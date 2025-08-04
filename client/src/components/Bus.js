@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/img/logo.png";
+import logo from "../assets/img/bus_tickets_app.png";
 import moment from "moment";
 
 function Bus({ bus }) {

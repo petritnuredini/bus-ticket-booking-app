@@ -6,7 +6,7 @@ import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import PageTitle from "../components/PageTitle";
 import moment from "moment";
 import { useReactToPrint } from "react-to-print";
-import logo from "../assets/img/logo.png";
+import logo from "../assets/img/bus_tickets_app.png";
 import { Helmet } from "react-helmet";
 import QRCode from "react-qr-code";
 
