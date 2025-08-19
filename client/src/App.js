@@ -16,6 +16,7 @@ const AdminBuses = lazy(() => import("./pages/Admin/AdminBuses"));
 const AdminDailyBuses = lazy(() => import("./pages/Admin/AdminDailyBuses"));
 const AdminUsers = lazy(() => import("./pages/Admin/AdminUsers"));
 const DailyBusesView = lazy(() => import("./pages/DailyBusesView"));
+const InternationalBooking = lazy(() => import("./pages/InternationalBooking"));
 const Home = lazy(() => import("./pages/Home"));
 const BookNow = lazy(() => import("./pages/BookNow"));
 const Bookings = lazy(() => import("./pages/Bookings"));
@@ -120,6 +121,23 @@ function App() {
                 element={
                   <PublicRoute>
                     <DailyBusesView />
+                  </PublicRoute>
+                }
+              />
+
+              <Route
+                path="/book-now/:id"
+                element={
+                  <ProtectedRoute>
+                    <BookNow />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/international-booking"
+                element={
+                  <PublicRoute>
+                    <InternationalBooking />
                   </PublicRoute>
                 }
               />

@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { Modal, Row, Form, Col, message } from "antd";
 import { axiosInstance } from "../helpers/axiosInstance";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
+import InternationalCitySelect from "./InternationalCitySelect";
 
 function BusForm({
   showBusForm,
@@ -13,18 +14,27 @@ function BusForm({
   setSelectedBus,
 }) {
   const dispatch = useDispatch();
-  const [cities, setCities] = useState([]);
+  const [fromCity, setFromCity] = useState("");
+  const [toCity, setToCity] = useState("");
 
   const onFinish = async (values) => {
     try {
       dispatch(ShowLoading());
+
+      // Include city values in the form data
+      const formData = {
+        ...values,
+        from: fromCity,
+        to: toCity,
+      };
+
       let response = null;
       if (type === "add") {
-        response = await axiosInstance.post("/api/buses/add-bus", values);
+        response = await axiosInstance.post("/api/buses/add-bus", formData);
       } else {
         response = await axiosInstance.put(
           `/api/buses/${selectedBus._id}`,
-          values
+          formData
         );
       }
       if (response.data.success) {
@@ -43,10 +53,15 @@ function BusForm({
   };
 
   useEffect(() => {
-    axiosInstance.get("/api/cities/get-all-cities").then((response) => {
-      setCities(response.data.data);
-    });
-  }, []);
+    // Set initial values when editing
+    if (selectedBus && type === "edit") {
+      setFromCity(selectedBus.from || "");
+      setToCity(selectedBus.to || "");
+    } else {
+      setFromCity("");
+      setToCity("");
+    }
+  }, [selectedBus, type]);
 
   return (
     <Modal
@@ -56,6 +71,8 @@ function BusForm({
       onCancel={() => {
         setSelectedBus(null);
         setShowBusForm(false);
+        setFromCity("");
+        setToCity("");
       }}
       footer={false}
     >
@@ -121,22 +138,17 @@ function BusForm({
               name="from"
               rules={[
                 {
-                  required: type === "add" ? true : true,
-                  message: "Please Choose an option",
-                  validateTrigger: "onSubmit",
+                  required: true,
+                  message: "Please select departure city",
                 },
               ]}
             >
-              <select className="block border border-blue-500 w-full p-3 rounded-lg mb-4">
-                <option value="">From</option>
-                {cities.map((data, index) => {
-                  return (
-                    <option key={index} value={data.ville}>
-                      {data.ville}
-                    </option>
-                  );
-                })}
-              </select>
+              <InternationalCitySelect
+                value={fromCity}
+                onChange={setFromCity}
+                placeholder="Select departure city"
+                className="mb-4"
+              />
             </Form.Item>
           </Col>
           <Col lg={12} xs={24}>
@@ -145,22 +157,17 @@ function BusForm({
               name="to"
               rules={[
                 {
-                  required: type === "add" ? true : true,
-                  message: "Please Choose an option",
-                  validateTrigger: "onSubmit",
+                  required: true,
+                  message: "Please select destination city",
                 },
               ]}
             >
-              <select className="block border border-blue-500 w-full p-3 rounded-lg mb-4">
-                <option value="">To</option>
-                {cities.map((data, index) => {
-                  return (
-                    <option key={index} value={data.ville}>
-                      {data.ville}
-                    </option>
-                  );
-                })}
-              </select>
+              <InternationalCitySelect
+                value={toCity}
+                onChange={setToCity}
+                placeholder="Select destination city"
+                className="mb-4"
+              />
             </Form.Item>
           </Col>
           <Col lg={8} xs={24}>

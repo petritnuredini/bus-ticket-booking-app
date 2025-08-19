@@ -1,48 +1,14 @@
 import logo from "../assets/img/bus_tickets_app.png";
 import { Helmet } from "react-helmet";
-import React, { useState, useEffect, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React, { useCallback } from "react";
 import { axiosInstance } from "../helpers/axiosInstance";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import Bus from "../components/Bus";
-import { Row, Col, message } from "antd";
+import { Row, message } from "antd";
 import { Link } from "react-router-dom";
 
+
 function Index() {
-  const dispatch = useDispatch();
-  const [buses, setBuses] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [filters, setFilters] = useState({});
-
-  const getBusesByFilter = useCallback(async () => {
-    dispatch(ShowLoading());
-    const from = filters.from;
-    const to = filters.to;
-    const journeyDate = filters.journeyDate;
-    try {
-      const { data } = await axiosInstance.post(
-        `/api/buses/get?from=${from}&to=${to}&journeyDate=${journeyDate}`
-      );
-
-      setBuses(data.data);
-      dispatch(HideLoading());
-    } catch (error) {
-      dispatch(HideLoading());
-      message.error(error.response.data.message);
-    }
-  }, [filters, dispatch]);
-
-  useEffect(() => {
-    axiosInstance.get("/api/cities/get-all-cities").then((response) => {
-      setCities(response.data.data);
-    });
-  }, []);
-
-  useCallback(() => {
-    if (filters.from && filters.to && filters.journeyDate) {
-      getBusesByFilter();
-    }
-  }, [filters.from, filters.to, filters.journeyDate, getBusesByFilter]);
 
   return (
     <>
@@ -58,21 +24,6 @@ function Index() {
             backgroundPosition: "center center",
           }}
         >
-          <div className="flex items-center h-full w-full">
-            <div className="h-screen overflow-auto overflow-x-hidden">
-              <div className="bg-opacity-80">
-                <Row gutter={[15, 15]}>
-                  {buses.map((bus, index) => {
-                    return (
-                      <div key={index} className="w-screen p-10 ">
-                        <Bus bus={bus} />
-                      </div>
-                    );
-                  })}
-                </Row>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div className="hero-content text-center text-neutral-content">
@@ -116,108 +67,63 @@ function Index() {
                 <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
                 <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-green-500 opacity-100 group-hover:translate-x-1"></span>
                 <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white flex items-center justify-center gap-2">
-                  <i className="ri-calendar-line"></i>
-                  View Daily Schedules
+                  <i className="ri-map-pin-line"></i>
+                  View Daily Buses inside Kosovo
                 </span>
                 <span className="absolute inset-0 border-2 border-green-500 rounded-full"></span>
               </Link>
-            </div>
-            <div className="w-full my-5 mx-2 p-2 px-2 py-3 flex justify-center">
-              <Row gutter={10} align="center">
-                <Col lg={12} sm={24}>
-                  <select
-                    className="mb-5 select select-primary w-full max-w-xs"
-                    onChange={(e) => {
-                      setFilters({ ...filters, from: e.target.value });
-                    }}
-                  >
-                    <option value="">From</option>
-                    {cities.map((data, index) => {
-                      return (
-                        <option key={index} value={data.ville}>
-                          {data.ville}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </Col>
-                <Col lg={12} sm={24}>
-                  <select
-                    className="mb-5 select select-primary w-full max-w-xs"
-                    onChange={(e) => {
-                      setFilters({ ...filters, to: e.target.value });
-                    }}
-                  >
-                    <option value="">To</option>
-                    {cities.map((data, index) => {
-                      return (
-                        <option key={index} value={data.ville}>
-                          {data.ville}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </Col>
-                <Col lg={24} sm={24}>
-                  <input
-                    className="mb-5 input input-bordered input-primary w-full max-w-xs"
-                    min={new Date().toISOString().split("T")[0]}
-                    type="date"
-                    placeholder="Date"
-                    onChange={(e) => {
-                      setFilters({
-                        ...filters,
-                        journeyDate: e.target.value,
-                      });
-                    }}
-                  />
-                </Col>
-                <Col lg={24} sm={24}>
-                  <div className="flex justify-center gap-4">
-                    <button
-                      onClick={() => {
-                        getBusesByFilter();
-                      }}
-                      className="relative inline-flex items-center justify-start
-                    px-10 py-3 overflow-hidden font-bold rounded-full
-                    group"
-                    >
-                      <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
-                      <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:-translate-x-8"></span>
-                      <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white">
-                        Search
-                      </span>
-                      <span className="gap-5 absolute inset-0 border-2 border-blue-600 rounded-full"></span>
-                    </button>
-                  </div>
-                </Col>
-                <div className="flex justify-center gap-4 mt-5 w-full">
-                  {buses.length === 0 && (
-                    <div className="text-center text-white text-2xl">
-                      Make your search now
-                    </div>
-                  )}
-                </div>
-              </Row>
+
+              <Link
+                to="/international-booking"
+                className="relative inline-flex items-center justify-start
+                  px-10 py-3 overflow-hidden font-bold rounded-full
+                  group border-2 border-purple-500"
+              >
+                <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
+                <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-purple-500 opacity-100 group-hover:translate-x-1"></span>
+                <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white flex items-center justify-center gap-2">
+                  <i className="ri-plane-line"></i>
+                  Book an International Ticket
+                </span>
+                <span className="absolute inset-0 border-2 border-purple-500 rounded-full"></span>
+              </Link>
             </div>
 
-            {/* Daily Buses Info Section */}
+            {/* Travel Options Info Section */}
             <div className="mt-8 p-4 bg-white bg-opacity-10 rounded-lg backdrop-blur-sm">
-              <div className="text-center">
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  <i className="ri-calendar-line mr-2"></i>
-                  Daily Bus Schedules
-                </h3>
-                <p className="text-white text-sm opacity-90 mb-3">
-                  Plan your regular commute with our recurring bus schedules.
-                  View weekly patterns and special timings.
-                </p>
-                <Link
-                  to="/daily-buses"
-                  className="text-green-400 hover:text-green-300 text-sm font-medium underline"
-                >
-                  Explore Daily Schedules →
-                </Link>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+                <div className="flex flex-col justify-start">
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    <i className="ri-map-pin-line mr-2"></i>
+                    Domestic Travel
+                  </h3>
+                  <p className="text-white text-sm opacity-90 mb-3">
+                    Explore daily bus schedules within Kosovo.
+                    Regular routes and recurring patterns.
+                  </p>
+                  <Link
+                    to="/daily-buses"
+                    className="text-green-400 hover:text-green-300 text-sm font-medium underline"
+                  >
+                    View Kosovo Routes →
+                  </Link>
+                </div>
+                <div className="flex flex-col justify-start">
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    <i className="ri-plane-line mr-2"></i>
+                    International Travel
+                  </h3>
+                  <p className="text-white text-sm opacity-90 mb-3">
+                    Book tickets for international destinations.
+                    Connect Kosovo with the world.
+                  </p>
+                  <Link
+                    to="/international-booking"
+                    className="text-purple-400 hover:text-purple-300 text-sm font-medium underline mt-auto"
+                  >
+                    Book International →
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

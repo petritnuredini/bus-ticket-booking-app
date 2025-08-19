@@ -32,6 +32,10 @@ app.use("/api/bookings", require("./routes/bookingsRoutes"));
 app.use("/api/cities", require("./routes/citiesRoutes"));
 app.use("/api/chat", require("./routes/chatRoutes"));
 app.use("/api/agents", require("./routes/agentRoutes"));
+app.use(
+  "/api/international-cities",
+  require("./routes/internationalCitiesRoutes")
+);
 
 /**
  * Socket.IO Connection Management
