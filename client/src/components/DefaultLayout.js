@@ -42,6 +42,11 @@ function DefaultLayout({ children }) {
       icon: "ri-bus-line",
     },
     {
+      name: "Daily Buses",
+      path: "/admin/daily-buses",
+      icon: "ri-calendar-line",
+    },
+    {
       name: "Users",
       path: "/admin/users",
       icon: "ri-user-line",
