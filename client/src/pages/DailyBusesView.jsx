@@ -4,7 +4,8 @@ import { axiosInstance } from "../helpers/axiosInstance";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import { message } from "antd";
 import { Helmet } from "react-helmet";
-import DefaultLayout from "../components/DefaultLayout";
+import { Link } from "react-router-dom";
+import logo from "../assets/img/bus_tickets_app.png";
 
 function DailyBusesView() {
   const dispatch = useDispatch();
@@ -91,12 +92,38 @@ function DailyBusesView() {
   }, [searchFrom, searchTo, dailyBuses]);
 
   return (
-    <DefaultLayout>
+    <>
       <Helmet>
         <title>Daily Bus Schedules</title>
       </Helmet>
-      
-      <div className="p-6">
+
+      {/* Public Header */}
+      <div className="bg-gray-800 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <Link to="/" className="flex items-center space-x-3">
+              <img className="h-10 w-10 rounded-full" src={logo} alt="Logo" />
+              <span className="text-white text-xl font-bold">Easy-Booking</span>
+            </Link>
+            <div className="flex space-x-4">
+              <Link
+                to="/login"
+                className="text-white hover:text-blue-300 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Register
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
@@ -268,7 +295,7 @@ function DailyBusesView() {
           </div>
         </div>
       </div>
-    </DefaultLayout>
+    </>
   );
 }
 

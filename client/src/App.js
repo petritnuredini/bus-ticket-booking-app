@@ -115,6 +115,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/daily-buses"
+                element={
+                  <PublicRoute>
+                    <DailyBusesView />
+                  </PublicRoute>
+                }
+              />
 
               <Route
                 path="/book-now/:id"
