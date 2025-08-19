@@ -6,6 +6,7 @@ import { message } from "antd";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import logo from "../assets/img/bus_tickets_app.png";
+import CitySelect from "../components/CitySelect";
 
 function DailyBusesView() {
   const dispatch = useDispatch();
@@ -83,6 +84,12 @@ function DailyBusesView() {
     setFilteredBuses(dailyBuses);
   };
 
+  const swapCities = () => {
+    const temp = searchFrom;
+    setSearchFrom(searchTo);
+    setSearchTo(temp);
+  };
+
   useEffect(() => {
     getDailyBuses();
   }, []);
@@ -137,31 +144,41 @@ function DailyBusesView() {
 
           {/* Search Filters */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   From
                 </label>
-                <input
-                  type="text"
+                <CitySelect
                   value={searchFrom}
-                  onChange={(e) => setSearchFrom(e.target.value)}
-                  placeholder="Enter departure city"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  onChange={setSearchFrom}
+                  placeholder="Select departure city"
                 />
               </div>
+
+              {/* Swap Button */}
+              <div className="flex items-end justify-center">
+                <button
+                  onClick={swapCities}
+                  className="p-3 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors border border-blue-200 hover:border-blue-300 rotate-90 md:rotate-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Swap departure and destination cities"
+                  disabled={!searchFrom || !searchTo}
+                >
+                  <i className="ri-arrow-left-right-line text-xl"></i>
+                </button>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   To
                 </label>
-                <input
-                  type="text"
+                <CitySelect
                   value={searchTo}
-                  onChange={(e) => setSearchTo(e.target.value)}
-                  placeholder="Enter destination city"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  onChange={setSearchTo}
+                  placeholder="Select destination city"
                 />
               </div>
+
               <div className="flex items-end">
                 <button
                   onClick={clearSearch}

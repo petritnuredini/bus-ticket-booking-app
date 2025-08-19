@@ -3,6 +3,7 @@ import { Modal, Form, Row, Col, message } from "antd";
 import { useDispatch } from "react-redux";
 import { axiosInstance } from "../helpers/axiosInstance";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
+import CitySelect from "./CitySelect";
 
 function DailyBusForm({
   showDailyBusForm,
@@ -13,10 +14,11 @@ function DailyBusForm({
   setSelectedDailyBus,
 }) {
   const dispatch = useDispatch();
-  const [cities, setCities] = useState([]);
   const [activeDays, setActiveDays] = useState([1, 2, 3, 4, 5, 6]); // Monday to Saturday by default
   const [scheduleVariations, setScheduleVariations] = useState({}); // Day-specific time overrides
   const [showVariations, setShowVariations] = useState(false);
+  const [fromCity, setFromCity] = useState("");
+  const [toCity, setToCity] = useState("");
 
   const daysOfWeek = [
     { value: 0, label: "Sunday", short: "Sun" },
@@ -35,6 +37,8 @@ function DailyBusForm({
       // Prepare the data with active days and schedule variations
       const formData = {
         ...values,
+        from: fromCity,
+        to: toCity,
         activeDays: activeDays,
         scheduleVariations: scheduleVariations,
       };
@@ -104,19 +108,24 @@ function DailyBusForm({
     });
   };
 
-  useEffect(() => {
-    // Fetch cities for dropdown
-    axiosInstance.get("/api/cities/get-all-cities").then((response) => {
-      setCities(response.data.data);
-    });
+  const swapCities = () => {
+    const temp = fromCity;
+    setFromCity(toCity);
+    setToCity(temp);
+  };
 
+  useEffect(() => {
     // Set initial values when editing
     if (selectedDailyBus && type === "edit") {
       setActiveDays(selectedDailyBus.activeDays || [1, 2, 3, 4, 5, 6]);
       setScheduleVariations(selectedDailyBus.scheduleVariations || {});
+      setFromCity(selectedDailyBus.from || "");
+      setToCity(selectedDailyBus.to || "");
     } else {
       setActiveDays([1, 2, 3, 4, 5, 6]); // Reset to default for new form
       setScheduleVariations({});
+      setFromCity("");
+      setToCity("");
     }
   }, [selectedDailyBus, type]);
 
@@ -133,6 +142,8 @@ function DailyBusForm({
         setActiveDays([1, 2, 3, 4, 5, 6]);
         setScheduleVariations({});
         setShowVariations(false);
+        setFromCity("");
+        setToCity("");
       }}
       footer={false}
     >
@@ -202,8 +213,8 @@ function DailyBusForm({
             </Form.Item>
           </Col>
 
-          {/* From and To */}
-          <Col lg={12} xs={24}>
+          {/* From and To with Swap Button */}
+          <Col lg={11} xs={24}>
             <Form.Item
               label="From"
               name="from"
@@ -214,17 +225,43 @@ function DailyBusForm({
                 },
               ]}
             >
-              <select className="block border border-blue-500 w-full p-3 rounded-lg mb-4">
-                <option value="">Select departure city</option>
-                {cities.map((city) => (
-                  <option key={city._id} value={city.name}>
-                    {city.name}
-                  </option>
-                ))}
-              </select>
+              <CitySelect
+                value={fromCity}
+                onChange={(value) => {
+                  setFromCity(value);
+                  // Update form field as well
+                  const form = document.querySelector("form");
+                  if (form) {
+                    const event = new Event("input", { bubbles: true });
+                    const input = form.querySelector('input[name="from"]');
+                    if (input) {
+                      input.value = value;
+                      input.dispatchEvent(event);
+                    }
+                  }
+                }}
+                placeholder="Select departure city"
+                className="mb-4"
+              />
             </Form.Item>
           </Col>
-          <Col lg={12} xs={24}>
+
+          {/* Swap Button */}
+          <Col lg={2} xs={24} className="flex items-center justify-center">
+            <div className="flex items-end h-full pb-6">
+              <button
+                type="button"
+                onClick={swapCities}
+                className="p-3 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors border border-blue-200 hover:border-blue-300"
+                title="Swap departure and destination cities"
+                disabled={!fromCity && !toCity}
+              >
+                <i className="ri-arrow-left-right-line text-xl"></i>
+              </button>
+            </div>
+          </Col>
+
+          <Col lg={11} xs={24}>
             <Form.Item
               label="To"
               name="to"
@@ -235,14 +272,24 @@ function DailyBusForm({
                 },
               ]}
             >
-              <select className="block border border-blue-500 w-full p-3 rounded-lg mb-4">
-                <option value="">Select destination city</option>
-                {cities.map((city) => (
-                  <option key={city._id} value={city.name}>
-                    {city.name}
-                  </option>
-                ))}
-              </select>
+              <CitySelect
+                value={toCity}
+                onChange={(value) => {
+                  setToCity(value);
+                  // Update form field as well
+                  const form = document.querySelector("form");
+                  if (form) {
+                    const event = new Event("input", { bubbles: true });
+                    const input = form.querySelector('input[name="to"]');
+                    if (input) {
+                      input.value = value;
+                      input.dispatchEvent(event);
+                    }
+                  }
+                }}
+                placeholder="Select destination city"
+                className="mb-4"
+              />
             </Form.Item>
           </Col>
 
@@ -315,6 +362,7 @@ function DailyBusForm({
                   message: "Please select status",
                 },
               ]}
+              initialValue="active"
             >
               <select className="block border border-blue-500 w-full p-3 rounded-lg mb-4">
                 <option value="active">Active</option>

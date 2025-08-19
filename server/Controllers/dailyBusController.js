@@ -223,13 +223,19 @@ const GetActiveDailyBuses = async (req, res) => {
     const dailyBuses = await DailyBus.findAll({
       where: {
         status: "active",
-        [Op.or]: [
-          { effectiveFrom: null },
-          { effectiveFrom: { [Op.lte]: new Date() } },
-        ],
-        [Op.or]: [
-          { effectiveTo: null },
-          { effectiveTo: { [Op.gte]: new Date() } },
+        [Op.and]: [
+          {
+            [Op.or]: [
+              { effectiveFrom: null },
+              { effectiveFrom: { [Op.lte]: new Date() } },
+            ],
+          },
+          {
+            [Op.or]: [
+              { effectiveTo: null },
+              { effectiveTo: { [Op.gte]: new Date() } },
+            ],
+          },
         ],
       },
       order: [

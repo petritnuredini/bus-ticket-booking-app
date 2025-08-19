@@ -13,16 +13,18 @@ const {
 } = require("../Controllers/dailyBusController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
+// Public routes (no authentication required for viewing) - MUST BE FIRST
+router.get("/active", GetActiveDailyBuses);
+router.get("/route", GetDailyBusesByRoute);
+
 // Admin routes (require authentication)
 router.post("/add-daily-bus", authMiddleware, AddDailyBus);
 router.post("/get-all-daily-buses", authMiddleware, GetAllDailyBuses);
-router.put("/:id", authMiddleware, UpdateDailyBus);
-router.delete("/:id", authMiddleware, DeleteDailyBus);
-router.get("/:id", authMiddleware, GetDailyBusById);
 router.post("/generate-buses", authMiddleware, GenerateBusesFromDaily);
 
-// Public routes (no authentication required for viewing)
-router.get("/active", GetActiveDailyBuses);
-router.get("/route", GetDailyBusesByRoute);
+// Parameterized routes MUST BE LAST to avoid conflicts
+router.get("/:id", authMiddleware, GetDailyBusById);
+router.put("/:id", authMiddleware, UpdateDailyBus);
+router.delete("/:id", authMiddleware, DeleteDailyBus);
 
 module.exports = router;
