@@ -13,7 +13,9 @@ const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const AdminBookings = lazy(() => import("./pages/Admin/AdminBookings"));
 const AdminBuses = lazy(() => import("./pages/Admin/AdminBuses"));
+const AdminDailyBuses = lazy(() => import("./pages/Admin/AdminDailyBuses"));
 const AdminUsers = lazy(() => import("./pages/Admin/AdminUsers"));
+const DailyBusesView = lazy(() => import("./pages/DailyBusesView"));
 const Home = lazy(() => import("./pages/Home"));
 const BookNow = lazy(() => import("./pages/BookNow"));
 const Bookings = lazy(() => import("./pages/Bookings"));
@@ -105,6 +107,23 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/daily-buses"
+                element={
+                  <ProtectedRoute>
+                    <DailyBusesView />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/book-now/:id"
+                element={
+                  <ProtectedRoute>
+                    <BookNow />
+                  </ProtectedRoute>
+                }
+              />
 
               <Route
                 path="/admin/bookings"
@@ -120,6 +139,30 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AdminBuses />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/users"
+                element={
+                  <ProtectedRoute>
+                    <AdminUsers />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/buses"
+                element={
+                  <ProtectedRoute>
+                    <AdminBuses />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/daily-buses"
+                element={
+                  <ProtectedRoute>
+                    <AdminDailyBuses />
                   </ProtectedRoute>
                 }
               />

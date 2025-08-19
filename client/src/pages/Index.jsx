@@ -92,19 +92,36 @@ function Index() {
               is a platform that allows you to book your bus tickets online and
               in a very easy way.
             </p>
-            <Link
-              to="/login"
-              className="relative inline-flex items-center justify-start
-                px-10 py-3 overflow-hidden font-bold rounded-full
-                group"
-            >
-              <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
-              <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:translate-x-1"></span>
-              <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white">
-                Check your tickets
-              </span>
-              <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
-            </Link>
+            <div className="flex flex-col gap-4">
+              <Link
+                to="/login"
+                className="relative inline-flex items-center justify-start
+                  px-10 py-3 overflow-hidden font-bold rounded-full
+                  group"
+              >
+                <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
+                <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:translate-x-1"></span>
+                <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white">
+                  Check your tickets
+                </span>
+                <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
+              </Link>
+
+              <Link
+                to="/daily-buses"
+                className="relative inline-flex items-center justify-start
+                  px-10 py-3 overflow-hidden font-bold rounded-full
+                  group border-2 border-green-500"
+              >
+                <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
+                <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-green-500 opacity-100 group-hover:translate-x-1"></span>
+                <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white flex items-center justify-center gap-2">
+                  <i className="ri-calendar-line"></i>
+                  View Daily Schedules
+                </span>
+                <span className="absolute inset-0 border-2 border-green-500 rounded-full"></span>
+              </Link>
+            </div>
             <div className="w-full my-5 mx-2 p-2 px-2 py-3 flex justify-center">
               <Row gutter={10} align="center">
                 <Col lg={12} sm={24}>
@@ -182,6 +199,26 @@ function Index() {
                   )}
                 </div>
               </Row>
+            </div>
+
+            {/* Daily Buses Info Section */}
+            <div className="mt-8 p-4 bg-white bg-opacity-10 rounded-lg backdrop-blur-sm">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  <i className="ri-calendar-line mr-2"></i>
+                  Daily Bus Schedules
+                </h3>
+                <p className="text-white text-sm opacity-90 mb-3">
+                  Plan your regular commute with our recurring bus schedules.
+                  View weekly patterns and special timings.
+                </p>
+                <Link
+                  to="/daily-buses"
+                  className="text-green-400 hover:text-green-300 text-sm font-medium underline"
+                >
+                  Explore Daily Schedules →
+                </Link>
+              </div>
             </div>
           </div>
         </div>
