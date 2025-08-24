@@ -4,7 +4,10 @@ const Chat = require('../models/Chat');
 const Agent = require('../models/Agent');
 const auth = require('../middlewares/authMiddleware');
 
-// Get all chats for a user
+/**
+ * GET /api/chat/user/:userId - Get all chats for a specific user
+ * Returns chat history with agent details for the authenticated user
+ */
 router.get('/user/:userId', async (req, res) => {
   try {
     const chats = await Chat.find({ userId: req.params.userId })
@@ -17,7 +20,10 @@ router.get('/user/:userId', async (req, res) => {
   }
 });
 
-// Get all chats for an agent
+/**
+ * GET /api/chat/agent/:agentId - Get all chats assigned to a specific agent
+ * Returns active and closed chats for the authenticated agent
+ */
 router.get('/agent/:agentId', auth, async (req, res) => {
   try {
     const chats = await Chat.find({ agentId: req.params.agentId })
@@ -30,7 +36,10 @@ router.get('/agent/:agentId', auth, async (req, res) => {
   }
 });
 
-// Get specific chat
+/**
+ * GET /api/chat/:chatId - Get details of a specific chat session
+ * Returns complete chat information including messages and participant details
+ */
 router.get('/:chatId', async (req, res) => {
   try {
     const chat = await Chat.findById(req.params.chatId)
@@ -47,7 +56,11 @@ router.get('/:chatId', async (req, res) => {
   }
 });
 
-// Create new chat
+/**
+ * POST /api/chat - Create a new chat session
+ * Automatically assigns an available agent based on topic and availability
+ * Creates the initial chat structure for user-agent communication
+ */
 router.post('/', async (req, res) => {
   try {
     const { userId, topic } = req.body;
@@ -56,7 +69,7 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: 'userId and topic are required' });
     }
     
-    // Find available agent based on topic
+    // Find available agent based on topic specialization and current workload
     const agent = await Agent.findOne({
       isAvailable: true,
       status: 'online',
@@ -77,7 +90,7 @@ router.post('/', async (req, res) => {
     
     const savedChat = await chat.save();
     
-    // Add chat to agent's active chats
+    // Add this chat to agent's active chats list
     await Agent.findByIdAndUpdate(agent._id, {
       $push: { activeChats: savedChat._id }
     });
@@ -93,7 +106,11 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Send message
+/**
+ * POST /api/chat/:chatId/messages - Send a new message in an existing chat
+ * Adds message to chat history and emits real-time updates via Socket.IO
+ * Supports both user and agent messages
+ */
 router.post('/:chatId/messages', async (req, res) => {
   try {
     const { content, sender, senderId } = req.body;
@@ -121,13 +138,13 @@ router.post('/:chatId/messages', async (req, res) => {
     // Emit the message via Socket.IO for real-time communication
     const io = req.app.get('io');
     if (io) {
-      // Emit to the specific chat room
+      // Emit to the specific chat room for all participants
       io.to(`chat-${chat._id}`).emit('new-message', {
         chatId: chat._id,
         message: message
       });
       
-      // Also emit to the recipient's personal room
+      // Also emit to the recipient's personal room for immediate delivery
       if (message.sender === 'user') {
         io.to(`agent-${chat.agentId._id}`).emit('new-message', {
           chatId: chat._id,
@@ -148,7 +165,11 @@ router.post('/:chatId/messages', async (req, res) => {
   }
 });
 
-// Close chat
+/**
+ * PATCH /api/chat/:chatId/close - Close an active chat session
+ * Marks chat as closed and removes it from agent's active chats list
+ * Prevents new messages from being sent to closed chats
+ */
 router.patch('/:chatId/close', async (req, res) => {
   try {
     const chat = await Chat.findByIdAndUpdate(
@@ -161,7 +182,7 @@ router.patch('/:chatId/close', async (req, res) => {
       return res.status(404).json({ message: 'Chat not found' });
     }
     
-    // Remove chat from agent's active chats
+    // Remove chat from agent's active chats list
     await Agent.findByIdAndUpdate(chat.agentId, {
       $pull: { activeChats: chat._id }
     });
@@ -172,7 +193,10 @@ router.patch('/:chatId/close', async (req, res) => {
   }
 });
 
-// Mark messages as read
+/**
+ * PATCH /api/chat/:chatId/read - Mark messages as read by recipient
+ * Updates message read status to track user engagement and agent response times
+ */
 router.patch('/:chatId/read', async (req, res) => {
   try {
     const { userId } = req.body;

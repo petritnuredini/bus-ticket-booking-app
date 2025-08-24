@@ -1,94 +1,79 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
+// Create context for managing chat state and Socket.IO connections
 const ChatContext = createContext();
 
-export const useChat = () => {
-  const context = useContext(ChatContext);
-  if (!context) {
-    throw new Error('useChat must be used within a ChatProvider');
-  }
-  return context;
-};
-
+/**
+ * ChatProvider Component
+ * Manages real-time chat functionality using Socket.IO
+ * Provides chat context to all child components
+ */
 export const ChatProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
-  const [currentChat, setCurrentChat] = useState(null);
-  const [chats, setChats] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
-  const [typingUsers, setTypingUsers] = useState({});
 
   useEffect(() => {
-    // Initialize socket connection
-    const newSocket = io('http://localhost:3001');
+    // Initialize Socket.IO connection to the backend server
+    const newSocket = io('http://localhost:3001', {
+      transports: ['websocket', 'polling']
+    });
+
+    // Handle successful connection
+    newSocket.on('connect', () => {
+      console.log('Connected to chat server');
+      setIsConnected(true);
+    });
+
+    // Handle connection errors
+    newSocket.on('connect_error', (error) => {
+      console.error('Connection error:', error);
+      setIsConnected(false);
+    });
+
+    // Handle disconnection
+    newSocket.on('disconnect', () => {
+      console.log('Disconnected from chat server');
+      setIsConnected(false);
+    });
+
     setSocket(newSocket);
 
-    newSocket.on('connect', () => {
-      setIsConnected(true);
-      console.log('Connected to chat server');
-    });
-
-    newSocket.on('disconnect', () => {
-      setIsConnected(false);
-      console.log('Disconnected from chat server');
-    });
-
-    newSocket.on('new-message', ({ chatId, message }) => {
-      setChats(prevChats => 
-        prevChats.map(chat => 
-          chat._id === chatId 
-            ? { ...chat, messages: [...chat.messages, message] }
-            : chat
-        )
-      );
-
-      // Update current chat if it's the active one
-      if (currentChat && currentChat._id === chatId) {
-        setCurrentChat(prev => ({
-          ...prev,
-          messages: [...prev.messages, message]
-        }));
-      }
-    });
-
-    newSocket.on('message-sent', ({ chatId, message }) => {
-      // Handle message sent confirmation
-      console.log('Message sent successfully');
-    });
-
-    newSocket.on('user-typing', ({ chatId, isTyping }) => {
-      setTypingUsers(prev => ({
-        ...prev,
-        [chatId]: isTyping
-      }));
-    });
-
-    newSocket.on('agent-typing', ({ chatId, isTyping }) => {
-      setTypingUsers(prev => ({
-        ...prev,
-        [chatId]: isTyping
-      }));
-    });
-
+    // Cleanup function to close socket connection
     return () => {
       newSocket.close();
     };
   }, []);
 
+  /**
+   * Join user to their personal room for receiving messages
+   * @param {string} userId - The user's unique identifier
+   */
   const joinUserRoom = (userId) => {
-    if (socket && userId) {
+    if (socket && isConnected) {
       socket.emit('join-user', userId);
     }
   };
 
+  /**
+   * Join agent to their personal room for receiving messages
+   * @param {string} agentId - The agent's unique identifier
+   */
   const joinAgentRoom = (agentId) => {
-    if (socket && agentId) {
+    if (socket && isConnected) {
       socket.emit('join-agent', agentId);
     }
   };
 
+  /**
+   * Send a message to a specific recipient
+   * @param {string} chatId - The chat session identifier
+   * @param {Object} message - The message object to send
+   * @param {string} recipientType - Type of recipient ('user' or 'agent')
+   * @param {string} recipientId - The recipient's unique identifier
+   */
   const sendMessage = (chatId, message, recipientType, recipientId) => {
-    if (socket) {
+    if (socket && isConnected) {
       socket.emit('send-message', {
         chatId,
         message,
@@ -98,8 +83,15 @@ export const ChatProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Send typing indicator to show when user/agent is typing
+   * @param {string} chatId - The chat session identifier
+   * @param {boolean} isTyping - Whether the user is currently typing
+   * @param {string} recipientType - Type of recipient ('user' or 'agent')
+   * @param {string} recipientId - The recipient's unique identifier
+   */
   const sendTypingIndicator = (chatId, isTyping, recipientType, recipientId) => {
-    if (socket) {
+    if (socket && isConnected) {
       socket.emit('typing', {
         chatId,
         isTyping,
@@ -109,14 +101,10 @@ export const ChatProvider = ({ children }) => {
     }
   };
 
+  // Context value containing all chat-related functions and state
   const value = {
     socket,
-    currentChat,
-    setCurrentChat,
-    chats,
-    setChats,
     isConnected,
-    typingUsers,
     joinUserRoom,
     joinAgentRoom,
     sendMessage,
@@ -128,4 +116,17 @@ export const ChatProvider = ({ children }) => {
       {children}
     </ChatContext.Provider>
   );
+};
+
+/**
+ * Custom hook to use chat context
+ * Provides access to chat functionality throughout the application
+ * @returns {Object} Chat context with socket, connection status, and functions
+ */
+export const useChat = () => {
+  const context = useContext(ChatContext);
+  if (!context) {
+    throw new Error('useChat must be used within a ChatProvider');
+  }
+  return context;
 };

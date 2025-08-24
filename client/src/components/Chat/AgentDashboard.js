@@ -3,6 +3,10 @@ import { useChat } from '../../contexts/ChatContext';
 import axios from 'axios';
 import { MessageCircle, Send, User, Phone, MapPin, Clock, LogOut, Settings } from 'react-feather';
 
+/**
+ * AgentDashboard Component
+ * Full-screen interface for customer service agents to manage multiple chat conversations
+ */
 const AgentDashboard = ({ agentId, agent }) => {
   const [chats, setChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -27,7 +31,7 @@ const AgentDashboard = ({ agentId, agent }) => {
       joinAgentRoom(agentId);
       loadChats();
       
-      // Listen for new messages
+      // Listen for new messages from users
       socket.on('new-message', (data) => {
         // Update the specific chat with the new message
         setChats(prevChats => 
@@ -47,10 +51,10 @@ const AgentDashboard = ({ agentId, agent }) => {
         }
       });
       
-      // Listen for typing indicators
+      // Listen for user typing indicators
       socket.on('user-typing', (data) => {
         if (data.chatId === currentChat?._id) {
-          // You can add a typing indicator here
+          // TODO: Add visual typing indicator
           console.log('User is typing...');
         }
       });
@@ -68,11 +72,13 @@ const AgentDashboard = ({ agentId, agent }) => {
     scrollToBottom();
   }, [currentChat?.messages]);
 
+  // Get authentication headers for API requests
   const getAuthHeaders = () => {
     const token = localStorage.getItem('agentToken');
     return token ? { 'Authorization': `Bearer ${token}` } : {};
   };
 
+  // Load all chats assigned to this agent
   const loadChats = async () => {
     try {
       const response = await axios.get(`/api/chat/agent/${agentId}`, {
@@ -92,14 +98,16 @@ const AgentDashboard = ({ agentId, agent }) => {
     }
   };
 
+  // Select a chat to view and respond to
   const selectChat = (chat) => {
     setCurrentChat(chat);
-    // Mark messages as read
+    // Mark messages as read when chat is selected
     if (chat.messages.some(msg => !msg.isRead && msg.sender === 'user')) {
       markMessagesAsRead(chat._id);
     }
   };
 
+  // Mark user messages as read
   const markMessagesAsRead = async (chatId) => {
     try {
       await axios.patch(`/api/chat/${chatId}/read`, { userId: currentChat?.userId }, {
@@ -110,6 +118,7 @@ const AgentDashboard = ({ agentId, agent }) => {
     }
   };
 
+  // Send message to user
   const sendMessageHandler = async () => {
     if (!message.trim() || !currentChat) return;
 
@@ -164,6 +173,7 @@ const AgentDashboard = ({ agentId, agent }) => {
     }
   };
 
+  // Handle typing input and send typing indicators
   const handleTyping = (e) => {
     setMessage(e.target.value);
     
@@ -183,6 +193,7 @@ const AgentDashboard = ({ agentId, agent }) => {
     }
   };
 
+  // Close a chat session
   const closeChat = async (chatId) => {
     try {
       await axios.patch(`/api/chat/${chatId}/close`, {}, {
@@ -206,6 +217,7 @@ const AgentDashboard = ({ agentId, agent }) => {
     }
   };
 
+  // Update agent availability status
   const updateStatus = async (newStatus, newAvailability) => {
     try {
       const response = await axios.patch(`/api/agents/${agentId}/status`, {
@@ -222,10 +234,12 @@ const AgentDashboard = ({ agentId, agent }) => {
     }
   };
 
+  // Auto-scroll to bottom of messages
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Handle Enter key press to send messages
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -233,6 +247,7 @@ const AgentDashboard = ({ agentId, agent }) => {
     }
   };
 
+  // Get icon for chat topic
   const getTopicIcon = (topic) => {
     switch (topic) {
       case 'schedule': return <Clock size={16} />;
@@ -242,15 +257,16 @@ const AgentDashboard = ({ agentId, agent }) => {
     }
   };
 
+  // Count unread messages from users
   const getUnreadCount = (chat) => {
     return chat.messages.filter(msg => !msg.isRead && msg.sender === 'user').length;
   };
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
+      {/* Sidebar with chat list */}
       <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-        {/* Header */}
+        {/* Header with agent status */}
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-semibold text-gray-800">Agent Dashboard</h2>
@@ -272,7 +288,7 @@ const AgentDashboard = ({ agentId, agent }) => {
           </div>
         </div>
 
-        {/* Chat List */}
+        {/* Chat list */}
         <div className="flex-1 overflow-y-auto">
           {chats.length === 0 ? (
             <div className="p-4 text-center text-gray-500">
@@ -294,9 +310,9 @@ const AgentDashboard = ({ agentId, agent }) => {
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center space-x-2">
                       {getTopicIcon(chat.topic)}
-                                             <span className="font-medium text-gray-800">
-                         {chat.userId || 'Unknown User'}
-                       </span>
+                      <span className="font-medium text-gray-800">
+                        {chat.userId || 'Unknown User'}
+                      </span>
                     </div>
                     {getUnreadCount(chat) > 0 && (
                       <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1">
@@ -319,11 +335,11 @@ const AgentDashboard = ({ agentId, agent }) => {
         </div>
       </div>
 
-      {/* Chat Area */}
+      {/* Main chat area */}
       <div className="flex-1 flex flex-col">
         {currentChat ? (
           <>
-            {/* Chat Header */}
+            {/* Chat header with user info */}
             <div className="bg-white border-b border-gray-200 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -331,12 +347,12 @@ const AgentDashboard = ({ agentId, agent }) => {
                     <User size={20} className="text-white" />
                   </div>
                   <div>
-                                         <h3 className="font-medium text-gray-800">
-                       {currentChat.userId || 'Unknown User'}
-                     </h3>
-                     <p className="text-sm text-gray-500">
-                       {currentChat.userId} • {getTopicIcon(currentChat.topic)} {currentChat.topic}
-                     </p>
+                    <h3 className="font-medium text-gray-800">
+                      {currentChat.userId || 'Unknown User'}
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      {currentChat.userId} • {getTopicIcon(currentChat.topic)} {currentChat.topic}
+                    </p>
                   </div>
                 </div>
                 <div className="flex space-x-2">
@@ -350,7 +366,7 @@ const AgentDashboard = ({ agentId, agent }) => {
               </div>
             </div>
 
-            {/* Messages */}
+            {/* Messages display */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {currentChat.messages.map((msg, index) => (
                 <div
@@ -379,7 +395,7 @@ const AgentDashboard = ({ agentId, agent }) => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Message Input */}
+            {/* Message input */}
             <div className="bg-white border-t border-gray-200 p-4">
               <div className="flex space-x-2">
                 <input

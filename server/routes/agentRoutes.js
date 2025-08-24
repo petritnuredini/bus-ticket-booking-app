@@ -5,30 +5,40 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../middlewares/authMiddleware');
 
-// Get all agents
+/**
+ * GET /api/agents - Retrieve all agents (admin only)
+ * Returns list of all agents without sensitive information like passwords
+ */
 router.get('/', auth, async (req, res) => {
   try {
-    const agents = await Agent.find({}, '-password');
+    const agents = await Agent.find({}, '-password'); // Exclude password field
     res.json(agents);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Get available agents
+/**
+ * GET /api/agents/available - Get list of available agents
+ * Returns agents who are online and available for new chat requests
+ * Used by chat system to assign users to available agents
+ */
 router.get('/available', async (req, res) => {
   try {
     const agents = await Agent.find({
       isAvailable: true,
       status: 'online'
-    }, 'name avatar status specialization');
+    }, 'name avatar status specialization'); // Only return necessary fields
     res.json(agents);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Get agent by ID
+/**
+ * GET /api/agents/:id - Get specific agent details
+ * Returns agent information by ID (requires authentication)
+ */
 router.get('/:id', auth, async (req, res) => {
   try {
     const agent = await Agent.findById(req.params.id, '-password');
@@ -41,18 +51,22 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// Create new agent
+/**
+ * POST /api/agents - Create a new agent account
+ * Allows administrators to add new customer service agents
+ * Automatically hashes passwords for security
+ */
 router.post('/', async (req, res) => {
   try {
     const { name, email, password, specialization } = req.body;
     
-    // Check if agent already exists
+    // Prevent duplicate agent accounts
     const existingAgent = await Agent.findOne({ email });
     if (existingAgent) {
       return res.status(400).json({ message: 'Agent with this email already exists' });
     }
     
-    // Hash password
+    // Hash password with bcrypt for security
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     
@@ -60,11 +74,11 @@ router.post('/', async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      specialization: specialization || ['general']
+      specialization: specialization || ['general'] // Default to general support
     });
     
     const savedAgent = await agent.save();
-    const { password: _, ...agentWithoutPassword } = savedAgent.toObject();
+    const { password: _, ...agentWithoutPassword } = savedAgent.toObject(); // Remove password from response
     
     res.status(201).json(agentWithoutPassword);
   } catch (error) {
@@ -72,7 +86,11 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Update agent status
+/**
+ * PATCH /api/agents/:id/status - Update agent availability status
+ * Allows agents to set themselves as online/offline/busy
+ * Also controls whether they accept new chat requests
+ */
 router.patch('/:id/status', auth, async (req, res) => {
   try {
     const { status, isAvailable } = req.body;
@@ -97,7 +115,10 @@ router.patch('/:id/status', auth, async (req, res) => {
   }
 });
 
-// Update agent profile
+/**
+ * PATCH /api/agents/:id - Update agent profile information
+ * Allows agents to modify their name, avatar, and specializations
+ */
 router.patch('/:id', auth, async (req, res) => {
   try {
     const { name, avatar, specialization } = req.body;
@@ -123,7 +144,11 @@ router.patch('/:id', auth, async (req, res) => {
   }
 });
 
-// Agent login
+/**
+ * POST /api/agents/login - Agent authentication
+ * Verifies agent credentials and returns JWT token for session management
+ * Automatically sets agent status to 'online' upon successful login
+ */
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -133,16 +158,17 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
     
+    // Verify password against stored hash
     const isMatch = await bcrypt.compare(password, agent.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
     
-    // Update status to online
+    // Update agent status to online for chat availability
     agent.status = 'online';
     await agent.save();
     
-    // Generate JWT token
+    // Generate JWT token for authenticated session
     const token = jwt.sign(
       { agentId: agent._id, email: agent.email },
       process.env.jwt_secret || 'your-secret-key',
@@ -156,7 +182,11 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Agent logout
+/**
+ * POST /api/agents/:id/logout - Agent logout
+ * Sets agent status to 'offline' and removes them from available agents list
+ * Requires valid authentication token
+ */
 router.post('/:id/logout', auth, async (req, res) => {
   try {
     const agent = await Agent.findByIdAndUpdate(

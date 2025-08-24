@@ -3,6 +3,11 @@ import { useChat } from '../../contexts/ChatContext';
 import axios from 'axios';
 import { MessageCircle, X, Send, User, Phone, MapPin, Clock } from 'react-feather';
 
+/**
+ * ChatWidget Component
+ * Floating chat interface that allows users to communicate with customer service agents
+ * Features topic selection, real-time messaging, and chat history
+ */
 const ChatWidget = ({ userId, user }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -26,25 +31,27 @@ const ChatWidget = ({ userId, user }) => {
 
   useEffect(() => {
     if (userId && isConnected) {
+      // Join user to their personal room for receiving messages
       joinUserRoom(userId);
       loadChatHistory();
       
-      // Listen for new messages
+      // Listen for incoming messages from agents
       socket.on('new-message', (data) => {
         if (data.chatId === currentChatId) {
           setChatHistory(prev => [...prev, data.message]);
         }
       });
       
-      // Listen for typing indicators
+      // Listen for agent typing indicators
       socket.on('agent-typing', (data) => {
         if (data.chatId === currentChatId) {
-          // You can add a typing indicator here
+          // TODO: Add visual typing indicator
           console.log('Agent is typing...');
         }
       });
     }
     
+    // Cleanup event listeners on unmount
     return () => {
       if (socket) {
         socket.off('new-message');
@@ -53,10 +60,15 @@ const ChatWidget = ({ userId, user }) => {
     };
   }, [userId, isConnected, currentChatId]);
 
+  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     scrollToBottom();
   }, [chatHistory]);
 
+  /**
+   * Load user's existing chat history from the server
+   * Finds active chats and sets up the current conversation
+   */
   const loadChatHistory = async () => {
     try {
       const response = await axios.get(`/api/chat/user/${userId}`);
@@ -73,6 +85,10 @@ const ChatWidget = ({ userId, user }) => {
     }
   };
 
+  /**
+   * Start a new chat session with an available agent
+   * Creates chat based on selected topic and assigns appropriate agent
+   */
   const startNewChat = async () => {
     if (!topic) return;
     
@@ -89,7 +105,7 @@ const ChatWidget = ({ userId, user }) => {
       setChatHistory([]);
       setShowTopicSelector(false);
       
-      // Join the chat room
+      // Join the chat room for real-time communication
       if (socket) {
         socket.emit('join-chat', newChat._id);
       }
@@ -103,32 +119,36 @@ const ChatWidget = ({ userId, user }) => {
     }
   };
 
+  /**
+   * Send a message to the current chat
+   * Updates local state and sends message via Socket.IO for real-time delivery
+   */
   const sendMessageHandler = async () => {
     if (!message.trim() || !currentChatId) return;
 
-          const newMessage = {
-        content: message.trim(),
-        sender: 'user',
-        senderId: userId,
-        timestamp: new Date()
-      };
+    const newMessage = {
+      content: message.trim(),
+      sender: 'user',
+      senderId: userId,
+      timestamp: new Date()
+    };
 
     try {
-      // Send message via API
+      // Send message via REST API for persistence
       const response = await axios.post(`/api/chat/${currentChatId}/messages`, {
         content: message.trim(),
         sender: 'user',
         senderId: userId
       });
 
-      // Add message to local state
+      // Update local chat history immediately
       setChatHistory(prev => [...prev, newMessage]);
       setMessage('');
 
-      // Send typing indicator
+      // Send typing indicator to show user has stopped typing
       sendTypingIndicator(currentChatId, false, 'agent', agent?._id);
       
-      // Emit message via Socket.IO for real-time delivery
+      // Emit message via Socket.IO for real-time delivery to agent
       if (socket) {
         socket.emit('send-message', {
           chatId: currentChatId,
@@ -142,29 +162,40 @@ const ChatWidget = ({ userId, user }) => {
     }
   };
 
+  /**
+   * Handle typing input and send typing indicators
+   * Shows agent when user is typing for better user experience
+   */
   const handleTyping = (e) => {
     setMessage(e.target.value);
     
-    // Send typing indicator
+    // Send typing indicator to agent
     if (currentChatId && agent) {
       sendTypingIndicator(currentChatId, true, 'agent', agent._id);
       
-      // Clear previous timeout
+      // Clear previous timeout to prevent multiple indicators
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
       
-      // Set timeout to stop typing indicator
+      // Stop typing indicator after 1 second of inactivity
       typingTimeoutRef.current = setTimeout(() => {
         sendTypingIndicator(currentChatId, false, 'agent', agent._id);
       }, 1000);
     }
   };
 
+  /**
+   * Auto-scroll chat to the bottom to show latest messages
+   */
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  /**
+   * Handle Enter key press to send messages
+   * Allows Shift+Enter for new lines
+   */
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -172,6 +203,11 @@ const ChatWidget = ({ userId, user }) => {
     }
   };
 
+  /**
+   * Get appropriate icon for each chat topic
+   * @param {string} topic - The chat topic
+   * @returns {JSX.Element} Icon component
+   */
   const getTopicIcon = (topic) => {
     switch (topic) {
       case 'schedule': return <Clock size={16} />;
@@ -181,6 +217,11 @@ const ChatWidget = ({ userId, user }) => {
     }
   };
 
+  /**
+   * Get human-readable label for each chat topic
+   * @param {string} topic - The chat topic
+   * @returns {string} User-friendly topic description
+   */
   const getTopicLabel = (topic) => {
     switch (topic) {
       case 'schedule': return 'Schedule & Timing';
@@ -190,6 +231,7 @@ const ChatWidget = ({ userId, user }) => {
     }
   };
 
+  // Render floating chat button when widget is closed
   if (!isOpen) {
     return (
       <div className="fixed bottom-6 right-6 z-50">
@@ -206,7 +248,7 @@ const ChatWidget = ({ userId, user }) => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 w-96 h-[500px] bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col">
-      {/* Header */}
+      {/* Chat Header */}
       <div className="bg-blue-600 text-white p-4 rounded-t-lg flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <MessageCircle size={20} />
@@ -223,7 +265,7 @@ const ChatWidget = ({ userId, user }) => {
       {/* Chat Body */}
       <div className="flex-1 flex flex-col">
         {!currentChatId ? (
-          // Topic Selection
+          // Topic Selection Interface
           <div className="flex-1 p-4">
             <div className="text-center mb-4">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">
@@ -262,9 +304,9 @@ const ChatWidget = ({ userId, user }) => {
             </button>
           </div>
         ) : (
-          // Chat Interface
+          // Active Chat Interface
           <>
-            {/* Agent Info */}
+            {/* Agent Information Display */}
             <div className="p-3 border-b border-gray-200 bg-gray-50">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -281,7 +323,7 @@ const ChatWidget = ({ userId, user }) => {
               </div>
             </div>
 
-            {/* Messages */}
+            {/* Messages Display */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {chatHistory.length === 0 ? (
                 <div className="text-center text-gray-500 py-8">
