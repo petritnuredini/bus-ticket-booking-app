@@ -96,7 +96,7 @@ node scripts/createAgent.js
 **Default Agent Credentials:**
 
 - Email: `agent@busticket.com`
-- Password: `your password`
+- Password: process.env.AGENT_PASSWORD
 
 ### 4. Start the Application
 
