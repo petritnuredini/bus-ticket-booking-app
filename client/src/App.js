@@ -109,14 +109,7 @@ function App() {
                 }
               />
 
-              <Route
-                path="/daily-buses"
-                element={
-                  <ProtectedRoute>
-                    <DailyBusesView />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/daily-buses" element={<DailyBusesView />} />
 
               <Route
                 path="/international-booking"
