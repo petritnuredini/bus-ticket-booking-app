@@ -5,6 +5,7 @@ This document describes the implementation of a real-time communication system t
 ## Features
 
 ### For Users
+
 - **Floating Chat Widget**: Accessible from any page with a floating chat button
 - **Topic Selection**: Choose from predefined topics (Schedule, Location, Booking, General)
 - **Real-time Messaging**: Instant message delivery with Socket.IO
@@ -13,6 +14,7 @@ This document describes the implementation of a real-time communication system t
 - **Full Chat Page**: Dedicated page for extended conversations
 
 ### For Agents
+
 - **Agent Dashboard**: Manage multiple chat conversations simultaneously
 - **Real-time Updates**: Instant notification of new messages
 - **Chat Management**: View all active and closed chats
@@ -24,17 +26,21 @@ This document describes the implementation of a real-time communication system t
 ### Backend (Server)
 
 #### Dependencies Added
+
 - `socket.io`: Real-time bidirectional communication
 
 #### New Models
+
 - **Chat Model** (`server/models/Chat.js`): Stores chat sessions and messages
 - **Agent Model** (`server/models/Agent.js`): Manages customer service agents
 
 #### New Routes
+
 - **Chat Routes** (`server/routes/chatRoutes.js`): Handle chat operations
 - **Agent Routes** (`server/routes/agentRoutes.js`): Manage agent accounts
 
 #### Socket.IO Integration
+
 - Real-time message delivery
 - User and agent room management
 - Typing indicators
@@ -43,14 +49,17 @@ This document describes the implementation of a real-time communication system t
 ### Frontend (Client)
 
 #### Dependencies Added
+
 - `socket.io-client`: Client-side Socket.IO implementation
 
 #### New Components
+
 - **ChatWidget**: Floating chat interface for users
 - **AgentDashboard**: Full-screen agent interface
 - **ChatPage**: Dedicated chat page for users
 
 #### Context Management
+
 - **ChatContext**: Centralized chat state and Socket.IO management
 
 ## Installation & Setup
@@ -58,12 +67,14 @@ This document describes the implementation of a real-time communication system t
 ### 1. Install Dependencies
 
 #### Server
+
 ```bash
 cd server
 npm install socket.io
 ```
 
 #### Client
+
 ```bash
 cd client
 npm install socket.io-client
@@ -83,18 +94,21 @@ node scripts/createAgent.js
 ```
 
 **Default Agent Credentials:**
+
 - Email: `agent@busticket.com`
-- Password: `agent123`
+- Password: `your password`
 
 ### 4. Start the Application
 
 #### Server
+
 ```bash
 cd server
 npm start
 ```
 
 #### Client
+
 ```bash
 cd client
 npm start
@@ -105,11 +119,13 @@ npm start
 ### For Users
 
 #### Floating Chat Widget
+
 1. Click the chat icon (bottom-right corner) on any page
 2. Select a topic for your inquiry
 3. Start chatting with an available agent
 
 #### Full Chat Page
+
 1. Navigate to `/chat` in your browser
 2. View chat history and start new conversations
 3. Manage multiple chat sessions
@@ -117,11 +133,13 @@ npm start
 ### For Agents
 
 #### Agent Login
+
 1. Navigate to `/agent/login`
 2. Use your agent credentials
 3. Access the dashboard
 
 #### Agent Dashboard
+
 1. View all active chats in the sidebar
 2. Click on a chat to open the conversation
 3. Respond to user messages in real-time
@@ -130,6 +148,7 @@ npm start
 ## API Endpoints
 
 ### Chat Endpoints
+
 - `GET /api/chat/user/:userId` - Get user's chat history
 - `GET /api/chat/agent/:agentId` - Get agent's active chats
 - `GET /api/chat/:chatId` - Get specific chat details
@@ -139,6 +158,7 @@ npm start
 - `PATCH /api/chat/:chatId/read` - Mark messages as read
 
 ### Agent Endpoints
+
 - `GET /api/agents` - Get all agents
 - `GET /api/agents/available` - Get available agents
 - `GET /api/agents/:id` - Get agent details
@@ -150,12 +170,14 @@ npm start
 ## Socket.IO Events
 
 ### Client to Server
+
 - `join-user`: User joins their personal room
 - `join-agent`: Agent joins their personal room
 - `send-message`: Send message to recipient
 - `typing`: Send typing indicator
 
 ### Server to Client
+
 - `new-message`: Receive new message
 - `message-sent`: Confirm message sent
 - `user-typing`: User typing indicator
@@ -210,11 +232,13 @@ npm start
 ### Common Issues
 
 1. **Socket Connection Failed**
+
    - Check if server is running on correct port
    - Verify CORS configuration
    - Check browser console for connection errors
 
 2. **Messages Not Delivering**
+
    - Verify user/agent authentication
    - Check Socket.IO room membership
    - Review server logs for errors
@@ -227,6 +251,7 @@ npm start
 ### Debug Mode
 
 Enable debug logging by setting environment variables:
+
 ```bash
 DEBUG=socket.io:*
 NODE_ENV=development
