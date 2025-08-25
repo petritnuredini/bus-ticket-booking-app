@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { axiosInstance } from "../helpers/axiosInstance";
+import axios from "axios";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import { message } from "antd";
 import { Helmet } from "react-helmet";
@@ -20,7 +20,7 @@ function DailyBusesView() {
   const getDailyBuses = async () => {
     try {
       dispatch(ShowLoading());
-      const response = await axiosInstance.get("/api/daily-buses/active");
+      const response = await axios.get("/api/daily-buses/active");
       dispatch(HideLoading());
       if (response.data.success) {
         setDailyBuses(response.data.data);
@@ -113,6 +113,12 @@ function DailyBusesView() {
               <span className="text-white text-xl font-bold">Easy-Booking</span>
             </Link>
             <div className="flex space-x-4">
+              <Link
+                to="/international-booking"
+                className="text-white hover:text-green-300 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                International Booking
+              </Link>
               <Link
                 to="/login"
                 className="text-white hover:text-blue-300 px-3 py-2 rounded-md text-sm font-medium"
