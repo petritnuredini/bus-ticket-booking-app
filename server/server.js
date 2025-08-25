@@ -123,12 +123,8 @@ const initializeApp = async () => {
       "Note: Install and start PostgreSQL to use daily buses feature"
     );
   }
-
-  // listen to port (always start server even if PostgreSQL fails)
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-    console.log("MongoDB connection active");
-  });
+  // Note: Server is already listening on line 108 with Socket.IO support
+  console.log("MongoDB connection active");
 };
 
 // Start the application

@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import io from 'socket.io-client';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import io from "socket.io-client";
 
 // Create context for managing chat state and Socket.IO connections
 const ChatContext = createContext();
@@ -15,25 +15,25 @@ export const ChatProvider = ({ children }) => {
 
   useEffect(() => {
     // Initialize Socket.IO connection to the backend server
-    const newSocket = io('http://localhost:3001', {
-      transports: ['websocket', 'polling']
+    const newSocket = io("http://localhost:3004", {
+      transports: ["websocket", "polling"],
     });
 
     // Handle successful connection
-    newSocket.on('connect', () => {
-      console.log('Connected to chat server');
+    newSocket.on("connect", () => {
+      console.log("Connected to chat server");
       setIsConnected(true);
     });
 
     // Handle connection errors
-    newSocket.on('connect_error', (error) => {
-      console.error('Connection error:', error);
+    newSocket.on("connect_error", (error) => {
+      console.error("Connection error:", error);
       setIsConnected(false);
     });
 
     // Handle disconnection
-    newSocket.on('disconnect', () => {
-      console.log('Disconnected from chat server');
+    newSocket.on("disconnect", () => {
+      console.log("Disconnected from chat server");
       setIsConnected(false);
     });
 
@@ -51,7 +51,7 @@ export const ChatProvider = ({ children }) => {
    */
   const joinUserRoom = (userId) => {
     if (socket && isConnected) {
-      socket.emit('join-user', userId);
+      socket.emit("join-user", userId);
     }
   };
 
@@ -61,7 +61,7 @@ export const ChatProvider = ({ children }) => {
    */
   const joinAgentRoom = (agentId) => {
     if (socket && isConnected) {
-      socket.emit('join-agent', agentId);
+      socket.emit("join-agent", agentId);
     }
   };
 
@@ -74,11 +74,11 @@ export const ChatProvider = ({ children }) => {
    */
   const sendMessage = (chatId, message, recipientType, recipientId) => {
     if (socket && isConnected) {
-      socket.emit('send-message', {
+      socket.emit("send-message", {
         chatId,
         message,
         recipientType,
-        recipientId
+        recipientId,
       });
     }
   };
@@ -90,13 +90,18 @@ export const ChatProvider = ({ children }) => {
    * @param {string} recipientType - Type of recipient ('user' or 'agent')
    * @param {string} recipientId - The recipient's unique identifier
    */
-  const sendTypingIndicator = (chatId, isTyping, recipientType, recipientId) => {
+  const sendTypingIndicator = (
+    chatId,
+    isTyping,
+    recipientType,
+    recipientId
+  ) => {
     if (socket && isConnected) {
-      socket.emit('typing', {
+      socket.emit("typing", {
         chatId,
         isTyping,
         recipientType,
-        recipientId
+        recipientId,
       });
     }
   };
@@ -108,14 +113,10 @@ export const ChatProvider = ({ children }) => {
     joinUserRoom,
     joinAgentRoom,
     sendMessage,
-    sendTypingIndicator
+    sendTypingIndicator,
   };
 
-  return (
-    <ChatContext.Provider value={value}>
-      {children}
-    </ChatContext.Provider>
-  );
+  return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
 };
 
 /**
@@ -126,7 +127,7 @@ export const ChatProvider = ({ children }) => {
 export const useChat = () => {
   const context = useContext(ChatContext);
   if (!context) {
-    throw new Error('useChat must be used within a ChatProvider');
+    throw new Error("useChat must be used within a ChatProvider");
   }
   return context;
 };

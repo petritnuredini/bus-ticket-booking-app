@@ -108,46 +108,22 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
               <Route
                 path="/daily-buses"
                 element={
                   <ProtectedRoute>
                     <DailyBusesView />
                   </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/daily-buses"
-                element={
-                  <PublicRoute>
-                    <DailyBusesView />
-                  </PublicRoute>
                 }
               />
 
-              <Route
-                path="/book-now/:id"
-                element={
-                  <ProtectedRoute>
-                    <BookNow />
-                  </ProtectedRoute>
-                }
-              />
               <Route
                 path="/international-booking"
                 element={
                   <PublicRoute>
                     <InternationalBooking />
                   </PublicRoute>
-                }
-              />
-
-              <Route
-                path="/book-now/:id"
-                element={
-                  <ProtectedRoute>
-                    <BookNow />
-                  </ProtectedRoute>
                 }
               />
 
@@ -168,22 +144,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/admin/users"
-                element={
-                  <ProtectedRoute>
-                    <AdminUsers />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/buses"
-                element={
-                  <ProtectedRoute>
-                    <AdminBuses />
-                  </ProtectedRoute>
-                }
-              />
+
               <Route
                 path="/admin/daily-buses"
                 element={
@@ -192,6 +153,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
               <Route
                 path="/admin/users"
                 element={

@@ -25,7 +25,7 @@ const createSampleAgent = async () => {
 
     // Hash password with bcrypt for secure storage
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash("agent123", salt);
+    const hashedPassword = await bcrypt.hash(process.env.AGENT_PASSWORD, salt);
 
     // Create sample agent with full support capabilities
     const agent = new Agent({
@@ -42,7 +42,7 @@ const createSampleAgent = async () => {
     console.log("Sample agent created successfully:", agent.email);
     console.log("Login credentials:");
     console.log("Email: agent@busticket.com");
-    console.log("Password: your password");
+    console.log("Password: ", process.env.AGENT_PASSWORD);
   } catch (error) {
     console.error("Error creating agent:", error);
   } finally {
