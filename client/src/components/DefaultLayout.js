@@ -20,6 +20,11 @@ function DefaultLayout({ children }) {
       icon: "ri-file-list-line",
     },
     {
+      name: "Chat",
+      path: "/chat",
+      icon: "ri-message-2-line",
+    },
+    {
       name: "Logout",
       path: "/logout",
       icon: "ri-logout-box-line",
@@ -45,6 +50,11 @@ function DefaultLayout({ children }) {
       name: "Bookings",
       path: "/admin/bookings",
       icon: "ri-file-list-line",
+    },
+    {
+      name: "Chat",
+      path: "/chat",
+      icon: "ri-message-2-line",
     },
     {
       name: "Logout",
