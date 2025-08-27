@@ -132,7 +132,7 @@ function BookNow() {
                 <Col span={12}>
                   <h1 className="text-lg font-bold">
                     <span className="text-blue-600 italic">Seats Left :</span>{" "}
-                    {bus.capacity - bus.seatsBooked.length}
+                    {bus.capacity - bus.seatsBooked.length - selectedSeats.length}
                   </h1>
                 </Col>
               </Row>
