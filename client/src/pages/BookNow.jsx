@@ -4,14 +4,15 @@ import { axiosInstance } from "../helpers/axiosInstance";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import { Row, Col, message } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
-import SeatSelection from "../components/SeatSelection";
 import StripeCheckout from "react-stripe-checkout";
 import { Helmet } from "react-helmet";
 import moment from "moment";
+import SeatSelection from "../components/SeatSelection";
+
 
 function BookNow() {
   const navigate = useNavigate();
-  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [selectedSeats, setSelectedSeats] = useState([]); 
   const params = useParams();
   const dispatch = useDispatch();
   const [bus, setBus] = useState(null);
@@ -104,7 +105,7 @@ function BookNow() {
                 </h1>
 
                 <h1 className="text-lg">
-                  <b className="text-blue-600 italic">Price :</b> DH {bus.price}{" "}
+                  <b className="text-blue-600 italic">Price :</b> € {bus.price}{" "}
                   /-
                 </h1>
                 <h1 className="text-lg">
@@ -136,7 +137,7 @@ function BookNow() {
                   {selectedSeats.join(", ")}
                 </h1>
                 <h1 className="text-xl mt-2 mb-3">
-                  <b className="text-blue-600 italic"> Price :</b> DH{" "}
+                  <b className="text-blue-600 italic"> Price :</b> € {" "}
                   {bus.price * selectedSeats.length}
                 </h1>
 
@@ -145,7 +146,7 @@ function BookNow() {
                   disabled={selectedSeats.length === 0}
                   token={onToken}
                   amount={bus.price * selectedSeats.length * 100}
-                  currency="MAD"
+                  currency="EUR"
                   stripeKey="pk_test_ZT7RmqCIjI0PqcpDF9jzOqAS"
                 >
                   <button
