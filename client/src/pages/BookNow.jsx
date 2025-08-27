@@ -9,10 +9,9 @@ import { Helmet } from "react-helmet";
 import moment from "moment";
 import SeatSelection from "../components/SeatSelection";
 
-
 function BookNow() {
   const navigate = useNavigate();
-  const [selectedSeats, setSelectedSeats] = useState([]); 
+  const [selectedSeats, setSelectedSeats] = useState([]);
   const params = useParams();
   const dispatch = useDispatch();
   const [bus, setBus] = useState(null);
@@ -81,6 +80,7 @@ function BookNow() {
   useEffect(() => {
     getBus();
   }, [getBus]);
+
   return (
     <>
       <Helmet>
@@ -98,46 +98,56 @@ function BookNow() {
               </h1>
               <hr className="border-black" />
 
-              <div className="flex flex-col gap-1 ">
+              <div className="flex flex-col gap-1">
                 <h1 className="text-lg">
                   <b className="text-blue-600 italic">Journey Date : </b>
-                  <span className="">{bus.journeyDate}</span>
+                  <span>{bus.journeyDate}</span>
                 </h1>
 
                 <h1 className="text-lg">
-                  <b className="text-blue-600 italic">Price :</b> € {bus.price}{" "}
-                  /-
+                  <b className="text-blue-600 italic">Price :</b> € {bus.price} /-
                 </h1>
+
                 <h1 className="text-lg">
-                  <b className="text-blue-600 italic">Departure Time</b> :{" "}
+                  <b className="text-blue-600 italic">Departure Time :</b>{" "}
                   {moment(bus.departure, "HH:mm").format("hh:mm A")}
                 </h1>
+
                 <h1 className="text-lg">
-                  <b className="text-blue-600 italic">Arrival Time</b> :{" "}
+                  <b className="text-blue-600 italic">Arrival Time :</b>{" "}
                   {moment(bus.arrival, "HH:mm").format("hh:mm A")}
                 </h1>
               </div>
+
               <hr className="border-black" />
 
-              <div className="flex w-60 flex-col ">
-                <h1 className="text-lg mt-2 font-bold">
-                  <span className="text-blue-600 italic">Capacity : </span>{" "}
-                  <p>{bus.capacity}</p>
-                </h1>
-                <h1 className="text-lg font-bold">
-                  <span className="text-blue-600 italic">Seats Left : </span>{" "}
-                  <p>{bus.capacity - bus.seatsBooked.length}</p>
-                </h1>
-              </div>
+              {/* Capacity & Seats Left */}
+              <Row gutter={[16, 16]} className="mt-2">
+                <Col span={12}>
+                  <h1 className="text-lg font-bold">
+                    <span className="text-blue-600 italic">Capacity :</span>{" "}
+                    {bus.capacity}
+                  </h1>
+                </Col>
+                <Col span={12}>
+                  <h1 className="text-lg font-bold">
+                    <span className="text-blue-600 italic">Seats Left :</span>{" "}
+                    {bus.capacity - bus.seatsBooked.length}
+                  </h1>
+                </Col>
+              </Row>
+
               <hr className="border-black" />
 
-              <div className="flex flex-col gap-2 w-48 ">
+              {/* Selected Seats & Price */}
+              <div className="mt-3">
                 <h1 className="text-xl">
-                  <b className="text-blue-600 italic">Selected Seats : </b>{" "}
-                  {selectedSeats.join(", ")}
+                  <b className="text-blue-600 italic">Selected Seats :</b>{" "}
+                  {selectedSeats.length > 0 ? selectedSeats.join(", ") : "None"}
                 </h1>
+
                 <h1 className="text-xl mt-2 mb-3">
-                  <b className="text-blue-600 italic"> Price :</b> € {" "}
+                  <b className="text-blue-600 italic">Price :</b> €{" "}
                   {bus.price * selectedSeats.length}
                 </h1>
 
@@ -161,6 +171,7 @@ function BookNow() {
                 </StripeCheckout>
               </div>
             </Col>
+
             <Col lg={12} xs={24} sm={24}>
               <SeatSelection
                 selectedSeats={selectedSeats}
