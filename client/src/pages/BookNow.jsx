@@ -4,10 +4,16 @@ import { axiosInstance } from "../helpers/axiosInstance";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import { Row, Col, message } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
-import StripeCheckout from "react-stripe-checkout";
 import { Helmet } from "react-helmet";
 import moment from "moment";
 import SeatSelection from "../components/SeatSelection";
+
+// Stripe
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import PaymentForm from "../components/PaymentForm";
+
+  const stripePromise = loadStripe("pk_test_51S1mfrFtZNvMqulyW4bLUF6gK3iwS3QVaOFpwcmf3VMI2TYi9CeGrVGqDLlsdMAeEGQB2RKU4jY3YF1FTNNcaGd200URefkIX3"); // public key
 
 function BookNow() {
   const navigate = useNavigate();
@@ -56,27 +62,6 @@ function BookNow() {
     }
   };
 
-  const onToken = async (token) => {
-    try {
-      dispatch(ShowLoading());
-      const response = await axiosInstance.post("/api/bookings/make-payment", {
-        token,
-        amount: selectedSeats.length * bus.price,
-      });
-
-      dispatch(HideLoading());
-      if (response.data.success) {
-        message.success(response.data.message);
-        bookNow(response.data.data.transactionId);
-      } else {
-        message.error(response.data.message);
-      }
-    } catch (error) {
-      dispatch(HideLoading());
-      message.error(error.message);
-    }
-  };
-
   useEffect(() => {
     getBus();
   }, [getBus]);
@@ -105,7 +90,8 @@ function BookNow() {
                 </h1>
 
                 <h1 className="text-lg">
-                  <b className="text-blue-600 italic">Price :</b> € {bus.price} /-
+                  <b className="text-blue-600 italic">Price :</b>{" "}
+                  {bus.price} € /-
                 </h1>
 
                 <h1 className="text-lg">
@@ -132,7 +118,9 @@ function BookNow() {
                 <Col span={12}>
                   <h1 className="text-lg font-bold">
                     <span className="text-blue-600 italic">Seats Left :</span>{" "}
-                    {bus.capacity - bus.seatsBooked.length - selectedSeats.length}
+                    {bus.capacity -
+                      bus.seatsBooked.length -
+                      selectedSeats.length}
                   </h1>
                 </Col>
               </Row>
@@ -143,32 +131,34 @@ function BookNow() {
               <div className="mt-3">
                 <h1 className="text-xl">
                   <b className="text-blue-600 italic">Selected Seats :</b>{" "}
-                  {selectedSeats.length > 0 ? selectedSeats.join(", ") : "None"}
+                  {selectedSeats.length > 0
+                    ? selectedSeats.join(", ")
+                    : "None"}
                 </h1>
 
                 <h1 className="text-xl mt-2 mb-3">
-                  <b className="text-blue-600 italic">Price :</b> €{" "}
-                  {bus.price * selectedSeats.length}
+                  <b className="text-blue-600 italic">Price :</b>{" "}
+                  {bus.price * selectedSeats.length} €
                 </h1>
 
-                <StripeCheckout
-                  billingAddress
-                  disabled={selectedSeats.length === 0}
-                  token={onToken}
-                  amount={bus.price * selectedSeats.length * 100}
-                  currency="EUR"
-                  stripeKey="pk_test_ZT7RmqCIjI0PqcpDF9jzOqAS"
-                >
+                {/* Payment Form */}
+                {selectedSeats.length > 0 ? (
+                  <Elements stripe={stripePromise}>
+                    <PaymentForm
+                      amount={bus.price * selectedSeats.length}
+                      onSuccess={(paymentId) => {
+                        bookNow(paymentId);
+                      }}
+                    />
+                  </Elements>
+                ) : (
                   <button
-                    className={`${
-                      selectedSeats.length === 0
-                        ? "animate-none cursor-not-allowed btn btn-primary py-2 px-5 rounded-full btn-disabled text-white"
-                        : "animate-bounce btn btn-primary py-2 px-5 rounded-full bg-blue-600 hover:bg-blue-800 hover:duration-300 text-white"
-                    }`}
+                    disabled
+                    className="cursor-not-allowed py-3 px-5 rounded-full bg-gray-400 text-white font-bold"
                   >
-                    Pay Now
+                    Select seats first
                   </button>
-                </StripeCheckout>
+                )}
               </div>
             </Col>
 

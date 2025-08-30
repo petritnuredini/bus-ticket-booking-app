@@ -37,6 +37,9 @@ app.use(
   require("./routes/internationalCitiesRoutes")
 );
 
+// 👉 Stripe Payment Routes
+app.use("/api/payments", require("./routes/paymentRoutes"));
+
 /**
  * Socket.IO Connection Management
  * Handles real-time communication between users and agents
@@ -108,6 +111,7 @@ app.set("io", io);
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 // Initialize PostgreSQL connection and database
 const initializeApp = async () => {
   try {
