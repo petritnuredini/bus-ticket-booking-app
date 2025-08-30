@@ -13,7 +13,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import PaymentForm from "../components/PaymentForm";
 
-const stripePromise = loadStripe("pk_test_ZT7RmqCIjI0PqcpDF9jzOqAS"); // public key
+const stripePromise = loadStripe("pk_test_51S1mfrFtZNvMqulyW4bLUF6gK3iwS3QVaOFpwcmf3VMI2TYi9CeGrVGqDLlsdMAeEGQB2RKU4jY3YF1FTNNcaGd200URefkIX3"); // public key
 
 function BookNow() {
   const navigate = useNavigate();
@@ -145,9 +145,10 @@ function BookNow() {
                 {selectedSeats.length > 0 ? (
                   <Elements stripe={stripePromise}>
                     <PaymentForm
+                      amount={bus.price * selectedSeats.length}
                       onSuccess={(paymentId) => {
                         console.log("Payment success:", paymentId);
-                        bookNow(paymentId); // thirr API bookNow pas pagesës
+                        bookNow(paymentId);
                       }}
                     />
                   </Elements>
