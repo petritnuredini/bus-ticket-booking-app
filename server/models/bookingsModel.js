@@ -5,24 +5,20 @@ const bookingSchema = new mongoose.Schema(
     bus: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "buses",
-      required: true,
+      require: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
-      required: true,
+      require: true,
     },
     seats: {
       type: Array,
-      required: true,
+      require: true,
     },
     transactionId: {
       type: String,
-      required: true,
-    },
-    amountPaid: {               // ✅ fusha e re për çmimin total
-      type: Number,
-      required: true,
+      require: true,
     },
   },
   {
