@@ -147,19 +147,6 @@ function Bookings() {
         <PageTitle title="Bookings" />
         <Table columns={columns} dataSource={bookings} />
 
-        {showPrintModal && (
-          <Modal
-            width={1000}
-            height={500}
-            title="Print Ticket"
-            onCancel={() => {
-              setShowPrintModal(false);
-              selectedBooking(null);
-            }}
-            open={showPrintModal}
-            okText="Print"
-            onOk={handlePrint}
-          >
             <div
               className="flex flex-col items-center justify-center bg-center bg-cover"
               ref={componentRef}
@@ -285,8 +272,8 @@ function Bookings() {
                 </div>
               </div>
             </div>
-          </Modal>
-        )}
+          
+      
       </div>
     </>
   );
