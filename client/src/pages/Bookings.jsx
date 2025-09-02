@@ -1,15 +1,13 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { axiosInstance } from "../helpers/axiosInstance";
-import { message, Table } from "antd";
+import { message, Table, Modal } from "antd";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import PageTitle from "../components/PageTitle";
 import moment from "moment";
-import { useReactToPrint } from "react-to-print";
 import { Helmet } from "react-helmet";
 
 function Bookings() {
-  const [selectedBooking, setSelectedBooking] = useState(null);
   const [bookings, setBookings] = useState([]);
   const dispatch = useDispatch();
 
@@ -47,7 +45,7 @@ function Bookings() {
       );
       dispatch(HideLoading());
       if (response.data.success) {
-        message.success(response.data.message);
+        message.success("Booking cancelled successfully!");
         getBookings();
       } else {
         message.error(response.data.message);
@@ -56,6 +54,17 @@ function Bookings() {
       dispatch(HideLoading());
       message.error(error.message);
     }
+  };
+
+  const confirmCancel = (record) => {
+    Modal.confirm({
+      title: "Are you sure you want to cancel this booking?",
+      content: `Bus: ${record.name} | Seats: ${record.seats.join(", ")}`,
+      okText: "Yes, Cancel",
+      okType: "danger",
+      cancelText: "No",
+      onOk: () => CancelBooking(record._id, record.user._id, record.bus._id),
+    });
   };
 
   const columns = [
@@ -98,22 +107,12 @@ function Bookings() {
       title: "Action",
       dataIndex: "action",
       render: (text, record) => (
-        <div className="flex gap-2">
-          <button
-            className="underline text-base text-green-500 cursor-pointer hover:text-green-700"
-            onClick={() => setSelectedBooking(record)}
-          >
-            View
-          </button>
-          <button
-            className="underline text-base text-red-500 cursor-pointer hover:text-red-700"
-            onClick={() =>
-              CancelBooking(record._id, record.user._id, record.bus._id)
-            }
-          >
-            Cancel
-          </button>
-        </div>
+        <button
+          className="underline text-base text-red-500 cursor-pointer hover:text-red-700"
+          onClick={() => confirmCancel(record)}
+        >
+          Cancel
+        </button>
       ),
     },
   ];
@@ -121,11 +120,6 @@ function Bookings() {
   useEffect(() => {
     getBookings();
   }, [getBookings]);
-
-  const componentRef = useRef();
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
 
   return (
     <>
@@ -136,87 +130,6 @@ function Bookings() {
       <div className="p-5">
         <PageTitle title="Bookings" />
         <Table columns={columns} dataSource={bookings} />
-
-        {selectedBooking && (
-          <div
-            className="flex flex-col items-center justify-center bg-center bg-cover mt-5"
-            ref={componentRef}
-          >
-            <div className="max-w-md w-full h-full mx-auto z-10 bg-blue-900 rounded-3xl">
-              <div className="flex flex-col">
-                <div className="bg-white relative drop-shadow-2xl rounded-3xl p-4 m-4">
-                  <div className="flex-auto justify-evenly">
-                    <div className="flex items-center justify-between">
-                      <h2 className="font-medium">{selectedBooking?.name}</h2>
-                      <div className="ml-auto font-bold text-blue-600">
-                        {selectedBooking?.user}
-                      </div>
-                    </div>
-
-                    <div className="border-dashed border-b-2 my-5"></div>
-
-                    <div className="flex items-center">
-                      <div className="flex flex-col">
-                        <div className="text-lg text-blue-800 font-bold">
-                          From
-                        </div>
-                        <div className="text-xs">{selectedBooking?.from}</div>
-                      </div>
-                      <div className="flex flex-col ml-auto">
-                        <div className="text-lg text-blue-800 font-bold">
-                          To
-                        </div>
-                        <div className="text-xs">{selectedBooking?.to}</div>
-                      </div>
-                    </div>
-
-                    <div className="border-dashed border-b-2 my-5 pt-5"></div>
-
-                    <div className="flex items-center mb-4 px-5">
-                      <div className="flex flex-col text-sm">
-                        <span>Depart Time</span>
-                        <div className="font-semibold">
-                          {moment(
-                            selectedBooking?.departure,
-                            "HH:mm"
-                          ).format("hh:mm A")}
-                        </div>
-                      </div>
-                      <div className="flex flex-col text-sm ml-auto">
-                        <span>Arrival Time</span>
-                        <div className="font-semibold">
-                          {moment(selectedBooking?.arrival, "HH:mm").format(
-                            "hh:mm A"
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="border-dashed border-b-2 my-5 pt-5"></div>
-
-                    <div className="flex items-center px-5 pt-3 text-sm">
-                      <div className="flex flex-col">
-                        <span>Price</span>
-                        <div className="font-semibold">
-                          {selectedBooking?.amountPaid} €
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col ml-auto">
-                        <span>Seats</span>
-                        <div className="font-semibold">
-                          {selectedBooking?.seats.join(", ")}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col py-5 justify-center text-sm "></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </>
   );

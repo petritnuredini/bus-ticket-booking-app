@@ -19,18 +19,32 @@ let transporter = nodemailer.createTransport({
 // book seat and send email to user with the booking details
 const BookSeat = async (req, res) => {
   try {
-    const newBooking = new Booking({
-      ...req.body, // spread operator to get all the data from the request body
-      user: req.params.userId,
-    });
-    const user = await User.findById(req.params.userId);
-    // res.json(user._id)
-    await newBooking.save();
-    const bus = await Bus.findById(req.body.bus); // get the bus from the request body
-    bus.seatsBooked = [...bus.seatsBooked, ...req.body.seats]; // add the booked seats to the bus seatsBooked array in the database
+    const bus = await Bus.findById(req.body.bus);
+    if (!bus) {
+      return res.status(404).send({ success: false, message: "Bus not found" });
+    }
 
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).send({ success: false, message: "User not found" });
+    }
+
+    // llogarit pagesën totale
+    const amountPaid = bus.price * req.body.seats.length;
+
+    const newBooking = new Booking({
+      ...req.body,
+      user: req.params.userId,
+      amountPaid, // 👉 fusha e re ruhet në DB
+    });
+
+    await newBooking.save();
+
+    // përditëso seatsBooked në bus
+    bus.seatsBooked = [...bus.seatsBooked, ...req.body.seats];
     await bus.save();
-    // send email to user with the booking details
+
+    // dërgo email
     let mailOptions = {
       from: process.env.EMAIL,
       to: user.email,
@@ -41,10 +55,11 @@ const BookSeat = async (req, res) => {
       Departure Time: ${moment(bus.departure, "HH:mm:ss").format("hh:mm A")}
       Arrival Time: ${moment(bus.arrival, "HH:mm:ss").format("hh:mm A")}
       Journey Date: ${bus.journeyDate}
-      Total Price: ${bus.price * req.body.seats.length} MAD
+      Total Price: ${amountPaid} MAD
       Thank you for choosing us! 
       `,
     };
+
     transporter.sendMail(mailOptions, (err, data) => {
       if (err) {
         console.log("Error Occurs", err);
@@ -52,6 +67,7 @@ const BookSeat = async (req, res) => {
         console.log("Email sent!!!");
       }
     });
+
     res.status(200).send({
       message: "Seat booked successfully",
       data: newBooking,
@@ -60,7 +76,6 @@ const BookSeat = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-
     res.status(500).send({
       message: "Booking failed",
       data: error,
@@ -115,16 +130,16 @@ const CancelBooking = async (req, res) => {
     if (!booking || !user || !bus) {
       res.status(404).send({
         message: "Booking not found",
-        data: error,
         success: false,
       });
     }
 
-    booking.remove();
+    await booking.remove();
     bus.seatsBooked = bus.seatsBooked.filter(
       (seat) => !booking.seats.includes(seat)
     );
     await bus.save();
+
     res.status(200).send({
       message: "Booking cancelled successfully",
       data: booking,
@@ -138,6 +153,7 @@ const CancelBooking = async (req, res) => {
     });
   }
 };
+
 const PayWithStripe = async (req, res) => {
   try {
     const { token, amount } = req.body;
@@ -169,9 +185,7 @@ const PayWithStripe = async (req, res) => {
     } else {
       res.status(500).send({
         message: "Payment failed",
-        data: error,
         success: false,
-        amount: payment.amount,
       });
     }
   } catch (error) {
@@ -182,6 +196,7 @@ const PayWithStripe = async (req, res) => {
     });
   }
 };
+
 module.exports = {
   BookSeat,
   GetAllBookings,
