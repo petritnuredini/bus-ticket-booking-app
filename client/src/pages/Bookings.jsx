@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { axiosInstance } from "../helpers/axiosInstance";
-import { message, Table, Modal } from "antd";
+import { message, Table } from "antd";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import PageTitle from "../components/PageTitle";
 import moment from "moment";
@@ -9,7 +9,6 @@ import { useReactToPrint } from "react-to-print";
 import { Helmet } from "react-helmet";
 
 function Bookings() {
-  const [showPrintModal, setShowPrintModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [bookings, setBookings] = useState([]);
   const dispatch = useDispatch();
@@ -18,8 +17,7 @@ function Bookings() {
     try {
       dispatch(ShowLoading());
       const response = await axiosInstance.get(
-        `/api/bookings/${localStorage.getItem("user_id")}`,
-        {}
+        `/api/bookings/${localStorage.getItem("user_id")}`
       );
       dispatch(HideLoading());
       if (response.data.success) {
@@ -41,18 +39,11 @@ function Bookings() {
     }
   }, [dispatch]);
 
-  const CancelBooking = async () => {
+  const CancelBooking = async (bookingId, userId, busId) => {
     try {
       dispatch(ShowLoading());
-      const res = await axiosInstance.get(
-        `/api/bookings/${localStorage.getItem("user_id")}`
-      );
-      const bus_id = res.data.data[0].bus._id;
-      const user_id = res.data.data[0].user._id;
-      const booking_id = res.data.data[0]._id;
       const response = await axiosInstance.delete(
-        `/api/bookings/${booking_id}/${user_id}/${bus_id}`,
-        {}
+        `/api/bookings/${bookingId}/${userId}/${busId}`
       );
       dispatch(HideLoading());
       if (response.data.success) {
@@ -101,7 +92,7 @@ function Bookings() {
     {
       title: "Price",
       key: "price",
-      render: (text, record) => <span>{record.amountPaid} €</span>, // ✅ tash vjen nga backend
+      render: (text, record) => <span>{record.amountPaid} €</span>,
     },
     {
       title: "Action",
@@ -110,18 +101,15 @@ function Bookings() {
         <div className="flex gap-2">
           <button
             className="underline text-base text-green-500 cursor-pointer hover:text-green-700"
-            onClick={() => {
-              setSelectedBooking(record);
-              setShowPrintModal(true);
-            }}
+            onClick={() => setSelectedBooking(record)}
           >
             View
           </button>
           <button
             className="underline text-base text-red-500 cursor-pointer hover:text-red-700"
-            onClick={() => {
-              CancelBooking();
-            }}
+            onClick={() =>
+              CancelBooking(record._id, record.user._id, record.bus._id)
+            }
           >
             Cancel
           </button>
@@ -149,46 +137,44 @@ function Bookings() {
         <PageTitle title="Bookings" />
         <Table columns={columns} dataSource={bookings} />
 
-        <div
-          className="flex flex-col items-center justify-center bg-center bg-cover"
-          ref={componentRef}
-        >
-          <div className="absolute bg-white opacity-80 inset-0 z-0"></div>
-          <div className="max-w-md w-full h-full mx-auto z-10 bg-blue-900 rounded-3xl">
-            <div className="flex flex-col">
-              <div className="bg-white relative drop-shadow-2xl  rounded-3xl p-4 m-4">
-                <div className="flex-none sm:flex">
+        {selectedBooking && (
+          <div
+            className="flex flex-col items-center justify-center bg-center bg-cover mt-5"
+            ref={componentRef}
+          >
+            <div className="max-w-md w-full h-full mx-auto z-10 bg-blue-900 rounded-3xl">
+              <div className="flex flex-col">
+                <div className="bg-white relative drop-shadow-2xl rounded-3xl p-4 m-4">
                   <div className="flex-auto justify-evenly">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center my-1">
-                        <h2 className="font-medium">
-                          {selectedBooking?.name}
-                        </h2>
-                      </div>
+                      <h2 className="font-medium">{selectedBooking?.name}</h2>
                       <div className="ml-auto font-bold text-blue-600">
                         {selectedBooking?.user}
                       </div>
                     </div>
+
                     <div className="border-dashed border-b-2 my-5"></div>
+
                     <div className="flex items-center">
                       <div className="flex flex-col">
-                        <div className="w-full flex-none text-lg text-blue-800 font-bold leading-none">
+                        <div className="text-lg text-blue-800 font-bold">
                           From
                         </div>
                         <div className="text-xs">{selectedBooking?.from}</div>
                       </div>
-                      <div className="flex flex-col ">
-                        <div className="w-full flex-none text-lg text-blue-800 font-bold leading-none">
+                      <div className="flex flex-col ml-auto">
+                        <div className="text-lg text-blue-800 font-bold">
                           To
                         </div>
                         <div className="text-xs">{selectedBooking?.to}</div>
                       </div>
                     </div>
+
                     <div className="border-dashed border-b-2 my-5 pt-5"></div>
 
                     <div className="flex items-center mb-4 px-5">
                       <div className="flex flex-col text-sm">
-                        <span className="">Depart Time</span>
+                        <span>Depart Time</span>
                         <div className="font-semibold">
                           {moment(
                             selectedBooking?.departure,
@@ -197,7 +183,7 @@ function Bookings() {
                         </div>
                       </div>
                       <div className="flex flex-col text-sm ml-auto">
-                        <span className="">Arrival Time</span>
+                        <span>Arrival Time</span>
                         <div className="font-semibold">
                           {moment(selectedBooking?.arrival, "HH:mm").format(
                             "hh:mm A"
@@ -210,29 +196,27 @@ function Bookings() {
 
                     <div className="flex items-center px-5 pt-3 text-sm">
                       <div className="flex flex-col">
-                        <span className="">Price</span>
+                        <span>Price</span>
                         <div className="font-semibold">
-                          {selectedBooking?.amountPaid} € {/* ✅ përdor amountPaid */}
+                          {selectedBooking?.amountPaid} €
                         </div>
                       </div>
 
                       <div className="flex flex-col ml-auto">
-                        <span className="">Seats</span>
+                        <span>Seats</span>
                         <div className="font-semibold">
                           {selectedBooking?.seats.join(", ")}
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-col py-5  justify-center text-sm ">
-                      <div className="barcode h-14 w-0 inline-block mt-4 relative left-auto"></div>
-                    </div>
+                    <div className="flex flex-col py-5 justify-center text-sm "></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );
