@@ -5,7 +5,7 @@ import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import { message } from "antd";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import logo from "../assets/img/bus_tickets_app.png";
+//import logo from "../assets/img/bus_tickets_app.png";
 import CitySelect from "../components/CitySelect";
 
 function DailyBusesView() {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
-function PaymentForm({ onSuccess }) {
+function PaymentForm({ amount, onSuccess }) {
   const stripe = useStripe();
   const elements = useElements();
   const [email, setEmail] = useState("");
@@ -13,6 +13,7 @@ function PaymentForm({ onSuccess }) {
 
     setLoading(true);
 
+    // 1. Krijo PaymentMethod nga Stripe
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card: elements.getElement(CardElement),
@@ -25,9 +26,30 @@ function PaymentForm({ onSuccess }) {
       return;
     }
 
-    console.log("Payment method:", paymentMethod);
+    try {
+      // 2. Thirr backend për të bërë pagesën
+      const response = await fetch("http://localhost:3001/api/payments/make-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount, // vjen nga BookNow.js (bus.price * selectedSeats.length)
+          paymentMethodId: paymentMethod.id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert("Payment successful 🎉");
+        onSuccess(paymentMethod.id);
+      } else {
+        alert("Payment failed: " + data.message);
+      }
+    } catch (err) {
+      alert("Error: " + err.message);
+    }
+
     setLoading(false);
-    onSuccess(paymentMethod.id);
   };
 
   return (
