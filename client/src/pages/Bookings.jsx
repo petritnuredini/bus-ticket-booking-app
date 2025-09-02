@@ -37,15 +37,15 @@ function Bookings() {
     }
   }, [dispatch]);
 
-  const CancelBooking = async (bookingId, userId, busId) => {
+  const CancelBooking = async (record) => {
     try {
       dispatch(ShowLoading());
       const response = await axiosInstance.delete(
-        `/api/bookings/${bookingId}/${userId}/${busId}`
+        `/api/bookings/${record._id}/${record.user._id}/${record.bus._id}`
       );
       dispatch(HideLoading());
       if (response.data.success) {
-        message.success("Booking cancelled successfully!");
+        message.success("Rezervimi u anulua me sukses!");
         getBookings();
       } else {
         message.error(response.data.message);
@@ -58,12 +58,12 @@ function Bookings() {
 
   const confirmCancel = (record) => {
     Modal.confirm({
-      title: "Are you sure you want to cancel this booking?",
-      content: `Bus: ${record.name} | Seats: ${record.seats.join(", ")}`,
-      okText: "Yes, Cancel",
+      title: "A jeni i sigurt që doni të anuloni këtë rezervim?",
+      content: `Autobusi: ${record.name} | Ulëset: ${record.seats.join(", ")}`,
+      okText: "Po, anulo",
       okType: "danger",
-      cancelText: "No",
-      onOk: () => CancelBooking(record._id, record.user._id, record.bus._id),
+      cancelText: "Jo",
+      onOk: () => CancelBooking(record),
     });
   };
 
