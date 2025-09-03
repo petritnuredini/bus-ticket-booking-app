@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/img/bus_tickets_app.png";
+//import logo from "../assets/img/bus_tickets_app.png";
 
 function DefaultLayout({ children }) {
   const navigate = useNavigate();
@@ -138,12 +138,12 @@ function DefaultLayout({ children }) {
       </div>
       <div className="w-full">
         <div className="bg-gray-800 flex flex-col justify-start items-center py-2">
-          <img
+          {/* <img
             onClick={() => navigate("/")}
             src={logo}
             alt="logo"
             className="w-30 h-20 rounded-full cursor-pointer"
-          />
+          /> */}
           <h1 className="text-white text-base mb-0 p-0 text-center ">
             <div className="mt-1">{user?.name} </div>
             <div className="mt-1">{user?.email}</div>
