@@ -11,6 +11,7 @@ function Bookings() {
   const [bookings, setBookings] = useState([]);
   const dispatch = useDispatch();
 
+  // Merr bookings nga API
   const getBookings = useCallback(async () => {
     try {
       dispatch(ShowLoading());
@@ -18,13 +19,16 @@ function Bookings() {
         `/api/bookings/${localStorage.getItem("user_id")}`
       );
       dispatch(HideLoading());
+
       if (response.data.success) {
         const mappedData = response.data.data.map((booking) => {
           return {
             ...booking,
             ...booking.bus,
             key: booking._id,
-            user: booking.user.name,
+            user: booking.user.name, // shfaq emrin
+          //  userId: booking.user._id,  ruaj id për Cancel
+           // busId: booking.bus._id,  ruaj id për Cancel
           };
         });
         setBookings(mappedData);
@@ -37,36 +41,40 @@ function Bookings() {
     }
   }, [dispatch]);
 
-  const CancelBooking = async (record) => {
-    try {
-      dispatch(ShowLoading());
-      const response = await axiosInstance.delete(
-        `/api/bookings/${record._id}/${record.user._id}/${record.bus._id}`
-      );
-      dispatch(HideLoading());
-      if (response.data.success) {
-        message.success("Rezervimi u anulua me sukses!");
-        getBookings();
-      } else {
-        message.error(response.data.message);
-      }
-    } catch (error) {
-      dispatch(HideLoading());
-      message.error(error.message);
-    }
-  };
+  // Anulo booking
+  // const CancelBooking = async (record) => {
+  //   try {
+  //     dispatch(ShowLoading());
+  //     const response = await axiosInstance.delete(
+  //       `/api/bookings/${record._id}/${record.userId}/${record.busId}`
+  //     );
+  //     dispatch(HideLoading());
 
-  const confirmCancel = (record) => {
-    Modal.confirm({
-      title: "A jeni i sigurt që doni të anuloni këtë rezervim?",
-      content: `Autobusi: ${record.name} | Ulëset: ${record.seats.join(", ")}`,
-      okText: "Po, anulo",
-      okType: "danger",
-      cancelText: "Jo",
-      onOk: () => CancelBooking(record),
-    });
-  };
+  //     if (response.data.success) {
+  //       message.success("Rezervimi u anulua me sukses!");
+  //       getBookings();
+  //     } else {
+  //       message.error(response.data.message);
+  //     }
+  //   } catch (error) {
+  //     dispatch(HideLoading());
+  //     message.error(error.message);
+  //   }
+  // };
 
+  // // Konfirmim para anulimit
+  // const confirmCancel = (record) => {
+  //   Modal.confirm({
+  //     title: "A jeni i sigurt që doni të anuloni këtë rezervim?",
+  //     content: `Autobusi: ${record.name} | Ulëset: ${record.seats.join(", ")}`,
+  //     okText: "Po, anulo",
+  //     okType: "danger",
+  //     cancelText: "Jo",
+  //     onOk: () => CancelBooking(record),
+  //   });
+  // };
+
+  // Kolonat e tabelës
   const columns = [
     {
       title: "Bus Name",
@@ -103,18 +111,7 @@ function Bookings() {
       key: "price",
       render: (text, record) => <span>{record.amountPaid} €</span>,
     },
-    {
-      title: "Action",
-      dataIndex: "action",
-      render: (text, record) => (
-        <button
-          className="underline text-base text-red-500 cursor-pointer hover:text-red-700"
-          onClick={() => confirmCancel(record)}
-        >
-          Cancel
-        </button>
-      ),
-    },
+    
   ];
 
   useEffect(() => {

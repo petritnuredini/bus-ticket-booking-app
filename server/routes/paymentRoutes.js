@@ -17,12 +17,16 @@ router.post("/make-payment", async (req, res) => {
       });
     }
 
-    // Krijo pagesën (PaymentIntent)
+    // Krijo PaymentIntent vetëm për kartela
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount * 100, // Stripe punon me cent (10€ = 1000)
       currency: "eur",
       payment_method: paymentMethodId,
       confirm: true,
+      automatic_payment_methods: {
+        enabled: true,
+        allow_redirects: "never", // 🚫 mos prano redirect
+      },
     });
 
     res.send({

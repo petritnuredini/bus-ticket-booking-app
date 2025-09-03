@@ -21,7 +21,7 @@ function PaymentForm({ amount, onSuccess }) {
     });
 
     if (error) {
-      alert(error.message);
+      console.log(error.message);
       setLoading(false);
       return;
     }
@@ -46,7 +46,7 @@ function PaymentForm({ amount, onSuccess }) {
         alert("Payment failed: " + data.message);
       }
     } catch (err) {
-      alert("Error: " + err.message);
+      console.log("Error: " + err.message);
     }
 
     setLoading(false);
