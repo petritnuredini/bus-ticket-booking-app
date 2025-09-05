@@ -24,6 +24,22 @@ const bookingSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    paymentDetails: {
+      email: {
+        type: String,
+        required: true
+      },
+      cardholderName: {
+        type: String,
+        required: true
+      },
+      cardDetails: {
+        brand: String,
+        last4: String,
+        exp_month: Number,
+        exp_year: Number
+      }
+    },
   },
   {
     timestamps: true,

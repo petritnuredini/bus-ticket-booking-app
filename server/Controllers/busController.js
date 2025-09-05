@@ -63,10 +63,15 @@ const GetAllBuses = async (req, res) => {
 // get all buses by from and to
 const GetBusesByFromAndTo = async (req, res) => {
   try {
+    // Handle both query parameters and body parameters
+    const from = req.query.from || req.body.from;
+    const to = req.query.to || req.body.to;
+    const journeyDate = req.query.journeyDate || req.body.journeyDate;
+    
     const buses = await Bus.find({
-      from: req.query.from,
-      to: req.query.to,
-      journeyDate: req.query.journeyDate,
+      from: from,
+      to: to,
+      journeyDate: journeyDate,
     });
 
     buses.forEach(async (bus) => {
@@ -83,7 +88,7 @@ const GetBusesByFromAndTo = async (req, res) => {
     });
 
     const filteredBuses = buses.filter(
-      (bus) => bus.status !== "Completed" && bus.status !== "Running"
+      (bus) => bus.status !== "Completed"
     );
     res.status(200).send({
       message: "Buses fetched successfully",

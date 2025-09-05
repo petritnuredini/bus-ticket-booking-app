@@ -1,14 +1,18 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { axiosInstance } from "../helpers/axiosInstance";
-import { message, Table, Modal } from "antd";
+import { message, Table, Modal, Button } from "antd";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import PageTitle from "../components/PageTitle";
 import moment from "moment";
 import { Helmet } from "react-helmet";
+import { DownloadOutlined } from "@ant-design/icons";
+import TicketDownload from "../components/TicketDownload";
 
 function Bookings() {
   const [bookings, setBookings] = useState([]);
+  const [showTicketModal, setShowTicketModal] = useState(false);
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
   const dispatch = useDispatch();
 
   // Merr bookings nga API
@@ -74,6 +78,12 @@ function Bookings() {
   //   });
   // };
 
+  // Handle ticket download
+  const handleDownloadTicket = (bookingId) => {
+    setSelectedBookingId(bookingId);
+    setShowTicketModal(true);
+  };
+
   // Kolonat e tabelës
   const columns = [
     {
@@ -111,7 +121,20 @@ function Bookings() {
       key: "price",
       render: (text, record) => <span>{record.amountPaid} €</span>,
     },
-    
+    {
+      title: "Actions",
+      key: "actions",
+      render: (text, record) => (
+        <Button
+          type="primary"
+          icon={<DownloadOutlined />}
+          onClick={() => handleDownloadTicket(record._id)}
+          size="small"
+        >
+          Download Ticket
+        </Button>
+      ),
+    },
   ];
 
   useEffect(() => {
@@ -128,6 +151,30 @@ function Bookings() {
         <PageTitle title="Bookings" />
         <Table columns={columns} dataSource={bookings} />
       </div>
+
+      {/* Ticket Download Modal */}
+      <Modal
+        title="🎫 Download Your Ticket"
+        open={showTicketModal}
+        onCancel={() => {
+          setShowTicketModal(false);
+          setSelectedBookingId(null);
+        }}
+        footer={null}
+        width="90%"
+        style={{ maxWidth: '900px' }}
+        centered
+      >
+        {selectedBookingId && (
+          <TicketDownload 
+            bookingId={selectedBookingId}
+            onClose={() => {
+              setShowTicketModal(false);
+              setSelectedBookingId(null);
+            }}
+          />
+        )}
+      </Modal>
     </>
   );
 }
