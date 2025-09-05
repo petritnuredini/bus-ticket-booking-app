@@ -79,80 +79,211 @@ function BookNow() {
   return (
     <>
       <Helmet>
-        <title>Book Now</title>
+        <title>Book Now - {bus?.name || 'Bus Booking'}</title>
       </Helmet>
-      <div>
-        {bus && (
-          <Row className="m-3 p-5" gutter={[30, 30]}>
-            <Col lg={12} xs={24} sm={24}>
-              <h1 className="font-extrabold text-2xl text-blue-500">
-                {bus.name}
+      
+      <div style={{ padding: '20px', backgroundColor: '#f8fafc', minHeight: '100vh' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          {bus && (
+            <div>
+              {/* Modern Blue Title */}
+              <h1 style={{ 
+                fontSize: '36px', 
+                textAlign: 'center', 
+                marginBottom: '30px', 
+                color: '#1e40af',
+                fontWeight: 'bold',
+                textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              }}>
+                Book Bus Ticket
               </h1>
-              <h1 className="text-2xl font-bold">
-                {bus.from} - {bus.to}
-              </h1>
-              <hr className="border-black" />
 
-              <div className="flex flex-col gap-1">
-                <h1 className="text-lg">
-                  <b className="text-blue-600 italic">Journey Date : </b>
-                  <span>{bus.journeyDate}</span>
-                </h1>
-
-                <h1 className="text-lg">
-                  <b className="text-blue-600 italic">Price :</b>{" "}
-                  {bus.price} € /-
-                </h1>
-
-                <h1 className="text-lg">
-                  <b className="text-blue-600 italic">Departure Time :</b>{" "}
-                  {moment(bus.departure, "HH:mm").format("hh:mm A")}
-                </h1>
-
-                <h1 className="text-lg">
-                  <b className="text-blue-600 italic">Arrival Time :</b>{" "}
-                  {moment(bus.arrival, "HH:mm").format("hh:mm A")}
-                </h1>
+              {/* Modern Bus Info Card */}
+              <div style={{ 
+                backgroundColor: 'white', 
+                padding: '25px', 
+                marginBottom: '30px',
+                border: '2px solid #3b82f6',
+                borderRadius: '12px',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+              }}>
+                <h2 style={{ 
+                  fontSize: '28px', 
+                  marginBottom: '20px', 
+                  color: '#1e40af',
+                  fontWeight: 'bold',
+                  textAlign: 'center'
+                }}>
+                  {bus.name}
+                </h2>
+                <div style={{ display: 'grid', gap: '15px' }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    padding: '12px', 
+                    backgroundColor: '#eff6ff',
+                    borderRadius: '8px',
+                    border: '1px solid #dbeafe'
+                  }}>
+                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#1e40af' }}>From:</span>
+                    <span style={{ fontSize: '18px', color: '#1f2937' }}>{bus.from}</span>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    padding: '12px', 
+                    backgroundColor: '#eff6ff',
+                    borderRadius: '8px',
+                    border: '1px solid #dbeafe'
+                  }}>
+                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#1e40af' }}>To:</span>
+                    <span style={{ fontSize: '18px', color: '#1f2937' }}>{bus.to}</span>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    padding: '12px', 
+                    backgroundColor: '#eff6ff',
+                    borderRadius: '8px',
+                    border: '1px solid #dbeafe'
+                  }}>
+                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#1e40af' }}>Date:</span>
+                    <span style={{ fontSize: '18px', color: '#1f2937' }}>{bus.journeyDate}</span>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    padding: '12px', 
+                    backgroundColor: '#eff6ff',
+                    borderRadius: '8px',
+                    border: '1px solid #dbeafe'
+                  }}>
+                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#1e40af' }}>Departure:</span>
+                    <span style={{ fontSize: '18px', color: '#1f2937' }}>{moment(bus.departure, "HH:mm").format("hh:mm A")}</span>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    padding: '12px', 
+                    backgroundColor: '#eff6ff',
+                    borderRadius: '8px',
+                    border: '1px solid #dbeafe'
+                  }}>
+                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#1e40af' }}>Arrival:</span>
+                    <span style={{ fontSize: '18px', color: '#1f2937' }}>{moment(bus.arrival, "HH:mm").format("hh:mm A")}</span>
+                  </div>
+                  <div style={{ 
+                    padding: '10px', 
+                    backgroundColor: '#dbeafe',
+                    borderRadius: '6px',
+                    border: '1px solid #3b82f6',
+                    textAlign: 'center'
+                  }}>
+                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#1e40af' }}>
+                      Price: {bus.price} € per seat
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <hr className="border-black" />
+              {/* Modern Seat Selection */}
+              <div style={{ 
+                backgroundColor: 'white',
+                padding: '25px',
+                marginBottom: '30px',
+                border: '2px solid #3b82f6',
+                borderRadius: '12px',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+              }}>
+                <h2 style={{ 
+                  fontSize: '28px', 
+                  marginBottom: '20px', 
+                  color: '#1e40af',
+                  fontWeight: 'bold',
+                  textAlign: 'center'
+                }}>
+                  Choose Your Seats
+                </h2>
+                <SeatSelection
+                  selectedSeats={selectedSeats}
+                  setSelectedSeats={setSelectedSeats}
+                  bus={bus}
+                />
+              </div>
 
-              {/* Capacity & Seats Left */}
-              <Row gutter={[16, 16]} className="mt-2">
-                <Col span={12}>
-                  <h1 className="text-lg font-bold">
-                    <span className="text-blue-600 italic">Capacity :</span>{" "}
-                    {bus.capacity}
-                  </h1>
-                </Col>
-                <Col span={12}>
-                  <h1 className="text-lg font-bold">
-                    <span className="text-blue-600 italic">Seats Left :</span>{" "}
-                    {bus.capacity -
-                      bus.seatsBooked.length -
-                      selectedSeats.length}
-                  </h1>
-                </Col>
-              </Row>
+              {/* Modern Booking Summary */}
+              {selectedSeats.length > 0 && (
+                <div style={{ 
+                  backgroundColor: 'white', 
+                  padding: '25px', 
+                  marginBottom: '30px',
+                  border: '2px solid #10b981',
+                  borderRadius: '12px',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                }}>
+                  <h2 style={{ 
+                    fontSize: '28px', 
+                    marginBottom: '20px', 
+                    color: '#1e40af',
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                  }}>
+                    Your Booking
+                  </h2>
+                  <div style={{ display: 'grid', gap: '15px' }}>
+                    <div style={{ 
+                      padding: '15px', 
+                      backgroundColor: '#f0fdf4',
+                      borderRadius: '8px',
+                      border: '1px solid #bbf7d0'
+                    }}>
+                      <p style={{ fontSize: '18px', margin: '0', color: '#1f2937' }}>
+                        <strong style={{ color: '#1e40af' }}>Selected Seats:</strong> {selectedSeats.join(', ')}
+                      </p>
+                    </div>
+                    <div style={{ 
+                      padding: '15px', 
+                      backgroundColor: '#f0fdf4',
+                      borderRadius: '8px',
+                      border: '1px solid #bbf7d0'
+                    }}>
+                      <p style={{ fontSize: '18px', margin: '0', color: '#1f2937' }}>
+                        <strong style={{ color: '#1e40af' }}>Number of Seats:</strong> {selectedSeats.length}
+                      </p>
+                    </div>
+                    <div style={{ 
+                      padding: '12px', 
+                      backgroundColor: '#dbeafe',
+                      borderRadius: '6px',
+                      border: '1px solid #3b82f6',
+                      textAlign: 'center'
+                    }}>
+                      <p style={{ fontSize: '20px', margin: '0', color: '#1e40af', fontWeight: 'bold' }}>
+                        Total Price: {bus.price * selectedSeats.length} €
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-              <hr className="border-black" />
-
-              {/* Selected Seats & Price */}
-              <div className="mt-3">
-                <h1 className="text-xl">
-                  <b className="text-blue-600 italic">Selected Seats :</b>{" "}
-                  {selectedSeats.length > 0
-                    ? selectedSeats.join(", ")
-                    : "None"}
-                </h1>
-
-                <h1 className="text-xl mt-2 mb-3">
-                  <b className="text-blue-600 italic">Price :</b>{" "}
-                  {bus.price * selectedSeats.length} €
-                </h1>
-
-                {/* Payment Form */}
-                {selectedSeats.length > 0 ? (
+              {/* Modern Payment */}
+              {selectedSeats.length > 0 ? (
+                <div style={{ 
+                  backgroundColor: 'white', 
+                  padding: '25px',
+                  border: '2px solid #3b82f6',
+                  borderRadius: '12px',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                }}>
+                  <h2 style={{ 
+                    fontSize: '28px', 
+                    marginBottom: '20px', 
+                    color: '#1e40af',
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                  }}>
+                    Payment
+                  </h2>
                   <Elements stripe={stripePromise}>
                     <PaymentForm
                       amount={bus.price * selectedSeats.length}
@@ -161,26 +292,24 @@ function BookNow() {
                       }}
                     />
                   </Elements>
-                ) : (
-                  <button
-                    disabled
-                    className="cursor-not-allowed py-3 px-5 rounded-full bg-gray-400 text-white font-bold"
-                  >
-                    Select seats first
-                  </button>
-                )}
-              </div>
-            </Col>
-
-            <Col lg={12} xs={24} sm={24}>
-              <SeatSelection
-                selectedSeats={selectedSeats}
-                setSelectedSeats={setSelectedSeats}
-                bus={bus}
-              />
-            </Col>
-          </Row>
-        )}
+                </div>
+              ) : (
+                <div style={{ 
+                  backgroundColor: 'white', 
+                  padding: '25px',
+                  border: '2px solid #6b7280',
+                  borderRadius: '12px',
+                  textAlign: 'center',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                }}>
+                  <p style={{ fontSize: '20px', color: '#6b7280', margin: '0' }}>
+                    Please select seats first to continue with payment
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Ticket Download Modal */}

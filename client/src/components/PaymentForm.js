@@ -75,45 +75,180 @@ function PaymentForm({ amount, onSuccess }) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col gap-4 p-5 border rounded-xl shadow-lg bg-white"
-      style={{ maxWidth: 400 }}
-    >
-      {/* Email Field */}
-      <input
-        type="email"
-        placeholder="Email Address"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        className="border px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
+    <div>
+      <form onSubmit={handleSubmit}>
+        {/* Email Field */}
+        <div style={{ marginBottom: '25px' }}>
+          <label style={{ 
+            display: 'block', 
+            fontSize: '18px', 
+            fontWeight: 'bold', 
+            marginBottom: '8px',
+            color: '#1e40af'
+          }}>
+            Email Address
+          </label>
+          <input
+            type="email"
+            placeholder="your.email@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={{
+              width: '100%',
+              padding: '12px',
+              fontSize: '16px',
+              border: '2px solid #dbeafe',
+              borderRadius: '8px',
+              backgroundColor: '#f8fafc',
+              color: '#1f2937',
+              transition: 'all 0.2s ease'
+            }}
+            onFocus={(e) => {
+              e.target.style.borderColor = '#3b82f6';
+              e.target.style.backgroundColor = 'white';
+            }}
+            onBlur={(e) => {
+              e.target.style.borderColor = '#dbeafe';
+              e.target.style.backgroundColor = '#f8fafc';
+            }}
+          />
+        </div>
 
-      {/* Cardholder Name Field */}
-      <input
-        type="text"
-        placeholder="Cardholder Name"
-        value={cardholderName}
-        onChange={(e) => setCardholderName(e.target.value)}
-        required
-        className="border px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
+        {/* Cardholder Name Field */}
+        <div style={{ marginBottom: '25px' }}>
+          <label style={{ 
+            display: 'block', 
+            fontSize: '18px', 
+            fontWeight: 'bold', 
+            marginBottom: '8px',
+            color: '#1e40af'
+          }}>
+            Cardholder Name
+          </label>
+          <input
+            type="text"
+            placeholder="John Doe"
+            value={cardholderName}
+            onChange={(e) => setCardholderName(e.target.value)}
+            required
+            style={{
+              width: '100%',
+              padding: '12px',
+              fontSize: '16px',
+              border: '2px solid #dbeafe',
+              borderRadius: '8px',
+              backgroundColor: '#f8fafc',
+              color: '#1f2937',
+              transition: 'all 0.2s ease'
+            }}
+            onFocus={(e) => {
+              e.target.style.borderColor = '#3b82f6';
+              e.target.style.backgroundColor = 'white';
+            }}
+            onBlur={(e) => {
+              e.target.style.borderColor = '#dbeafe';
+              e.target.style.backgroundColor = '#f8fafc';
+            }}
+          />
+        </div>
 
-      {/* Card Field */}
-      <div className="border px-3 py-2 rounded-lg">
-        <CardElement options={{ style: { base: { fontSize: "16px" } } }} />
-      </div>
+        {/* Card Field */}
+        <div style={{ marginBottom: '25px' }}>
+          <label style={{ 
+            display: 'block', 
+            fontSize: '18px', 
+            fontWeight: 'bold', 
+            marginBottom: '8px',
+            color: '#1e40af'
+          }}>
+            Card Details
+          </label>
+          <div style={{
+            padding: '12px',
+            border: '2px solid #dbeafe',
+            borderRadius: '8px',
+            backgroundColor: '#f8fafc',
+            transition: 'all 0.2s ease'
+          }}>
+            <CardElement 
+              options={{ 
+                style: { 
+                  base: { 
+                    fontSize: "16px",
+                    color: "#1f2937",
+                    fontFamily: "system-ui, sans-serif"
+                  },
+                  invalid: {
+                    color: "#ef4444"
+                  }
+                },
+                hidePostalCode: true
+              }} 
+            />
+          </div>
+        </div>
 
-      {/* Pay Button */}
-      <button
-        type="submit"
-        disabled={!stripe || loading}
-        className="py-3 px-5 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold transition"
-      >
-        {loading ? "Processing..." : "Pay Now"}
-      </button>
-    </form>
+        {/* Modern Blue Pay Button */}
+        <button
+          type="submit"
+          disabled={!stripe || loading}
+          style={{
+            width: '100%',
+            padding: '12px',
+            backgroundColor: loading ? '#9ca3af' : '#3b82f6',
+            color: 'white',
+            fontSize: '18px',
+            fontWeight: 'bold',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            boxShadow: loading ? 'none' : '0 2px 4px rgba(59, 130, 246, 0.3)',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            if (!loading) {
+              e.target.style.backgroundColor = '#1e40af';
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 6px 12px rgba(59, 130, 246, 0.4)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!loading) {
+              e.target.style.backgroundColor = '#3b82f6';
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = '0 4px 8px rgba(59, 130, 246, 0.3)';
+            }
+          }}
+        >
+          {loading ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+              <div style={{
+                width: '20px',
+                height: '20px',
+                border: '2px solid white',
+                borderTop: '2px solid transparent',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite'
+              }}></div>
+              Processing...
+            </div>
+          ) : (
+            `Pay ${amount} €`
+          )}
+        </button>
+
+      </form>
+
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
+    </div>
   );
 }
 

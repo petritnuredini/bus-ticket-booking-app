@@ -71,6 +71,19 @@ const TicketDownload = ({ bookingId, onClose }) => {
   const printTicket = () => {
     const ticketElement = document.getElementById('ticket-content');
     const printWindow = window.open('', '_blank');
+    
+    // Get the QR code element and convert it to base64
+    const qrElement = ticketElement?.querySelector('svg');
+    let qrCodeDataUrl = '';
+    
+    if (qrElement) {
+      const svgData = new XMLSerializer().serializeToString(qrElement);
+      qrCodeDataUrl = 'data:image/svg+xml;base64,' + btoa(svgData);
+    } else {
+      // Fallback: create a simple text-based QR placeholder
+      qrCodeDataUrl = '';
+    }
+    
     printWindow.document.write(`
       <html>
         <head>
@@ -90,6 +103,7 @@ const TicketDownload = ({ bookingId, onClose }) => {
               border-radius: 20px;
               box-shadow: 0 20px 40px rgba(0,0,0,0.15);
               overflow: hidden;
+              page-break-inside: avoid;
             }
             .ticket-header {
               background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
@@ -121,6 +135,7 @@ const TicketDownload = ({ bookingId, onClose }) => {
               padding: 30px;
               border-radius: 15px;
               border: 2px dashed #3b82f6;
+              page-break-inside: avoid;
             }
             .qr-container {
               display: inline-block;
@@ -128,6 +143,20 @@ const TicketDownload = ({ bookingId, onClose }) => {
               background: white;
               border-radius: 15px;
               box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            }
+            .qr-container svg {
+              display: block !important;
+              width: 180px !important;
+              height: 180px !important;
+              max-width: 180px !important;
+              max-height: 180px !important;
+            }
+            .qr-container canvas {
+              display: block !important;
+              width: 180px !important;
+              height: 180px !important;
+              max-width: 180px !important;
+              max-height: 180px !important;
             }
             .details-grid {
               display: grid;
@@ -201,6 +230,7 @@ const TicketDownload = ({ bookingId, onClose }) => {
               background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
               border-radius: 15px;
               color: white;
+              page-break-inside: avoid;
             }
             .footer-grid {
               display: grid;
@@ -208,6 +238,23 @@ const TicketDownload = ({ bookingId, onClose }) => {
               gap: 15px;
               font-size: 14px;
               line-height: 1.6;
+            }
+            .action-buttons {
+              display: none !important;
+            }
+            @media print {
+              .action-buttons {
+                display: none !important;
+              }
+              body {
+                margin: 0;
+                padding: 0;
+              }
+              .ticket-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+              }
+            }
             }
             @media print {
               body { background: white; }
@@ -217,7 +264,129 @@ const TicketDownload = ({ bookingId, onClose }) => {
         </head>
         <body>
           <div class="ticket-container">
-            ${ticketElement.innerHTML}
+            <div class="ticket-header">
+              <h1>🚌 BUS TICKET</h1>
+              <div class="ticket-number">#${ticket.ticketNumber}</div>
+            </div>
+            
+            <div class="ticket-content">
+              <div class="qr-section">
+                ${qrCodeDataUrl ? `<img src="${qrCodeDataUrl}" alt="QR Code" style="width: 180px; height: 180px; display: block; margin: 0 auto;">` : `
+                  <div style="width: 180px; height: 180px; background: #f8f9fa; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed #3b82f6; border-radius: 8px;">
+                    <div style="font-size: 24px; margin-bottom: 8px;">📱</div>
+                    <div style="font-size: 12px; color: #3b82f6; text-align: center; font-weight: 500;">QR Code</div>
+                    <div style="font-size: 10px; color: #666; text-align: center; margin-top: 4px;">${ticket.ticketNumber}</div>
+                  </div>
+                `}
+                <p style="margin-top: 15px; color: #2563eb; font-weight: 500;">📱 Scan QR code for validation</p>
+              </div>
+              
+              <div class="details-grid">
+                <div class="detail-card">
+                  <h3 class="card-title">👤 Passenger Details</h3>
+                  <div class="detail-row">
+                    <span class="detail-label">Name:</span>
+                    <span class="detail-value">${ticket.passengerName}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Email:</span>
+                    <span class="detail-value">${ticket.passengerEmail}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Booking Date:</span>
+                    <span class="detail-value">${new Date(ticket.bookingDate).toLocaleDateString()}</span>
+                  </div>
+                </div>
+                
+                <div class="detail-card">
+                  <h3 class="card-title">🚌 Journey Details</h3>
+                  <div class="detail-row">
+                    <span class="detail-label">Route:</span>
+                    <span class="detail-value">${ticket.busDetails.from} → ${ticket.busDetails.to}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Departure:</span>
+                    <span class="detail-value">${ticket.busDetails.departureTime ? new Date(ticket.busDetails.departureTime).toLocaleString() : 'N/A'}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Arrival:</span>
+                    <span class="detail-value">${ticket.busDetails.arrivalTime ? new Date(ticket.busDetails.arrivalTime).toLocaleString() : 'N/A'}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Bus:</span>
+                    <span class="detail-value">${ticket.busDetails.busNumber} ${ticket.busDetails.busType ? `(${ticket.busDetails.busType})` : ''}</span>
+                  </div>
+                </div>
+                
+                <div class="detail-card">
+                  <h3 class="card-title">🪑 Seat Information</h3>
+                  <div class="detail-row">
+                    <span class="detail-label">Seats:</span>
+                    <span class="badge">${ticket.seatNumbers.join(', ')}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Total Seats:</span>
+                    <span class="badge badge-success">${ticket.seatNumbers.length}</span>
+                  </div>
+                </div>
+                
+                <div class="detail-card">
+                  <h3 class="card-title">💰 Payment Details</h3>
+                  <div class="detail-row">
+                    <span class="detail-label">Total Amount:</span>
+                    <span class="detail-value" style="color: #28a745; font-weight: bold; font-size: 18px;">${ticket.totalAmount} MAD</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="badge ${ticket.status === 'active' ? 'badge-success' : ''}">${ticket.status.toUpperCase()}</span>
+                  </div>
+                </div>
+              </div>
+              
+              ${ticket.paymentDetails ? `
+                <div class="payment-section">
+                  <h3 class="card-title">💳 Payment Information</h3>
+                  <div class="payment-grid">
+                    <div class="payment-card">
+                      <h4>Cardholder Details</h4>
+                      <div class="detail-row">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value">${ticket.paymentDetails.cardholderName}</span>
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">${ticket.paymentDetails.email}</span>
+                      </div>
+                    </div>
+                    <div class="payment-card">
+                      <h4>Card Details</h4>
+                      <div class="detail-row">
+                        <span class="detail-label">Type:</span>
+                        <span class="badge">${ticket.paymentDetails.cardDetails?.brand?.toUpperCase() || 'N/A'}</span>
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Number:</span>
+                        <span class="detail-value">**** **** **** ${ticket.paymentDetails.cardDetails?.last4 || '****'}</span>
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Expires:</span>
+                        <span class="detail-value">${ticket.paymentDetails.cardDetails?.exp_month || '**'}/${ticket.paymentDetails.cardDetails?.exp_year || '****'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ` : ''}
+              
+              <div class="footer">
+                <h4 style="margin: 0 0 20px 0; font-size: 18px;">Important Instructions</h4>
+                <div class="footer-grid">
+                  <div>⏰ Arrive 15 minutes early</div>
+                  <div>🎫 Present ticket when boarding</div>
+                  <div>📱 Keep ticket safe</div>
+                  <div>📞 Contact support if needed</div>
+                </div>
+              </div>
+            </div>
           </div>
         </body>
       </html>
@@ -267,15 +436,19 @@ const TicketDownload = ({ bookingId, onClose }) => {
         <div className="p-10">
           <div className="text-center mb-10 bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl border-2 border-dashed border-blue-500">
             <div className="inline-block p-5 bg-white rounded-2xl shadow-lg">
-              <QRCode 
-                value={JSON.stringify({
-                  ticketNumber: ticket.ticketNumber,
-                  bookingId: ticket.bookingId,
-                  passengerName: ticket.passengerName
-                })}
-                size={180}
-                className="border-0"
-              />
+              <div style={{ width: '180px', height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+                <QRCode 
+                  value={`${ticket.ticketNumber}|${ticket.bookingId}|${ticket.passengerName}`}
+                  size={180}
+                  level="M"
+                  includeMargin={false}
+                  style={{ 
+                    display: 'block',
+                    width: '180px',
+                    height: '180px'
+                  }}
+                />
+              </div>
             </div>
             <p className="mt-4 text-sm text-blue-600 font-medium">
               📱 Scan QR code for validation
@@ -317,22 +490,28 @@ const TicketDownload = ({ bookingId, onClose }) => {
                     {ticket.busDetails.from} → {ticket.busDetails.to}
                   </span>
                 </div>
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="font-semibold text-gray-600">Departure:</span> 
-                  <span className="text-gray-900 font-medium">
-                    {new Date(ticket.busDetails.departureTime).toLocaleString()}
-                  </span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="font-semibold text-gray-600">Arrival:</span> 
-                  <span className="text-gray-900 font-medium">
-                    {new Date(ticket.busDetails.arrivalTime).toLocaleString()}
-                  </span>
-                </div>
+                                    <div className="flex justify-between py-2 border-b border-gray-100">
+                      <span className="font-semibold text-gray-600">Departure:</span>
+                      <span className="text-gray-900 font-medium">
+                        {ticket.busDetails.departureTime ? 
+                          new Date(ticket.busDetails.departureTime).toLocaleString() : 
+                          'N/A'
+                        }
+                      </span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-gray-100">
+                      <span className="font-semibold text-gray-600">Arrival:</span>
+                      <span className="text-gray-900 font-medium">
+                        {ticket.busDetails.arrivalTime ? 
+                          new Date(ticket.busDetails.arrivalTime).toLocaleString() : 
+                          'N/A'
+                        }
+                      </span>
+                    </div>
                 <div className="flex justify-between py-2">
                   <span className="font-semibold text-gray-600">Bus:</span> 
                   <span className="text-gray-900 font-medium">
-                    {ticket.busDetails.busNumber} ({ticket.busDetails.busType})
+                    {ticket.busDetails.busNumber} {ticket.busDetails.busType ? `(${ticket.busDetails.busType})` : ''}
                   </span>
                 </div>
               </div>
@@ -447,33 +626,33 @@ const TicketDownload = ({ bookingId, onClose }) => {
         </div>
       </div>
 
-      {/* Enhanced Action Buttons */}
-      <div className="text-center mt-8 flex justify-center gap-4 flex-wrap">
-        <Button 
-          type="primary" 
-          icon={<DownloadOutlined />} 
-          onClick={downloadTicket}
-          size="large"
-          className="bg-gradient-to-r from-blue-500 to-blue-600 border-0 rounded-full px-8 py-2 h-auto text-base font-semibold shadow-lg hover:shadow-xl transition-shadow"
-        >
-          Download PDF
-        </Button>
-        <Button 
-          icon={<PrinterOutlined />} 
-          onClick={printTicket}
-          size="large"
-          className="rounded-full px-8 py-2 h-auto text-base font-semibold border-2 border-blue-500 text-blue-500 hover:bg-blue-50"
-        >
-          Print Ticket
-        </Button>
-        <Button 
-          onClick={onClose} 
-          size="large"
-          className="rounded-full px-8 py-2 h-auto text-base font-semibold"
-        >
-          Close
-        </Button>
-      </div>
+              {/* Enhanced Action Buttons */}
+        <div className="action-buttons text-center mt-8 flex justify-center gap-4 flex-wrap">
+          <Button 
+            type="primary" 
+            icon={<DownloadOutlined />} 
+            onClick={downloadTicket}
+            size="large"
+            className="bg-gradient-to-r from-blue-500 to-blue-600 border-0 rounded-full px-8 py-2 h-auto text-base font-semibold shadow-lg hover:shadow-xl transition-shadow"
+          >
+            Download PDF
+          </Button>
+          <Button 
+            icon={<PrinterOutlined />} 
+            onClick={printTicket}
+            size="large"
+            className="rounded-full px-8 py-2 h-auto text-base font-semibold border-2 border-blue-500 text-blue-500 hover:bg-blue-50"
+          >
+            Print Ticket
+          </Button>
+          <Button 
+            onClick={onClose}
+            size="large"
+            className="rounded-full px-8 py-2 h-auto text-base font-semibold"
+          >
+            Close
+          </Button>
+        </div>
     </div>
   );
 };
