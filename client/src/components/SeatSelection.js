@@ -151,12 +151,12 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
         borderRadius: '12px',
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
       }}>
-        <p style={{ fontSize: '18px', color: '#1e40af', margin: '0', fontWeight: '500' }}>
+        <div style={{ fontSize: '18px', color: '#1e40af', margin: '0', fontWeight: '500' }}>
           {selectedSeats.length > 0 ? (
             <>
-              <strong style={{ color: '#1e40af', fontSize: '20px' }}>
+              <div style={{ color: '#1e40af', fontSize: '20px', fontWeight: 'bold' }}>
                 {selectedSeats.length} seat{selectedSeats.length > 1 ? 's' : ''} selected
-              </strong>
+              </div>
               {selectedSeats.length >= 5 && (
                 <div style={{ color: '#ef4444', fontSize: '16px', marginTop: '8px', fontWeight: 'bold' }}>
                   Maximum 5 seats allowed
@@ -166,7 +166,7 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
           ) : (
             <span style={{ fontSize: '18px' }}>Click on seats to select them</span>
           )}
-        </p>
+        </div>
       </div>
     </div>
   );

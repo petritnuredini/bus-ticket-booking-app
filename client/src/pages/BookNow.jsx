@@ -284,7 +284,7 @@ function BookNow() {
                   }}>
                     Payment
                   </h2>
-                  <Elements stripe={stripePromise}>
+                  <Elements stripe={stripePromise} key="payment-elements">
                     <PaymentForm
                       amount={bus.price * selectedSeats.length}
                       onSuccess={(paymentData) => {
