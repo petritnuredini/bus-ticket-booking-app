@@ -15,7 +15,7 @@ export const ChatProvider = ({ children }) => {
 
   useEffect(() => {
     // Initialize Socket.IO connection to the backend server
-    const newSocket = io("http://localhost:3004", {
+    const newSocket = io("http://localhost:3001", {
       transports: ["websocket", "polling"],
     });
 

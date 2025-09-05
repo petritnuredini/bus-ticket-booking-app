@@ -2,11 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { axiosInstance } from "../helpers/axiosInstance";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
-import { Row, Col, message } from "antd";
+import { Row, Col, message, Modal } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import moment from "moment";
 import SeatSelection from "../components/SeatSelection";
+import TicketDownload from "../components/TicketDownload";
 
 // Stripe
 import { Elements } from "@stripe/react-stripe-js";
@@ -21,6 +22,8 @@ function BookNow() {
   const params = useParams();
   const dispatch = useDispatch();
   const [bus, setBus] = useState(null);
+  const [showTicketModal, setShowTicketModal] = useState(false);
+  const [bookingId, setBookingId] = useState(null);
 
   const getBus = useCallback(async () => {
     try {
@@ -38,7 +41,7 @@ function BookNow() {
     }
   }, [dispatch, params.id]);
 
-  const bookNow = async (transactionId) => {
+  const bookNow = async (paymentData) => {
     try {
       dispatch(ShowLoading());
       const response = await axiosInstance.post(
@@ -46,13 +49,20 @@ function BookNow() {
         {
           bus: bus._id,
           seats: selectedSeats,
-          transactionId,
+          transactionId: paymentData.paymentMethodId,
+          paymentDetails: {
+            email: paymentData.email,
+            cardholderName: paymentData.cardholderName,
+            cardDetails: paymentData.cardDetails
+          }
         }
       );
       dispatch(HideLoading());
       if (response.data.success) {
         message.success(response.data.message);
-        navigate("/bookings");
+        // Show ticket download modal instead of navigating away
+        setBookingId(response.data.data._id);
+        setShowTicketModal(true);
       } else {
         message.error(response.data.message);
       }
@@ -146,8 +156,8 @@ function BookNow() {
                   <Elements stripe={stripePromise}>
                     <PaymentForm
                       amount={bus.price * selectedSeats.length}
-                      onSuccess={(paymentId) => {
-                        bookNow(paymentId);
+                      onSuccess={(paymentData) => {
+                        bookNow(paymentData);
                       }}
                     />
                   </Elements>
@@ -172,6 +182,30 @@ function BookNow() {
           </Row>
         )}
       </div>
+
+      {/* Ticket Download Modal */}
+      <Modal
+        title="🎫 Your Ticket is Ready!"
+        open={showTicketModal}
+        onCancel={() => {
+          setShowTicketModal(false);
+          navigate("/bookings");
+        }}
+        footer={null}
+        width="90%"
+        style={{ maxWidth: '900px' }}
+        centered
+      >
+        {bookingId && (
+          <TicketDownload 
+            bookingId={bookingId}
+            onClose={() => {
+              setShowTicketModal(false);
+              navigate("/bookings");
+            }}
+          />
+        )}
+      </Modal>
     </>
   );
 }

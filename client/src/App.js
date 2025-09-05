@@ -27,6 +27,7 @@ const PasswordResetSuccess = lazy(() => import("./pages/PasswordResetSuccess"));
 const ChatPage = lazy(() => import("./pages/ChatPage"));
 const AgentLoginPage = lazy(() => import("./pages/AgentLoginPage"));
 const AgentDashboardPage = lazy(() => import("./pages/AgentDashboardPage"));
+const AdminTicketValidator = lazy(() => import("./pages/Admin/AdminTicketValidator"));
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
@@ -152,6 +153,15 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AdminUsers />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin/ticket-validator"
+                element={
+                  <ProtectedRoute>
+                    <AdminTicketValidator />
                   </ProtectedRoute>
                 }
               />

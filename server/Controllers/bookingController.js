@@ -36,6 +36,11 @@ const BookSeat = async (req, res) => {
       ...req.body,
       user: req.params.userId,
       amountPaid, // 👉 fusha e re ruhet në DB
+      paymentDetails: req.body.paymentDetails || {
+        email: req.body.email || 'N/A',
+        cardholderName: req.body.cardholderName || 'N/A',
+        cardDetails: req.body.cardDetails || {}
+      }
     });
 
     await newBooking.save();
@@ -43,6 +48,58 @@ const BookSeat = async (req, res) => {
     // përditëso seatsBooked në bus
     bus.seatsBooked = [...bus.seatsBooked, ...req.body.seats];
     await bus.save();
+
+    // Generate ticket after successful booking
+    try {
+      const Ticket = require('../models/ticketModel');
+      const QRCode = require('qrcode');
+      
+      // Generate unique ticket number
+      const ticketNumber = `TKT-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
+      // Create QR code data
+      const qrData = {
+        ticketNumber,
+        bookingId: newBooking._id,
+        passengerName: user.name,
+        busFrom: bus.from,
+        busTo: bus.to,
+        departureTime: bus.departureTime,
+        seatNumbers: req.body.seats,
+        amount: amountPaid,
+        timestamp: new Date().toISOString()
+      };
+
+      // Generate QR code
+      const qrCodeData = await QRCode.toDataURL(JSON.stringify(qrData));
+
+      // Create ticket
+      const ticket = new Ticket({
+        bookingId: newBooking._id,
+        ticketNumber,
+        qrCodeData,
+        passengerName: user.name,
+        passengerEmail: newBooking.paymentDetails.email,
+        busDetails: {
+          from: bus.from,
+          to: bus.to,
+          departureTime: bus.departureTime,
+          arrivalTime: bus.arrivalTime,
+          busNumber: bus.busNumber,
+          busType: bus.busType
+        },
+        seatNumbers: req.body.seats,
+        totalAmount: amountPaid,
+        paymentDetails: newBooking.paymentDetails,
+        bookingDate: newBooking.createdAt
+      });
+
+      await ticket.save();
+      console.log('Ticket generated successfully:', ticketNumber);
+    } catch (ticketError) {
+      console.error('Error generating ticket:', ticketError);
+      // Don't fail the booking if ticket generation fails
+    }
 
     // dërgo email
     let mailOptions = {

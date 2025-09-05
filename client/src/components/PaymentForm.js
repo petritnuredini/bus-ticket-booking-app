@@ -5,6 +5,7 @@ function PaymentForm({ amount, onSuccess }) {
   const stripe = useStripe();
   const elements = useElements();
   const [email, setEmail] = useState("");
+  const [cardholderName, setCardholderName] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -13,20 +14,23 @@ function PaymentForm({ amount, onSuccess }) {
 
     setLoading(true);
 
-    // 1. Krijo PaymentMethod nga Stripe
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: elements.getElement(CardElement),
-      billing_details: { email },
-    });
-
-    if (error) {
-      console.log(error.message);
-      setLoading(false);
-      return;
-    }
-
     try {
+      // 1. Krijo PaymentMethod nga Stripe
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card: elements.getElement(CardElement),
+        billing_details: { 
+          email,
+          name: cardholderName
+        },
+      });
+
+      if (error) {
+        console.log(error.message);
+        setLoading(false);
+        return;
+      }
+
       // 2. Thirr backend për të bërë pagesën
       const response = await fetch("http://localhost:3001/api/payments/make-payment", {
         method: "POST",
@@ -34,6 +38,14 @@ function PaymentForm({ amount, onSuccess }) {
         body: JSON.stringify({
           amount, // vjen nga BookNow.js (bus.price * selectedSeats.length)
           paymentMethodId: paymentMethod.id,
+          email,
+          cardholderName,
+          cardDetails: {
+            brand: paymentMethod.card.brand,
+            last4: paymentMethod.card.last4,
+            exp_month: paymentMethod.card.exp_month,
+            exp_year: paymentMethod.card.exp_year
+          }
         }),
       });
 
@@ -41,12 +53,23 @@ function PaymentForm({ amount, onSuccess }) {
 
       if (data.success) {
         alert("Payment successful 🎉");
-        onSuccess(paymentMethod.id);
+        onSuccess({
+          paymentMethodId: paymentMethod.id,
+          email,
+          cardholderName,
+          cardDetails: {
+            brand: paymentMethod.card.brand,
+            last4: paymentMethod.card.last4,
+            exp_month: paymentMethod.card.exp_month,
+            exp_year: paymentMethod.card.exp_year
+          }
+        });
       } else {
         alert("Payment failed: " + data.message);
       }
     } catch (err) {
       console.log("Error: " + err.message);
+      alert("Payment failed: " + err.message);
     }
 
     setLoading(false);
@@ -61,9 +84,19 @@ function PaymentForm({ amount, onSuccess }) {
       {/* Email Field */}
       <input
         type="email"
-        placeholder="Email"
+        placeholder="Email Address"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        required
+        className="border px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+
+      {/* Cardholder Name Field */}
+      <input
+        type="text"
+        placeholder="Cardholder Name"
+        value={cardholderName}
+        onChange={(e) => setCardholderName(e.target.value)}
         required
         className="border px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
       />

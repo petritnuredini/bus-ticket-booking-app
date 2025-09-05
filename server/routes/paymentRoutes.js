@@ -3,12 +3,12 @@ const router = express.Router();
 const Stripe = require("stripe");
 
 // Merr secret key nga .env
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = Stripe(process.env.stripe_key);
 
 // API: bëj pagesë
 router.post("/make-payment", async (req, res) => {
   try {
-    const { amount, paymentMethodId } = req.body;
+    const { amount, paymentMethodId, email, cardholderName, cardDetails } = req.body;
 
     if (!amount || !paymentMethodId) {
       return res.status(400).send({
@@ -17,25 +17,41 @@ router.post("/make-payment", async (req, res) => {
       });
     }
 
-    // Krijo PaymentIntent vetëm për kartela
+    // Krijo PaymentIntent me payment method
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount * 100, // Stripe punon me cent (10€ = 1000)
       currency: "eur",
       payment_method: paymentMethodId,
       confirm: true,
-      automatic_payment_methods: {
-        enabled: true,
-        allow_redirects: "never", // 🚫 mos prano redirect
-      },
+      return_url: "http://localhost:3000", // Return URL për redirect
     });
 
-    res.send({
-      success: true,
-      message: "Payment successful",
-      data: paymentIntent,
-    });
+    // Kontrollo nëse pagesa u konfirmua
+    if (paymentIntent.status === 'succeeded') {
+      res.send({
+        success: true,
+        message: "Payment successful",
+        data: {
+          paymentIntentId: paymentIntent.id,
+          amount: paymentIntent.amount,
+          status: paymentIntent.status,
+          paymentMethod: {
+            id: paymentMethodId,
+            email,
+            cardholderName,
+            cardDetails
+          }
+        },
+      });
+    } else {
+      res.status(400).send({
+        success: false,
+        message: "Payment not completed",
+        data: paymentIntent,
+      });
+    }
   } catch (error) {
-    console.error(error);
+    console.error("Payment error:", error);
     res.status(500).send({
       success: false,
       message: error.message,
