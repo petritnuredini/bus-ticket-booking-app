@@ -15,7 +15,7 @@ function PaymentForm({ amount, onSuccess }) {
     setLoading(true);
 
     try {
-      // 1. Krijo PaymentMethod nga Stripe
+      // 1. Krijo PaymentMethod nga Stripe (për të marrë detajet e kartës)
       const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: "card",
         card: elements.getElement(CardElement),
@@ -37,7 +37,6 @@ function PaymentForm({ amount, onSuccess }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount, // vjen nga BookNow.js (bus.price * selectedSeats.length)
-          paymentMethodId: paymentMethod.id,
           email,
           cardholderName,
           cardDetails: {
@@ -54,7 +53,7 @@ function PaymentForm({ amount, onSuccess }) {
       if (data.success) {
         alert("Payment successful 🎉");
         onSuccess({
-          paymentMethodId: paymentMethod.id,
+          paymentMethodId: data.data.paymentMethod.id,
           email,
           cardholderName,
           cardDetails: {
