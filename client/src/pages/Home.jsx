@@ -33,8 +33,8 @@ function Home() {
   }, [searchFrom, searchTo, journeyDate, dispatch]);
 
   const handleSearch = () => {
-    if (!searchFrom || !searchTo || !journeyDate) {
-      message.error("Please fill all the fields");
+    if (!searchFrom || !searchTo) {
+      message.error("Please select departure and destination cities");
       return;
     }
     getBusesByFilter();
@@ -59,8 +59,8 @@ function Home() {
         // Clear the saved search data
         localStorage.removeItem("internationalSearch");
 
-        // Auto-search if all fields are filled
-        if (searchData.from && searchData.to && searchData.journeyDate) {
+        // Auto-search if required fields are filled
+        if (searchData.from && searchData.to) {
           // Small delay to ensure state is updated
           setTimeout(() => {
             getBusesByFilter();
@@ -120,7 +120,7 @@ function Home() {
 
             <Col lg={6} md={24} sm={24}>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Journey Date
+                Journey Date <span className="text-gray-500 text-xs">(Optional)</span>
               </label>
               <input
                 type="date"
@@ -128,6 +128,7 @@ function Home() {
                 onChange={(e) => setJourneyDate(e.target.value)}
                 min={new Date().toISOString().split("T")[0]}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                placeholder="Select date (optional)"
               />
             </Col>
 
@@ -147,6 +148,7 @@ function Home() {
           {buses.length > 0 && (
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
               Available International Buses ({buses.length} found)
+              {journeyDate && <span className="text-sm text-gray-600 ml-2">for {journeyDate}</span>}
             </h3>
           )}
           <Row gutter={[15, 15]}>
@@ -157,7 +159,7 @@ function Home() {
                 </Col>
               );
             })}
-            {buses.length === 0 && searchFrom && searchTo && journeyDate && (
+            {buses.length === 0 && searchFrom && searchTo && (
               <div className="flex justify-center w-full py-12">
                 <div className="text-center">
                   <i className="ri-bus-line text-6xl text-gray-300 mb-4"></i>
@@ -165,12 +167,15 @@ function Home() {
                     No buses found
                   </h2>
                   <p className="text-gray-400">
-                    No international buses available for {searchFrom} → {searchTo} on {journeyDate}
+                    {journeyDate 
+                      ? `No international buses available for ${searchFrom} → ${searchTo} on ${journeyDate}`
+                      : `No international buses available for ${searchFrom} → ${searchTo}`
+                    }
                   </p>
                 </div>
               </div>
             )}
-            {buses.length === 0 && (!searchFrom || !searchTo || !journeyDate) && (
+            {buses.length === 0 && (!searchFrom || !searchTo) && (
               <div className="flex justify-center w-full py-12">
                 <div className="text-center">
                   <i className="ri-search-line text-6xl text-gray-300 mb-4"></i>
@@ -178,7 +183,7 @@ function Home() {
                     Search for International Buses
                   </h2>
                   <p className="text-gray-400">
-                    Select your departure city, destination, and travel date to find available buses
+                    Select your departure city and destination to find available buses. Date is optional.
                   </p>
                 </div>
               </div>

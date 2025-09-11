@@ -20,6 +20,16 @@ function DefaultLayout({ children }) {
       icon: "ri-file-list-line",
     },
     {
+      name: "Daily Buses",
+      path: "/daily-buses",
+      icon: "ri-calendar-line",
+    },
+    {
+      name: "International Buses",
+      path: "/international-booking",
+      icon: "ri-plane-line",
+    },
+    {
       name: "Chat",
       path: "/chat",
       icon: "ri-message-2-line",

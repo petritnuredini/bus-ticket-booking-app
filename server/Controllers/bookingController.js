@@ -26,7 +26,9 @@ const BookSeat = async (req, res) => {
 
     const user = await User.findById(req.params.userId);
     if (!user) {
-      return res.status(404).send({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .send({ success: false, message: "User not found" });
     }
 
     // llogarit pagesën totale
@@ -37,10 +39,10 @@ const BookSeat = async (req, res) => {
       user: req.params.userId,
       amountPaid, // 👉 fusha e re ruhet në DB
       paymentDetails: req.body.paymentDetails || {
-        email: req.body.email || 'N/A',
-        cardholderName: req.body.cardholderName || 'N/A',
-        cardDetails: req.body.cardDetails || {}
-      }
+        email: req.body.email || "N/A",
+        cardholderName: req.body.cardholderName || "N/A",
+        cardDetails: req.body.cardDetails || {},
+      },
     });
 
     await newBooking.save();
@@ -51,11 +53,14 @@ const BookSeat = async (req, res) => {
 
     // Generate ticket after successful booking
     try {
-      const Ticket = require('../models/ticketModel');
-      const QRCode = require('qrcode');
-      
+      const Ticket = require("../models/ticketModel");
+      const QRCode = require("qrcode");
+
       // Generate unique ticket number
-      const ticketNumber = `TKT-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+      const ticketNumber = `TKT-${Date.now()}-${Math.random()
+        .toString(36)
+        .substr(2, 9)
+        .toUpperCase()}`;
 
       // Create QR code data
       const qrData = {
@@ -67,7 +72,7 @@ const BookSeat = async (req, res) => {
         departureTime: bus.departureTime,
         seatNumbers: req.body.seats,
         amount: amountPaid,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       // Generate QR code
@@ -86,18 +91,18 @@ const BookSeat = async (req, res) => {
           departureTime: bus.departureTime,
           arrivalTime: bus.arrivalTime,
           busNumber: bus.busNumber,
-          busType: bus.busType
+          busType: bus.busType,
         },
         seatNumbers: req.body.seats,
         totalAmount: amountPaid,
         paymentDetails: newBooking.paymentDetails,
-        bookingDate: newBooking.createdAt
+        bookingDate: newBooking.createdAt,
       });
 
       await ticket.save();
-      console.log('Ticket generated successfully:', ticketNumber);
+      console.log("Ticket generated successfully:", ticketNumber);
     } catch (ticketError) {
-      console.error('Error generating ticket:', ticketError);
+      console.error("Error generating ticket:", ticketError);
       // Don't fail the booking if ticket generation fails
     }
 
@@ -112,7 +117,7 @@ const BookSeat = async (req, res) => {
       Departure Time: ${moment(bus.departure, "HH:mm:ss").format("hh:mm A")}
       Arrival Time: ${moment(bus.arrival, "HH:mm:ss").format("hh:mm A")}
       Journey Date: ${bus.journeyDate}
-      Total Price: ${amountPaid} MAD
+      Total Price: ${amountPaid} EUR
       Thank you for choosing us! 
       `,
     };
@@ -221,7 +226,7 @@ const PayWithStripe = async (req, res) => {
     const payment = await stripe.charges.create(
       {
         amount: amount * 100,
-        currency: "MAD",
+        currency: "EUR",
         customer: customer.id,
         receipt_email: token.email,
       },
