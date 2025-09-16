@@ -12,8 +12,10 @@ import {
 } from "react-feather";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const ChatPage = () => {
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.users);
   const userId = user?._id;
   const [chats, setChats] = useState([]);
@@ -46,7 +48,7 @@ const ChatPage = () => {
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading user information...</p>
+          <p className="text-gray-600">{t('chat.loadingUserInfo', 'Loading user information...')}</p>
         </div>
       </div>
     );
@@ -92,7 +94,7 @@ const ChatPage = () => {
       }
     } catch (error) {
       console.error("Error starting new chat:", error);
-      alert("Unable to start chat. Please try again.");
+      alert(t('chat.unableToStartChat', 'Unable to start chat. Please try again.'));
     } finally {
       setIsLoading(false);
     }
@@ -192,13 +194,13 @@ const ChatPage = () => {
   const getTopicLabel = (topic) => {
     switch (topic) {
       case "schedule":
-        return "Schedule & Timing";
+        return t('chat.topicSchedule', 'Schedule & Timing');
       case "location":
-        return "Routes & Locations";
+        return t('chat.topicLocation', 'Routes & Locations');
       case "booking":
-        return "Booking & Tickets";
+        return t('chat.topicBooking', 'Booking & Tickets');
       default:
-        return "General Support";
+        return t('chat.topicGeneral', 'General Support');
     }
   };
 
@@ -227,7 +229,7 @@ const ChatPage = () => {
                 <ArrowLeft size={20} />
               </button>
               <h1 className="text-xl font-semibold text-gray-900">
-                Customer Support
+                {t('chat.customerSupport', 'Customer Support')}
               </h1>
             </div>
             <div className="flex items-center space-x-4">
@@ -238,7 +240,7 @@ const ChatPage = () => {
                   }`}
                 />
                 <span className="text-sm text-gray-600">
-                  {isConnected ? "Connected" : "Disconnected"}
+                  {isConnected ? t('chat.connected', 'Connected') : t('chat.disconnected', 'Disconnected')}
                 </span>
               </div>
             </div>
@@ -254,13 +256,13 @@ const ChatPage = () => {
               <div className="p-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-medium text-gray-900">
-                    Chat History
+                    {t('chat.chatHistory', 'Chat History')}
                   </h2>
                   <button
                     onClick={() => setShowTopicSelector(true)}
                     className="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
                   >
-                    New Chat
+                    {t('chat.newChat', 'New Chat')}
                   </button>
                 </div>
               </div>
@@ -272,7 +274,7 @@ const ChatPage = () => {
                       size={32}
                       className="mx-auto mb-2 opacity-50"
                     />
-                    <p>No chats yet</p>
+                    <p>{t('chat.noChatsYet', 'No chats yet')}</p>
                   </div>
                 ) : (
                   <div className="space-y-1">
@@ -289,13 +291,13 @@ const ChatPage = () => {
                         <div className="flex items-center space-x-2 mb-1">
                           {getTopicIcon(chat.topic)}
                           <span className="font-medium text-gray-800">
-                            {chat.agentId?.name || "Support Agent"}
+                            {chat.agentId?.name || t('chat.supportAgent', 'Support Agent')}
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
                           <p className="text-sm text-gray-600 truncate">
                             {chat.messages[chat.messages.length - 1]?.content ||
-                              "No messages yet"}
+                              t('chat.noMessagesYet', 'No messages yet')}
                           </p>
                           <span
                             className={`text-xs px-2 py-1 rounded-full ${
@@ -329,10 +331,10 @@ const ChatPage = () => {
                       className="mx-auto mb-4 opacity-50"
                     />
                     <h3 className="text-lg font-medium mb-2">
-                      Start a conversation
+                      {t('chat.startConversation', 'Start a conversation')}
                     </h3>
                     <p className="text-sm">
-                      Select a chat from the sidebar or start a new one
+                      {t('chat.selectChatPrompt', 'Select a chat from the sidebar or start a new one')}
                     </p>
                   </div>
                 </div>
@@ -347,7 +349,7 @@ const ChatPage = () => {
                         </div>
                         <div>
                           <h3 className="font-medium text-gray-800">
-                            {currentChat.agentId?.name || "Support Agent"}
+                            {currentChat.agentId?.name || t('chat.supportAgent', 'Support Agent')}
                           </h3>
                           <p className="text-sm text-gray-500">
                             {getTopicIcon(currentChat.topic)}{" "}
@@ -364,8 +366,8 @@ const ChatPage = () => {
                           }`}
                         >
                           {currentChat.agentId?.status === "online"
-                            ? "🟢 Online"
-                            : "🔴 Offline"}
+                            ? `🟢 ${t('chat.online', 'Online')}` 
+                            : `🔴 ${t('chat.offline', 'Offline')}`}
                         </span>
                       </div>
                     </div>
@@ -412,7 +414,7 @@ const ChatPage = () => {
                         value={message}
                         onChange={handleTyping}
                         onKeyPress={handleKeyPress}
-                        placeholder="Type your message..."
+                        placeholder={t('chat.typeMessage', 'Type your message...')}
                         className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                       <button
@@ -436,7 +438,7 @@ const ChatPage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
-              How can we help you today?
+              {t('chat.howCanWeHelp', 'How can we help you today?')}
             </h3>
 
             <div className="space-y-3 mb-6">
@@ -463,14 +465,14 @@ const ChatPage = () => {
                 onClick={() => setShowTopicSelector(false)}
                 className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                {t('common.cancel', 'Cancel')}
               </button>
               <button
                 onClick={startNewChat}
                 disabled={isLoading}
                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {isLoading ? "Starting chat..." : "Start Chat"}
+                {isLoading ? t('chat.startingChat', 'Starting chat...') : t('chat.startChat', 'Start Chat')}
               </button>
             </div>
           </div>
