@@ -6,9 +6,11 @@ import Bus from "../components/Bus";
 import { Row, Col, message } from "antd";
 import { Helmet } from "react-helmet";
 import InternationalCitySelect from "../components/InternationalCitySelect";
+import { useTranslation } from "react-i18next";
 
 function Home() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const [buses, setBuses] = useState([]);
   const [searchFrom, setSearchFrom] = useState("");
   const [searchTo, setSearchTo] = useState("");
@@ -34,7 +36,7 @@ function Home() {
 
   const handleSearch = () => {
     if (!searchFrom || !searchTo) {
-      message.error("Please select departure and destination cities");
+      message.error(t('booking.selectDepartureAndDestination'));
       return;
     }
     getBusesByFilter();
@@ -75,23 +77,23 @@ function Home() {
   return (
     <>
       <Helmet>
-        <title>International Bus Booking</title>
+        <title>{t('booking.internationalBusBooking')}</title>
       </Helmet>
       <div>
         {/* International Bus Search Form */}
         <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg mb-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-            Search International Buses
+            {t('booking.searchInternationalBuses')}
           </h2>
           <Row gutter={[20, 20]} align="middle">
             <Col lg={8} md={12} sm={24}>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                From
+                {t('booking.from')}
               </label>
               <InternationalCitySelect
                 value={searchFrom}
                 onChange={setSearchFrom}
-                placeholder="Select departure city"
+                placeholder={t('booking.selectDepartureCity')}
               />
             </Col>
 
@@ -100,7 +102,7 @@ function Home() {
               <button
                 onClick={swapCities}
                 className="p-3 bg-purple-50 hover:bg-purple-100 text-purple-600 rounded-lg transition-colors border border-purple-200 hover:border-purple-300 rotate-90 lg:rotate-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                title="Swap departure and destination cities"
+                title={t('booking.swapDepartureAndDestination')}
                 disabled={!searchFrom || !searchTo}
               >
                 <i className="ri-arrow-left-right-line text-xl"></i>
@@ -109,18 +111,18 @@ function Home() {
 
             <Col lg={8} md={12} sm={24}>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                To
+                {t('booking.to')}
               </label>
               <InternationalCitySelect
                 value={searchTo}
                 onChange={setSearchTo}
-                placeholder="Select destination city"
+                placeholder={t('booking.selectDestinationCity')}
               />
             </Col>
 
             <Col lg={6} md={24} sm={24}>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Journey Date <span className="text-gray-500 text-xs">(Optional)</span>
+                {t('booking.journeyDate')} <span className="text-gray-500 text-xs">({t('common.optional')})</span>
               </label>
               <input
                 type="date"
@@ -128,7 +130,7 @@ function Home() {
                 onChange={(e) => setJourneyDate(e.target.value)}
                 min={new Date().toISOString().split("T")[0]}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                placeholder="Select date (optional)"
+                placeholder={`${t('booking.selectDate')} (${t('common.optional')})`}
               />
             </Col>
 
@@ -138,7 +140,7 @@ function Home() {
                 className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
               >
                 <i className="ri-search-line mr-2"></i>
-                Search International Buses
+                {t('booking.searchInternationalBuses')}
               </button>
             </Col>
           </Row>
@@ -147,8 +149,8 @@ function Home() {
         <div className="max-w-6xl mx-auto">
           {buses.length > 0 && (
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
-              Available International Buses ({buses.length} found)
-              {journeyDate && <span className="text-sm text-gray-600 ml-2">for {journeyDate}</span>}
+              {t('booking.availableInternationalBuses')} ({buses.length} {t('booking.found')})
+              {journeyDate && <span className="text-sm text-gray-600 ml-2">{t('booking.forDate')} {journeyDate}</span>}
             </h3>
           )}
           <Row gutter={[15, 15]}>
@@ -164,12 +166,12 @@ function Home() {
                 <div className="text-center">
                   <i className="ri-bus-line text-6xl text-gray-300 mb-4"></i>
                   <h2 className="text-2xl font-bold text-gray-500 mb-2">
-                    No buses found
+                    {t('booking.noBusesFound')}
                   </h2>
                   <p className="text-gray-400">
                     {journeyDate 
-                      ? `No international buses available for ${searchFrom} → ${searchTo} on ${journeyDate}`
-                      : `No international buses available for ${searchFrom} → ${searchTo}`
+                      ? t('booking.noInternationalBusesAvailableWithDate', { from: searchFrom, to: searchTo, date: journeyDate })
+                      : t('booking.noInternationalBusesAvailable', { from: searchFrom, to: searchTo })
                     }
                   </p>
                 </div>
@@ -180,10 +182,10 @@ function Home() {
                 <div className="text-center">
                   <i className="ri-search-line text-6xl text-gray-300 mb-4"></i>
                   <h2 className="text-2xl font-bold text-gray-500 mb-2">
-                    Search for International Buses
+                    {t('booking.searchForInternationalBuses')}
                   </h2>
                   <p className="text-gray-400">
-                    Select your departure city and destination to find available buses. Date is optional.
+                    {t('booking.selectDepartureAndDestinationHelp')}
                   </p>
                 </div>
               </div>

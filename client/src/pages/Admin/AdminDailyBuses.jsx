@@ -6,9 +6,11 @@ import { useDispatch } from "react-redux";
 import { axiosInstance } from "../../helpers/axiosInstance";
 import { message, Table } from "antd";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
 
 function AdminDailyBuses() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const [showDailyBusForm, setShowDailyBusForm] = useState(false);
   const [dailyBuses, setDailyBuses] = useState([]);
   const [selectedDailyBus, setSelectedDailyBus] = useState(null);
@@ -48,7 +50,15 @@ function AdminDailyBuses() {
   };
 
   const formatActiveDays = (activeDays) => {
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayNames = [
+      t('common.sun'), 
+      t('common.mon'), 
+      t('common.tue'), 
+      t('common.wed'), 
+      t('common.thu'), 
+      t('common.fri'), 
+      t('common.sat')
+    ];
     return activeDays.map(day => dayNames[day]).join(', ');
   };
 
@@ -64,34 +74,34 @@ function AdminDailyBuses() {
 
   const columns = [
     {
-      title: "Bus Name",
+      title: t('admin.busName'),
       dataIndex: "name",
       width: 150,
     },
     {
-      title: "Bus Number",
+      title: t('booking.busNumber'),
       dataIndex: "busNumber",
       width: 120,
     },
     {
-      title: "Route",
+      title: t('admin.route'),
       width: 200,
       render: (_, record) => (
         <span>{record.from} → {record.to}</span>
       ),
     },
     {
-      title: "Default Schedule",
+      title: t('admin.defaultSchedule'),
       width: 180,
       render: (_, record) => (
         <div>
-          <div>Dep: {formatTime(record.defaultDeparture)}</div>
-          <div>Arr: {formatTime(record.defaultArrival)}</div>
+          <div>{t('booking.departureShort')}: {formatTime(record.defaultDeparture)}</div>
+          <div>{t('booking.arrivalShort')}: {formatTime(record.defaultArrival)}</div>
         </div>
       ),
     },
     {
-      title: "Active Days",
+      title: t('admin.activeDays'),
       dataIndex: "activeDays",
       width: 200,
       render: (activeDays) => (
@@ -99,18 +109,18 @@ function AdminDailyBuses() {
       ),
     },
     {
-      title: "Capacity",
+      title: t('admin.capacity'),
       dataIndex: "capacity",
       width: 80,
     },
     {
-      title: "Price",
+      title: t('admin.price'),
       dataIndex: "price",
       width: 80,
       render: (price) => `$${parseFloat(price).toFixed(2)}`,
     },
     {
-      title: "Status",
+      title: t('admin.status'),
       dataIndex: "status",
       width: 100,
       render: (status) => {
@@ -120,34 +130,34 @@ function AdminDailyBuses() {
         
         return (
           <span className={`${colorClass} capitalize font-medium`}>
-            {status}
+            {t(`admin.status_${status}`)}
           </span>
         );
       },
     },
     {
-      title: "Variations",
+      title: t('admin.variations'),
       width: 100,
       render: (_, record) => {
         const variationCount = Object.keys(record.scheduleVariations || {}).length;
         return variationCount > 0 ? (
           <span className="text-blue-600 text-sm">
-            {variationCount} day{variationCount !== 1 ? 's' : ''}
+            {variationCount} {variationCount !== 1 ? t('admin.days') : t('admin.day')}
           </span>
         ) : (
-          <span className="text-gray-400 text-sm">None</span>
+          <span className="text-gray-400 text-sm">{t('admin.none')}</span>
         );
       },
     },
     {
-      title: "Actions",
+      title: t('admin.actions'),
       width: 100,
       render: (_, record) => (
         <div className="flex gap-3">
           <i
             className="ri-delete-bin-line cursor-pointer text-red-500 text-xl hover:text-red-700"
             onClick={() => deleteDailyBus(record.id)}
-            title="Delete daily bus"
+            title={t('admin.deleteDailyBus')}
           ></i>
           <i
             className="ri-pencil-line cursor-pointer text-blue-500 text-xl hover:text-blue-700"
@@ -155,7 +165,7 @@ function AdminDailyBuses() {
               setSelectedDailyBus(record);
               setShowDailyBusForm(true);
             }}
-            title="Edit daily bus"
+            title={t('admin.editDailyBus')}
           ></i>
         </div>
       ),
@@ -169,11 +179,11 @@ function AdminDailyBuses() {
   return (
     <>
       <Helmet>
-        <title>Daily Buses - Admin</title>
+        <title>{t('admin.dailyBuses')}</title>
       </Helmet>
       <div>
         <div className="flex justify-between items-center p-7">
-          <PageTitle title="Daily Bus Schedules" />
+          <PageTitle title={t('admin.dailyBusSchedules')} />
           <button
             type="button"
             className="relative inline-flex items-center justify-start
@@ -184,7 +194,7 @@ function AdminDailyBuses() {
             <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
             <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:-translate-x-8"></span>
             <span className="relative w-full text-left text-black transition-colors duration-200 ease-in-out group-hover:text-white">
-              Add Daily Bus
+              {t('admin.addDailyBus')}
             </span>
             <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
           </button>
@@ -192,7 +202,7 @@ function AdminDailyBuses() {
 
         <div className="p-7">
           <div className="mb-4 text-sm text-gray-600">
-            Manage recurring bus schedules. These templates can be used to generate regular bus instances.
+            {t('admin.dailyBusManagementDescription')}
           </div>
           
           <Table
@@ -203,7 +213,7 @@ function AdminDailyBuses() {
               showSizeChanger: true,
               showQuickJumper: true,
               showTotal: (total, range) => 
-                `${range[0]}-${range[1]} of ${total} daily buses`
+                t('admin.paginationTotal', {start: range[0], end: range[1], total: total})
             }}
             scroll={{ x: 1200 }}
             rowKey="id"

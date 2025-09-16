@@ -6,9 +6,11 @@ import { useEffect } from "react";
 import { axiosInstance } from "../../helpers/axiosInstance";
 import { message, Table } from "antd";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
 
 function AdminUsers() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const [users, setUsers] = useState([]);
 
   const getUsers = useCallback( async () => {
@@ -29,15 +31,15 @@ function AdminUsers() {
 
   const columns = [
     {
-      title: "Name",
+      title: t('auth.name'),
       dataIndex: "name",
     },
     {
-      title: "Email",
+      title: t('auth.email'),
       dataIndex: "email",
     },
     {
-      title: "Account Created At",
+      title: t('admin.accountCreatedAt'),
       dataIndex: "createdAt",
       render: (text, record) => {
         return new Date(record.createdAt).toLocaleDateString();
@@ -52,11 +54,11 @@ function AdminUsers() {
   return (
     <>
       <Helmet>
-        <title>Users</title>
+        <title>{t('admin.users')}</title>
       </Helmet>
       <div>
         <div className="flex justify-between p-7">
-          <PageTitle title="Users" />
+          <PageTitle title={t('admin.users')} />
         </div>
         <div className="p-7">
           <Table
