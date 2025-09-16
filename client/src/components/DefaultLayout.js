@@ -1,78 +1,81 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "./LanguageSwitcher";
 //import logo from "../assets/img/bus_tickets_app.png";
 
 function DefaultLayout({ children }) {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const { user } = useSelector((state) => state.users);
+  const { t } = useTranslation();
 
   const userMenu = [
     {
-      name: "Home",
+      name: t('common.home'),
       path: "/easy-booking",
       icon: "ri-home-line",
     },
     {
-      name: "Bookings",
+      name: t('common.myBookings'),
       path: "/bookings",
       icon: "ri-file-list-line",
     },
     {
-      name: "Daily Buses",
+      name: t('booking.dailyBuses', 'Daily Buses'),
       path: "/daily-buses",
       icon: "ri-calendar-line",
     },
     {
-      name: "International Buses",
+      name: t('booking.internationalBuses', 'International Buses'),
       path: "/international-booking",
       icon: "ri-plane-line",
     },
     {
-      name: "Chat",
+      name: t('chat.chatWithUs'),
       path: "/chat",
       icon: "ri-message-2-line",
     },
     {
-      name: "Logout",
+      name: t('common.logout'),
       path: "/logout",
       icon: "ri-logout-box-line",
     },
   ];
   const adminMenu = [
     {
-      name: "Home",
+      name: t('common.home'),
       path: "/easy-booking",
       icon: "ri-home-line",
     },
     {
-      name: "Buses",
+      name: t('admin.buses'),
       path: "/admin/buses",
       icon: "ri-bus-line",
     },
     {
-      name: "Daily Buses",
+      name: t('admin.dailyBuses'),
       path: "/admin/daily-buses",
       icon: "ri-calendar-line",
     },
     {
-      name: "Users",
+      name: t('admin.users'),
       path: "/admin/users",
       icon: "ri-user-line",
     },
     {
-      name: "Bookings",
+      name: t('admin.bookings'),
       path: "/admin/bookings",
       icon: "ri-file-list-line",
     },
     {
-      name: "Chat",
+      name: t('chat.chatWithUs'),
       path: "/chat",
       icon: "ri-message-2-line",
     },
     {
-      name: "Logout",
+      name: t('common.logout'),
       path: "/logout",
       icon: "ri-logout-box-line",
     },
@@ -158,6 +161,9 @@ function DefaultLayout({ children }) {
             <div className="mt-1">{user?.name} </div>
             <div className="mt-1">{user?.email}</div>
           </h1>
+          <div className="mt-3">
+            <LanguageSwitcher />
+          </div>
         </div>
         <div className="p-[10px] px-0">{children}</div>
       </div>
