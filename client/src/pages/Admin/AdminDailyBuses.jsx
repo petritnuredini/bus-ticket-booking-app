@@ -16,7 +16,7 @@ function AdminDailyBuses() {
   const getDailyBuses = useCallback(async () => {
     try {
       dispatch(ShowLoading());
-      const response = await axiosInstance.post("/api/daily-buses/get-all-daily-buses", {});
+      const response = await axiosInstance.post("/daily-buses/get-all-daily-buses", {});
       dispatch(HideLoading());
       if (response.data.success) {
         setDailyBuses(response.data.data);
@@ -32,7 +32,7 @@ function AdminDailyBuses() {
   const deleteDailyBus = async (id) => {
     try {
       dispatch(ShowLoading());
-      const response = await axiosInstance.delete(`/api/daily-buses/${id}`, {});
+      const response = await axiosInstance.delete(`/daily-buses/${id}`, {});
 
       dispatch(HideLoading());
       if (response.data.success) {

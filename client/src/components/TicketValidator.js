@@ -1,47 +1,51 @@
-import React, { useState } from 'react';
-import { Button, Card, Input, message, Result, Descriptions, Tag } from 'antd';
-import { QrcodeOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { axiosInstance } from '../helpers/axiosInstance';
+import React, { useState } from "react";
+import { Button, Card, Input, message, Result, Descriptions, Tag } from "antd";
+import {
+  QrcodeOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+} from "@ant-design/icons";
+import { axiosInstance } from "../helpers/axiosInstance";
 
 const TicketValidator = () => {
-  const [qrCodeData, setQrCodeData] = useState('');
+  const [qrCodeData, setQrCodeData] = useState("");
   const [validationResult, setValidationResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const validateTicket = async () => {
     if (!qrCodeData.trim()) {
-      message.error('Please enter QR code data');
+      message.error("Please enter QR code data");
       return;
     }
 
     try {
       setLoading(true);
-      const response = await axiosInstance.post('/api/tickets/validate', {
+      const response = await axiosInstance.post("/tickets/validate", {
         qrCodeData,
-        validatedBy: 'Admin' // You can get this from user context
+        validatedBy: "Admin", // You can get this from user context
       });
 
       if (response.data.success) {
         setValidationResult({
           success: true,
-          data: response.data.data
+          data: response.data.data,
         });
-        message.success('Ticket validated successfully!');
+        message.success("Ticket validated successfully!");
       } else {
         setValidationResult({
           success: false,
           message: response.data.message,
-          data: response.data.data
+          data: response.data.data,
         });
         message.warning(response.data.message);
       }
     } catch (error) {
-      console.error('Error validating ticket:', error);
+      console.error("Error validating ticket:", error);
       setValidationResult({
         success: false,
-        message: 'Error validating ticket'
+        message: "Error validating ticket",
       });
-      message.error('Error validating ticket');
+      message.error("Error validating ticket");
     } finally {
       setLoading(false);
     }
@@ -49,21 +53,21 @@ const TicketValidator = () => {
 
   const resetValidation = () => {
     setValidationResult(null);
-    setQrCodeData('');
+    setQrCodeData("");
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <Card title="🎫 Ticket Validator" style={{ marginBottom: '20px' }}>
-        <div style={{ marginBottom: '20px' }}>
+    <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
+      <Card title="🎫 Ticket Validator" style={{ marginBottom: "20px" }}>
+        <div style={{ marginBottom: "20px" }}>
           <Input.TextArea
             placeholder="Paste QR code data here or scan QR code..."
             value={qrCodeData}
             onChange={(e) => setQrCodeData(e.target.value)}
             rows={4}
-            style={{ marginBottom: '10px' }}
+            style={{ marginBottom: "10px" }}
           />
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: "flex", gap: "10px" }}>
             <Button
               type="primary"
               icon={<QrcodeOutlined />}
@@ -73,9 +77,7 @@ const TicketValidator = () => {
             >
               Validate Ticket
             </Button>
-            <Button onClick={resetValidation}>
-              Reset
-            </Button>
+            <Button onClick={resetValidation}>Reset</Button>
           </div>
         </div>
       </Card>
@@ -86,27 +88,34 @@ const TicketValidator = () => {
             <Result
               status="success"
               title="Ticket Validated Successfully!"
-              icon={<CheckCircleOutlined style={{ color: '#52c41a' }} />}
+              icon={<CheckCircleOutlined style={{ color: "#52c41a" }} />}
               extra={
                 <div>
                   <Descriptions bordered column={1} size="small">
                     <Descriptions.Item label="Ticket Number">
-                      <Tag color="blue">{validationResult.data.ticketNumber}</Tag>
+                      <Tag color="blue">
+                        {validationResult.data.ticketNumber}
+                      </Tag>
                     </Descriptions.Item>
                     <Descriptions.Item label="Passenger Name">
                       {validationResult.data.passengerName}
                     </Descriptions.Item>
                     <Descriptions.Item label="Route">
-                      {validationResult.data.busDetails.from} → {validationResult.data.busDetails.to}
+                      {validationResult.data.busDetails.from} →{" "}
+                      {validationResult.data.busDetails.to}
                     </Descriptions.Item>
                     <Descriptions.Item label="Departure Time">
-                      {new Date(validationResult.data.busDetails.departureTime).toLocaleString()}
+                      {new Date(
+                        validationResult.data.busDetails.departureTime
+                      ).toLocaleString()}
                     </Descriptions.Item>
                     <Descriptions.Item label="Seat Numbers">
-                      {validationResult.data.seatNumbers.join(', ')}
+                      {validationResult.data.seatNumbers.join(", ")}
                     </Descriptions.Item>
                     <Descriptions.Item label="Validated At">
-                      {new Date(validationResult.data.validatedAt).toLocaleString()}
+                      {new Date(
+                        validationResult.data.validatedAt
+                      ).toLocaleString()}
                     </Descriptions.Item>
                     <Descriptions.Item label="Validated By">
                       {validationResult.data.validatedBy}
@@ -119,18 +128,22 @@ const TicketValidator = () => {
             <Result
               status="error"
               title="Ticket Validation Failed"
-              icon={<CloseCircleOutlined style={{ color: '#ff4d4f' }} />}
+              icon={<CloseCircleOutlined style={{ color: "#ff4d4f" }} />}
               subTitle={validationResult.message}
               extra={
                 validationResult.data && (
                   <div>
                     <Descriptions bordered column={1} size="small">
                       <Descriptions.Item label="Ticket Number">
-                        <Tag color="red">{validationResult.data.ticketNumber}</Tag>
+                        <Tag color="red">
+                          {validationResult.data.ticketNumber}
+                        </Tag>
                       </Descriptions.Item>
                       {validationResult.data.usedAt && (
                         <Descriptions.Item label="Used At">
-                          {new Date(validationResult.data.usedAt).toLocaleString()}
+                          {new Date(
+                            validationResult.data.usedAt
+                          ).toLocaleString()}
                         </Descriptions.Item>
                       )}
                       {validationResult.data.usedBy && (
@@ -140,7 +153,9 @@ const TicketValidator = () => {
                       )}
                       {validationResult.data.departureTime && (
                         <Descriptions.Item label="Departure Time">
-                          {new Date(validationResult.data.departureTime).toLocaleString()}
+                          {new Date(
+                            validationResult.data.departureTime
+                          ).toLocaleString()}
                         </Descriptions.Item>
                       )}
                     </Descriptions>

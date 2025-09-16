@@ -22,7 +22,7 @@ function Bookings() {
     try {
       dispatch(ShowLoading());
       const response = await axiosInstance.get(
-        `/api/bookings/${localStorage.getItem("user_id")}`
+        `/bookings/${localStorage.getItem("user_id")}`
       );
       dispatch(HideLoading());
 
@@ -52,7 +52,7 @@ function Bookings() {
   //   try {
   //     dispatch(ShowLoading());
   //     const response = await axiosInstance.delete(
-  //       `/api/bookings/${record._id}/${record.userId}/${record.busId}`
+  //       `/bookings/${record._id}/${record.userId}/${record.busId}`
   //     );
   //     dispatch(HideLoading());
 

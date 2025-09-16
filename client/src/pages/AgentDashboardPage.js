@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import AgentDashboard from '../components/Chat/AgentDashboard';
-import { LogOut, User, Settings } from 'react-feather';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { axiosInstance } from "../helpers/axiosInstance";
+import AgentDashboard from "../components/Chat/AgentDashboard";
+import { LogOut, User, Settings } from "react-feather";
 
 const AgentDashboardPage = () => {
   const [agent, setAgent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
-  
+  const [error, setError] = useState("");
+
   const { agentId } = useParams();
   const navigate = useNavigate();
 
@@ -16,36 +16,33 @@ const AgentDashboardPage = () => {
     const loadAgent = async () => {
       try {
         // Check if agent is logged in
-        const storedAgent = localStorage.getItem('agent');
+        const storedAgent = localStorage.getItem("agent");
         if (!storedAgent) {
-          navigate('/agent/login');
+          navigate("/agent/login");
           return;
         }
 
         const agentData = JSON.parse(storedAgent);
         if (agentData._id !== agentId) {
-          navigate('/agent/login');
+          navigate("/agent/login");
           return;
         }
 
         // Verify agent with server
-        const token = localStorage.getItem('agentToken');
+        const token = localStorage.getItem("agentToken");
         if (!token) {
-          navigate('/agent/login');
+          navigate("/agent/login");
           return;
         }
 
-        const response = await axios.get(`/api/agents/${agentId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        // axiosInstance automatically adds auth headers
+        const response = await axiosInstance.get(`/agents/${agentId}`);
         setAgent(response.data);
       } catch (error) {
-        console.error('Error loading agent:', error);
-        setError('Failed to load agent data');
-        localStorage.removeItem('agent');
-        navigate('/agent/login');
+        console.error("Error loading agent:", error);
+        setError("Failed to load agent data");
+        localStorage.removeItem("agent");
+        navigate("/agent/login");
       } finally {
         setIsLoading(false);
       }
@@ -56,20 +53,17 @@ const AgentDashboardPage = () => {
 
   const handleLogout = async () => {
     try {
-      const token = localStorage.getItem('agentToken');
+      const token = localStorage.getItem("agentToken");
       if (token) {
-        await axios.post(`/api/agents/${agentId}/logout`, {}, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        // axiosInstance automatically adds auth headers
+        await axiosInstance.post(`/agents/${agentId}/logout`, {});
       }
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error("Error during logout:", error);
     } finally {
-      localStorage.removeItem('agent');
-      localStorage.removeItem('agentToken');
-      navigate('/agent/login');
+      localStorage.removeItem("agent");
+      localStorage.removeItem("agentToken");
+      navigate("/agent/login");
     }
   };
 
@@ -90,7 +84,7 @@ const AgentDashboardPage = () => {
         <div className="text-center">
           <div className="text-red-600 text-lg mb-4">{error}</div>
           <button
-            onClick={() => navigate('/agent/login')}
+            onClick={() => navigate("/agent/login")}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Go to Login
@@ -110,17 +104,19 @@ const AgentDashboardPage = () => {
       <div className="bg-white border-b border-gray-200 px-6 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <h1 className="text-xl font-semibold text-gray-900">Customer Support Dashboard</h1>
+            <h1 className="text-xl font-semibold text-gray-900">
+              Customer Support Dashboard
+            </h1>
             <span className="text-sm text-gray-500">•</span>
             <span className="text-sm text-gray-600">{agent.name}</span>
           </div>
-          
+
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 rounded-full bg-green-500"></div>
               <span className="text-sm text-gray-600">Connected</span>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <button className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors">
                 <Settings size={16} />

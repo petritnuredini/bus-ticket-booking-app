@@ -30,10 +30,10 @@ function BusForm({
 
       let response = null;
       if (type === "add") {
-        response = await axiosInstance.post("/api/buses/add-bus", formData);
+        response = await axiosInstance.post("/buses/add-bus", formData);
       } else {
         response = await axiosInstance.put(
-          `/api/buses/${selectedBus._id}`,
+          `/buses/${selectedBus._id}`,
           formData
         );
       }

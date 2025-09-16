@@ -1,38 +1,40 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { MessageCircle, Eye, EyeOff, User, Lock } from 'react-feather';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "../helpers/axiosInstance";
+import { MessageCircle, Eye, EyeOff, User, Lock } from "react-feather";
 
 const AgentLoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setIsLoading(true);
 
     try {
-      const response = await axios.post('/api/agents/login', {
+      const response = await axiosInstance.post("/agents/login", {
         email,
-        password
+        password,
       });
 
       const { token, ...agentData } = response.data;
-      
+
       // Store agent info and token in localStorage
-      localStorage.setItem('agent', JSON.stringify(agentData));
-      localStorage.setItem('agentToken', token);
-      
+      localStorage.setItem("agent", JSON.stringify(agentData));
+      localStorage.setItem("agentToken", token);
+
       // Redirect to agent dashboard
       navigate(`/agent/dashboard/${agentData._id}`);
     } catch (error) {
-      setError(error.response?.data?.message || 'Login failed. Please try again.');
+      setError(
+        error.response?.data?.message || "Login failed. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -64,7 +66,10 @@ const AgentLoginPage = () => {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email address
               </label>
               <div className="mt-1 relative">
@@ -86,7 +91,10 @@ const AgentLoginPage = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1 relative">
@@ -96,7 +104,7 @@ const AgentLoginPage = () => {
                 <input
                   id="password"
                   name="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   required
                   value={password}
@@ -132,7 +140,7 @@ const AgentLoginPage = () => {
                     Signing in...
                   </div>
                 ) : (
-                  'Sign in'
+                  "Sign in"
                 )}
               </button>
             </div>
@@ -150,7 +158,8 @@ const AgentLoginPage = () => {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                Contact your administrator if you're having trouble accessing your account
+                Contact your administrator if you're having trouble accessing
+                your account
               </p>
             </div>
           </div>

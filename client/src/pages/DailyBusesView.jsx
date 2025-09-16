@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import axios from "axios";
+import { axiosInstance } from "../helpers/axiosInstance";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import { message } from "antd";
 import { Helmet } from "react-helmet";
@@ -20,7 +20,7 @@ function DailyBusesView() {
   const getDailyBuses = async () => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.get("/api/daily-buses/active");
+      const response = await axiosInstance.get("/daily-buses/active");
       dispatch(HideLoading());
       if (response.data.success) {
         setDailyBuses(response.data.data);

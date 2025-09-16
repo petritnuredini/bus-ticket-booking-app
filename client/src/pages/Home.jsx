@@ -18,7 +18,7 @@ function Home() {
     try {
       dispatch(ShowLoading());
       const response = await axiosInstance.post(
-        `/api/buses/get?from=${searchFrom}&to=${searchTo}&journeyDate=${journeyDate}`
+        `/buses/get?from=${searchFrom}&to=${searchTo}&journeyDate=${journeyDate}`
       );
       dispatch(HideLoading());
       if (response.data.success) {
