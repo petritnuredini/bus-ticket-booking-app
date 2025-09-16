@@ -46,12 +46,12 @@ function DailyBusForm({
       let response = null;
       if (type === "add") {
         response = await axiosInstance.post(
-          "/api/daily-buses/add-daily-bus",
+          "/daily-buses/add-daily-bus",
           formData
         );
       } else {
         response = await axiosInstance.put(
-          `/api/daily-buses/${selectedDailyBus.id}`,
+          `/daily-buses/${selectedDailyBus.id}`,
           formData
         );
       }

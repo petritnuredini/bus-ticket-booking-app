@@ -6,21 +6,23 @@ import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import PageTitle from "../components/PageTitle";
 import moment from "moment";
 import { Helmet } from "react-helmet";
-import { DownloadOutlined } from "@ant-design/icons";
+import { DownloadOutlined, PlusOutlined } from "@ant-design/icons";
 import TicketDownload from "../components/TicketDownload";
+import { useNavigate } from "react-router-dom";
 
 function Bookings() {
   const [bookings, setBookings] = useState([]);
   const [showTicketModal, setShowTicketModal] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Merr bookings nga API
   const getBookings = useCallback(async () => {
     try {
       dispatch(ShowLoading());
       const response = await axiosInstance.get(
-        `/api/bookings/${localStorage.getItem("user_id")}`
+        `/bookings/${localStorage.getItem("user_id")}`
       );
       dispatch(HideLoading());
 
@@ -50,7 +52,7 @@ function Bookings() {
   //   try {
   //     dispatch(ShowLoading());
   //     const response = await axiosInstance.delete(
-  //       `/api/bookings/${record._id}/${record.userId}/${record.busId}`
+  //       `/bookings/${record._id}/${record.userId}/${record.busId}`
   //     );
   //     dispatch(HideLoading());
 
@@ -148,7 +150,18 @@ function Bookings() {
       </Helmet>
 
       <div className="p-5">
-        <PageTitle title="Bookings" />
+        <div className="flex justify-between items-center mb-4">
+          <PageTitle title="Bookings" />
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => navigate("/international-booking")}
+            className="bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700"
+            size="large"
+          >
+            Add New Booking
+          </Button>
+        </div>
         <Table columns={columns} dataSource={bookings} />
       </div>
 

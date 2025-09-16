@@ -28,7 +28,7 @@ function BookNow() {
   const getBus = useCallback(async () => {
     try {
       dispatch(ShowLoading());
-      const response = await axiosInstance.get(`/api/buses/${params.id}`);
+      const response = await axiosInstance.get(`/buses/${params.id}`);
       dispatch(HideLoading());
       if (response.data.success) {
         setBus(response.data.data);
@@ -45,7 +45,7 @@ function BookNow() {
     try {
       dispatch(ShowLoading());
       const response = await axiosInstance.post(
-        `/api/bookings/book-seat/${localStorage.getItem("user_id")}`,
+        `/bookings/book-seat/${localStorage.getItem("user_id")}`,
         {
           bus: bus._id,
           seats: selectedSeats,

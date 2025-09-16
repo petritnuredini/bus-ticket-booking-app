@@ -30,10 +30,10 @@ function BusForm({
 
       let response = null;
       if (type === "add") {
-        response = await axiosInstance.post("/api/buses/add-bus", formData);
+        response = await axiosInstance.post("/buses/add-bus", formData);
       } else {
         response = await axiosInstance.put(
-          `/api/buses/${selectedBus._id}`,
+          `/buses/${selectedBus._id}`,
           formData
         );
       }
@@ -234,29 +234,44 @@ function BusForm({
                   required: type === "add" ? true : true,
                   message: "Please input price!",
                 },
+                {
+                  pattern: /^\d+(\.\d{1,2})?$/,
+                  message:
+                    "Please enter a valid price with up to 2 decimal places!",
+                },
+                {
+                  validator: (_, value) => {
+                    if (value && parseFloat(value) < 0) {
+                      return Promise.reject(
+                        new Error("Price cannot be negative!")
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
               ]}
             >
               <input
                 type="number"
+                step="0.01"
+                min="0"
                 className="block border border-blue-500 w-full p-3 rounded-lg mb-4"
+                onKeyPress={(e) => {
+                  // Allow only numbers, decimal point, and backspace
+                  if (!/[0-9.]/.test(e.key) && e.key !== "Backspace") {
+                    e.preventDefault();
+                  }
+                }}
               />
             </Form.Item>
           </Col>
           <Col lg={12} xs={24}>
-            <Form.Item
-              label="Status"
-              name="status"
-              rules={[
-                {
-                  required: type === "add" ? true : true,
-                  validateTrigger: "onSubmit",
-                },
-              ]}
-            >
+            <Form.Item label="Status" name="status" initialValue="Yet to start">
               <select
                 className="block border border-blue-500 w-full p-3 rounded-lg mb-4"
                 name=""
                 id=""
+                defaultValue="Yet to start"
               >
                 <option value="Yet to start">Yet To Start</option>
                 <option value="Running">Running</option>

@@ -15,7 +15,11 @@ export const ChatProvider = ({ children }) => {
 
   useEffect(() => {
     // Initialize Socket.IO connection to the backend server
-    const newSocket = io("http://localhost:3001", {
+    // Extract the base URL without '/api' suffix
+    const socketURL = process.env.REACT_APP_API_URL
+      ? process.env.REACT_APP_API_URL.replace("/api", "")
+      : "http://localhost:3001";
+    const newSocket = io(socketURL, {
       transports: ["websocket", "polling"],
     });
 

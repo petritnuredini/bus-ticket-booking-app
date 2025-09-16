@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { axiosInstance } from "../helpers/axiosInstance";
 
-function InternationalCitySelect({ 
-  value, 
-  onChange, 
-  placeholder = "Select international city", 
+function InternationalCitySelect({
+  value,
+  onChange,
+  placeholder = "Select international city",
   className = "",
-  disabled = false 
+  disabled = false,
 }) {
   const [cities, setCities] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +21,9 @@ function InternationalCitySelect({
     const fetchCities = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get("/api/international-cities/get-all-cities");
+        const response = await axiosInstance.get(
+          "/international-cities/get-all-cities"
+        );
         if (response.data.status === "success") {
           setCities(response.data.data);
           setFilteredCities(response.data.data);
@@ -40,9 +42,10 @@ function InternationalCitySelect({
   useEffect(() => {
     if (searchTerm && isOpen && searchTerm !== value) {
       // Only filter when user is actively typing something different from selected value
-      const filtered = cities.filter((city) =>
-        city.ville.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        city.country.toLowerCase().includes(searchTerm.toLowerCase())
+      const filtered = cities.filter(
+        (city) =>
+          city.ville.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          city.country.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredCities(filtered);
     } else {
@@ -54,7 +57,7 @@ function InternationalCitySelect({
   // Set initial search term based on value
   useEffect(() => {
     if (value && cities.length > 0) {
-      const selectedCity = cities.find(city => city.ville === value);
+      const selectedCity = cities.find((city) => city.ville === value);
       if (selectedCity) {
         setSearchTerm(selectedCity.ville);
       }
@@ -81,7 +84,7 @@ function InternationalCitySelect({
     const newValue = e.target.value;
     setSearchTerm(newValue);
     setIsOpen(true);
-    
+
     // If user clears the input, clear the selection
     if (!newValue) {
       onChange("");
@@ -182,7 +185,9 @@ function InternationalCitySelect({
         <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
           {filteredCities.length === 0 ? (
             <div className="px-4 py-3 text-gray-500 text-center">
-              {searchTerm ? `No cities found matching "${searchTerm}"` : "No cities available"}
+              {searchTerm
+                ? `No cities found matching "${searchTerm}"`
+                : "No cities available"}
             </div>
           ) : (
             filteredCities.map((city) => (
@@ -190,7 +195,9 @@ function InternationalCitySelect({
                 key={city.id}
                 onClick={() => handleCitySelect(city)}
                 className={`px-4 py-3 cursor-pointer hover:bg-purple-50 flex justify-between items-center ${
-                  value === city.ville ? 'bg-purple-100 text-purple-800' : 'text-gray-700'
+                  value === city.ville
+                    ? "bg-purple-100 text-purple-800"
+                    : "text-gray-700"
                 }`}
               >
                 <div className="flex items-center space-x-3">

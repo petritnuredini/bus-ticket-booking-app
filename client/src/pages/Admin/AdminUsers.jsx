@@ -14,7 +14,7 @@ function AdminUsers() {
   const getUsers = useCallback( async () => {
     try {
       dispatch(ShowLoading());
-      const response = await axiosInstance.get("/api/users/get-all-users", {});
+      const response = await axiosInstance.get("/users/get-all-users", {});
       dispatch(HideLoading());
       if (response.data.success) {
         setUsers(response.data.data);

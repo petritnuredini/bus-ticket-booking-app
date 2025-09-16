@@ -21,7 +21,7 @@ function CitySelect({
     const fetchCities = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get("/api/cities/get-all-cities");
+        const response = await axiosInstance.get("/cities/get-all-cities");
         if (response.data.status === "success") {
           setCities(response.data.data);
           setFilteredCities(response.data.data);

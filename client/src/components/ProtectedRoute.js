@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import axios from "axios";
+import { axiosInstance } from "../helpers/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { SetUser } from "../redux/usersSlice";
@@ -16,15 +16,8 @@ function ProtectedRoute({ children }) {
     try {
       dispatch(ShowLoading());
 
-      const response = await axios.get(
-        `/api/users/${user_id} `,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await axiosInstance.get(`/users/${user_id}`);
+      // axiosInstance already handles the authorization headers
       dispatch(HideLoading());
       if (response.data.success) {
         dispatch(SetUser(response.data.data));
