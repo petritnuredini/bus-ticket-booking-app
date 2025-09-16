@@ -8,7 +8,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { useSelector } from "react-redux";
 import { ChatProvider } from "./contexts/ChatContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
-import GlobalLanguageSwitcher from "./components/GlobalLanguageSwitcher";
 import "./i18n";
 
 const Index = lazy(() => import("./pages/Index"));
@@ -40,7 +39,6 @@ function App() {
       <LanguageProvider>
         <ChatProvider>
           <BrowserRouter>
-            <GlobalLanguageSwitcher position="top-right" />
             <Suspense fallback={loading}>
               <Routes>
               <Route
