@@ -9,6 +9,7 @@ import { Helmet } from "react-helmet";
 import { DownloadOutlined, PlusOutlined } from "@ant-design/icons";
 import TicketDownload from "../components/TicketDownload";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function Bookings() {
   const [bookings, setBookings] = useState([]);
@@ -16,6 +17,7 @@ function Bookings() {
   const [selectedBookingId, setSelectedBookingId] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Merr bookings nga API
   const getBookings = useCallback(async () => {
@@ -86,45 +88,45 @@ function Bookings() {
     setShowTicketModal(true);
   };
 
-  // Kolonat e tabelës
+  // Table columns
   const columns = [
     {
-      title: "Bus Name",
+      title: t('admin.busName'),
       dataIndex: "name",
       key: "bus",
     },
     {
-      title: "Full Name",
+      title: t('admin.fullName'),
       dataIndex: "user",
       key: "user",
     },
     {
-      title: "Bus Number",
+      title: t('booking.busNumber'),
       dataIndex: "busNumber",
       key: "bus",
     },
     {
-      title: "Journey Date",
+      title: t('booking.journeyDate'),
       dataIndex: "journeyDate",
       render: (journeyDate) => moment(journeyDate).format("DD/MM/YYYY"),
     },
     {
-      title: "Journey Time",
+      title: t('admin.journeyTime'),
       dataIndex: "departure",
       render: (departure) => moment(departure, "HH:mm").format("hh:mm A"),
     },
     {
-      title: "Seats",
+      title: t('booking.seats'),
       dataIndex: "seats",
       render: (seats) => seats.join(", "),
     },
     {
-      title: "Price",
+      title: t('admin.price'),
       key: "price",
       render: (text, record) => <span>{record.amountPaid} €</span>,
     },
     {
-      title: "Actions",
+      title: t('admin.actions'),
       key: "actions",
       render: (text, record) => (
         <Button
@@ -133,7 +135,7 @@ function Bookings() {
           onClick={() => handleDownloadTicket(record._id)}
           size="small"
         >
-          Download Ticket
+          {t('booking.downloadTicket')}
         </Button>
       ),
     },
@@ -146,12 +148,12 @@ function Bookings() {
   return (
     <>
       <Helmet>
-        <title>Bookings</title>
+        <title>{t('common.bookings')}</title>
       </Helmet>
 
       <div className="p-5">
         <div className="flex justify-between items-center mb-4">
-          <PageTitle title="Bookings" />
+          <PageTitle title={t('common.bookings')} />
           <Button
             type="primary"
             icon={<PlusOutlined />}
@@ -159,7 +161,7 @@ function Bookings() {
             className="bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700"
             size="large"
           >
-            Add New Booking
+            {t('booking.addNewBooking')}
           </Button>
         </div>
         <Table columns={columns} dataSource={bookings} />
@@ -167,7 +169,7 @@ function Bookings() {
 
       {/* Ticket Download Modal */}
       <Modal
-        title="🎫 Download Your Ticket"
+        title={`🎫 ${t('booking.downloadYourTicket')}`}
         open={showTicketModal}
         onCancel={() => {
           setShowTicketModal(false);

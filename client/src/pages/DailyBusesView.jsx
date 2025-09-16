@@ -7,6 +7,8 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 //import logo from "../assets/img/bus_tickets_app.png";
 import CitySelect from "../components/CitySelect";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 
 function DailyBusesView() {
   const dispatch = useDispatch();
@@ -14,8 +16,17 @@ function DailyBusesView() {
   const [filteredBuses, setFilteredBuses] = useState([]);
   const [searchFrom, setSearchFrom] = useState("");
   const [searchTo, setSearchTo] = useState("");
+  const { t } = useTranslation();
 
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const daysOfWeek = [
+    t('common.sun') + 'day', 
+    t('common.mon') + 'day', 
+    t('common.tue') + 'day', 
+    t('common.wed') + 'day', 
+    t('common.thu') + 'day', 
+    t('common.fri') + 'day', 
+    t('common.sat') + 'day'
+  ];
 
   const getDailyBuses = async () => {
     try {
@@ -29,8 +40,8 @@ function DailyBusesView() {
         message.error(response.data.message);
       }
     } catch (error) {
-      dispatch(HideLoading());
-      message.error("Failed to fetch daily bus schedules");
+                      dispatch(HideLoading());
+                      message.error(t('common.failedToFetchDailyBusSchedules'));
     }
   };
 
@@ -101,7 +112,7 @@ function DailyBusesView() {
   return (
     <>
       <Helmet>
-        <title>Daily Bus Schedules</title>
+        <title>{t('booking.dailyBuses')}</title>
       </Helmet>
 
       {/* Public Header */}
@@ -109,27 +120,28 @@ function DailyBusesView() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <Link to="/" className="flex items-center space-x-3">
-              <span className="text-white text-xl font-bold">Easy-Booking</span>
+              <span className="text-white text-xl font-bold">{t('common.appName')}</span>
             </Link>
-            <div className="flex space-x-4">
+            <div className="flex items-center space-x-4">
               <Link
                 to="/international-booking"
                 className="text-white hover:text-green-300 px-3 py-2 rounded-md text-sm font-medium"
               >
-                International Booking
+                {t('booking.internationalBusBooking')}
               </Link>
               <Link
                 to="/login"
                 className="text-white hover:text-blue-300 px-3 py-2 rounded-md text-sm font-medium"
               >
-                Login
+                {t('common.login')}
               </Link>
               <Link
                 to="/register"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
               >
-                Register
+                {t('common.register')}
               </Link>
+              <LanguageSwitcher />
             </div>
           </div>
         </div>
@@ -140,10 +152,10 @@ function DailyBusesView() {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              Daily Bus Schedules
+              {t('booking.dailyBuses')}
             </h1>
             <p className="text-gray-600">
-              View recurring bus schedules and plan your regular journeys
+              {t('admin.dailyBusManagementDescription')}
             </p>
           </div>
 
@@ -152,12 +164,12 @@ function DailyBusesView() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  From
+                  {t('booking.from')}
                 </label>
                 <CitySelect
                   value={searchFrom}
                   onChange={setSearchFrom}
-                  placeholder="Select departure city"
+                  placeholder={t('booking.selectDepartureCity')}
                 />
               </div>
 
@@ -166,7 +178,7 @@ function DailyBusesView() {
                 <button
                   onClick={swapCities}
                   className="p-3 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors border border-blue-200 hover:border-blue-300 rotate-90 md:rotate-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                  title="Swap departure and destination cities"
+                  title={t('booking.swapDepartureAndDestination')}
                   disabled={!searchFrom || !searchTo}
                 >
                   <i className="ri-arrow-left-right-line text-xl"></i>
@@ -175,12 +187,12 @@ function DailyBusesView() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  To
+                  {t('booking.to')}
                 </label>
                 <CitySelect
                   value={searchTo}
                   onChange={setSearchTo}
-                  placeholder="Select destination city"
+                  placeholder={t('booking.selectDestinationCity')}
                 />
               </div>
 
@@ -189,7 +201,7 @@ function DailyBusesView() {
                   onClick={clearSearch}
                   className="w-full px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
                 >
-                  Clear Filters
+                  {t('common.clearFilters')}
                 </button>
               </div>
             </div>
@@ -198,7 +210,9 @@ function DailyBusesView() {
           {/* Results Count */}
           <div className="mb-4">
             <p className="text-gray-600">
-              Showing {filteredBuses.length} daily bus schedule{filteredBuses.length !== 1 ? 's' : ''}
+              {t('common.showing')} {filteredBuses.length} {filteredBuses.length !== 1 
+                ? t('admin.dailyBusSchedules').toLowerCase() 
+                : t('common.schedule').toLowerCase()}
             </p>
           </div>
 
@@ -210,12 +224,12 @@ function DailyBusesView() {
                   <i className="ri-bus-line"></i>
                 </div>
                 <h3 className="text-xl font-medium text-gray-600 mb-2">
-                  No daily bus schedules found
+                  {t('booking.noDailyBusSchedulesFound')}
                 </h3>
                 <p className="text-gray-500">
                   {searchFrom || searchTo 
-                    ? "Try adjusting your search criteria" 
-                    : "No daily bus schedules are currently available"
+                    ? t('booking.tryAdjustingSearchCriteria')
+                    : t('booking.noDailyBusSchedulesAvailable')
                   }
                 </p>
               </div>
@@ -227,14 +241,14 @@ function DailyBusesView() {
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-xl font-bold text-gray-800">{bus.name}</h3>
-                        <p className="text-gray-600">Bus #{bus.busNumber}</p>
+                        <p className="text-gray-600">{t('booking.busNumber')}: {bus.busNumber}</p>
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold text-blue-600">
-                          ${parseFloat(bus.price).toFixed(2)}
+                          {parseFloat(bus.price).toFixed(2)} €
                         </div>
                         <div className="text-sm text-gray-500">
-                          {bus.capacity} seats
+                          {bus.capacity} {t('booking.seats').toLowerCase()}
                         </div>
                       </div>
                     </div>
@@ -243,7 +257,7 @@ function DailyBusesView() {
                     <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-lg">
                       <div className="text-center">
                         <div className="text-lg font-semibold text-gray-800">{bus.from}</div>
-                        <div className="text-sm text-gray-500">Departure</div>
+                        <div className="text-sm text-gray-500">{t('booking.departureShort')}</div>
                       </div>
                       <div className="flex-1 mx-4">
                         <div className="border-t-2 border-dashed border-gray-300 relative">
@@ -252,7 +266,7 @@ function DailyBusesView() {
                       </div>
                       <div className="text-center">
                         <div className="text-lg font-semibold text-gray-800">{bus.to}</div>
-                        <div className="text-sm text-gray-500">Arrival</div>
+                        <div className="text-sm text-gray-500">{t('booking.arrivalShort')}</div>
                       </div>
                     </div>
 
@@ -260,7 +274,7 @@ function DailyBusesView() {
                     <div className="space-y-4">
                       {/* Active Days */}
                       <div>
-                        <h4 className="font-medium text-gray-700 mb-2">Operating Days:</h4>
+                        <h4 className="font-medium text-gray-700 mb-2">{t('admin.activeDays')}:</h4>
                         <div className="flex flex-wrap gap-2">
                           {daysOfWeek.map((day, index) => (
                             <span
@@ -279,11 +293,11 @@ function DailyBusesView() {
 
                       {/* Default Schedule */}
                       <div>
-                        <h4 className="font-medium text-gray-700 mb-2">Default Schedule:</h4>
+                        <h4 className="font-medium text-gray-700 mb-2">{t('admin.defaultSchedule')}:</h4>
                         <div className="bg-blue-50 p-3 rounded-lg">
                           <div className="flex justify-between">
-                            <span>Departure: <strong>{formatTime(bus.defaultDeparture)}</strong></span>
-                            <span>Arrival: <strong>{formatTime(bus.defaultArrival)}</strong></span>
+                            <span>{t('booking.departureTime')}: <strong>{formatTime(bus.defaultDeparture)}</strong></span>
+                            <span>{t('booking.arrivalTime')}: <strong>{formatTime(bus.defaultArrival)}</strong></span>
                           </div>
                         </div>
                       </div>
@@ -291,7 +305,7 @@ function DailyBusesView() {
                       {/* Schedule Variations */}
                       {bus.scheduleVariations && Object.keys(bus.scheduleVariations).length > 0 && (
                         <div>
-                          <h4 className="font-medium text-gray-700 mb-2">Special Schedules:</h4>
+                          <h4 className="font-medium text-gray-700 mb-2">{t('admin.variations')}:</h4>
                           <div className="space-y-2">
                             {Object.entries(bus.scheduleVariations).map(([dayNum, schedule]) => (
                               <div key={dayNum} className="bg-yellow-50 p-3 rounded-lg">
@@ -300,8 +314,8 @@ function DailyBusesView() {
                                     {daysOfWeek[parseInt(dayNum)]}:
                                   </span>
                                   <span>
-                                    Dep: <strong>{formatTime(schedule.departure)}</strong> | 
-                                    Arr: <strong>{formatTime(schedule.arrival)}</strong>
+                                    {t('booking.departureShort')}: <strong>{formatTime(schedule.departure)}</strong> | 
+                                    {t('booking.arrivalShort')}: <strong>{formatTime(schedule.arrival)}</strong>
                                   </span>
                                 </div>
                               </div>

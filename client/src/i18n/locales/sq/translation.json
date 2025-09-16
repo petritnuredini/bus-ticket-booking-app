@@ -22,6 +22,10 @@
     "internationalDescription": "Rezervoni bileta për destinacione ndërkombëtare. Lidhni Kosovën me botën.",
     "bookInternationalLink": "Rezervo Ndërkombëtare →",
     "optional": "Opsionale",
+    "clearFilters": "Pastro Filtrat",
+    "showing": "Duke shfaqur",
+    "schedule": "Orar",
+    "failedToFetchDailyBusSchedules": "Dështoi në marrjen e orareve të autobusëve të përditshëm",
     "sun": "Die",
     "mon": "Hën",
     "tue": "Mar",
@@ -50,8 +54,12 @@
     "back": "Kthehu",
     "validation": {
       "emailRequired": "Ju lutem shkruani emailin tuaj!",
-      "passwordRequired": "Ju lutem shkruani fjalëkalimin tuaj!"
-    }
+      "passwordRequired": "Ju lutem shkruani fjalëkalimin tuaj!",
+      "nameRequired": "Ju lutem shkruani emrin tuaj të plotë!",
+      "confirmPasswordRequired": "Ju lutem shkruani fjalëkalimin tuaj përsëri!"
+    },
+    "passwordsMustMatch": "Fjalëkalimi dhe Konfirmimi i Fjalëkalimit duhet të jenë të njëjtë",
+    "createAccount": "Krijo Llogarinë"
   },
   "booking": {
     "from": "Nga",
@@ -83,6 +91,12 @@
     "noResults": "Nuk u gjetën autobusë për kriteret e zgjedhura",
     "dailyBuses": "Autobusët e Përditshëm",
     "internationalBuses": "Autobusët Ndërkombëtarë",
+    "downloadTicket": "Shkarko Biletën",
+    "downloadYourTicket": "Shkarko Biletën Tuaj",
+    "addNewBooking": "Shto Rezervim të Ri",
+    "noDailyBusSchedulesFound": "Nuk u gjetën orare të autobusëve të përditshëm",
+    "tryAdjustingSearchCriteria": "Provoni të rregulloni kriteret e kërkimit",
+    "noDailyBusSchedulesAvailable": "Aktualisht nuk ka orare të autobusëve të përditshëm",
     "internationalBusBooking": "Rezervimi i Autobusëve Ndërkombëtarë",
     "searchInternationalBuses": "Kërko Autobusë Ndërkombëtarë",
     "selectDepartureCity": "Zgjidhni qytetin e nisjes",

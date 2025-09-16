@@ -22,6 +22,10 @@
     "internationalDescription": "Book tickets for international destinations. Connect Kosovo with the world.",
     "bookInternationalLink": "Book International →",
     "optional": "Optional",
+    "clearFilters": "Clear Filters",
+    "showing": "Showing",
+    "schedule": "Schedule",
+    "failedToFetchDailyBusSchedules": "Failed to fetch daily bus schedules",
     "sun": "Sun",
     "mon": "Mon",
     "tue": "Tue",
@@ -50,8 +54,12 @@
     "back": "Back",
     "validation": {
       "emailRequired": "Please input your email!",
-      "passwordRequired": "Please input your password!"
-    }
+      "passwordRequired": "Please input your password!",
+      "nameRequired": "Please input your full name!",
+      "confirmPasswordRequired": "Please input your password again!"
+    },
+    "passwordsMustMatch": "Password and Confirm Password must be the same",
+    "createAccount": "Create Account"
   },
   "booking": {
     "from": "From",
@@ -83,6 +91,12 @@
     "noResults": "No buses found for the selected criteria",
     "dailyBuses": "Daily Buses",
     "internationalBuses": "International Buses",
+    "downloadTicket": "Download Ticket",
+    "downloadYourTicket": "Download Your Ticket",
+    "addNewBooking": "Add New Booking",
+    "noDailyBusSchedulesFound": "No daily bus schedules found",
+    "tryAdjustingSearchCriteria": "Try adjusting your search criteria",
+    "noDailyBusSchedulesAvailable": "No daily bus schedules are currently available",
     "internationalBusBooking": "International Bus Booking",
     "searchInternationalBuses": "Search International Buses",
     "selectDepartureCity": "Select departure city",
