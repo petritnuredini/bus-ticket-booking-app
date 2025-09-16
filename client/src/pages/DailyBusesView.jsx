@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 //import logo from "../assets/img/bus_tickets_app.png";
 import CitySelect from "../components/CitySelect";
 import { useTranslation } from "react-i18next";
-import LanguageSwitcher from "../components/LanguageSwitcher";
+import GlobalLanguageSwitcher from "../components/GlobalLanguageSwitcher";
 
 function DailyBusesView() {
   const dispatch = useDispatch();
@@ -114,6 +114,8 @@ function DailyBusesView() {
       <Helmet>
         <title>{t('booking.dailyBuses')}</title>
       </Helmet>
+      
+      <GlobalLanguageSwitcher position="top-right" />
 
       {/* Public Header */}
       <div className="bg-gray-800 shadow-lg">
@@ -141,7 +143,6 @@ function DailyBusesView() {
               >
                 {t('common.register')}
               </Link>
-              <LanguageSwitcher />
             </div>
           </div>
         </div>

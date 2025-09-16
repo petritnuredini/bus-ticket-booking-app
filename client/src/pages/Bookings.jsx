@@ -10,6 +10,7 @@ import { DownloadOutlined, PlusOutlined } from "@ant-design/icons";
 import TicketDownload from "../components/TicketDownload";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import GlobalLanguageSwitcher from "../components/GlobalLanguageSwitcher";
 
 function Bookings() {
   const [bookings, setBookings] = useState([]);
@@ -150,6 +151,8 @@ function Bookings() {
       <Helmet>
         <title>{t('common.bookings')}</title>
       </Helmet>
+      
+      <GlobalLanguageSwitcher position="top-right" />
 
       <div className="p-5">
         <div className="flex justify-between items-center mb-4">

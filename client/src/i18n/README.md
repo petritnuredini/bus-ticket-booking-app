@@ -37,21 +37,19 @@ Use the `useLanguage` hook to access language changing functionality:
 ```jsx
 import { useLanguage } from '../contexts/LanguageContext';
 
-function LanguageSwitcher() {
-  const { currentLanguage, changeLanguage, languages } = useLanguage();
+function GlobalLanguageSwitcher({ position = 'top-right' }) {
+  const { currentLanguage, changeLanguage } = useLanguage();
   
+  const toggleLanguage = () => {
+    const newLang = currentLanguage === 'sq' ? 'en' : 'sq';
+    changeLanguage(newLang);
+  };
+
   return (
-    <div>
-      <select 
-        value={currentLanguage}
-        onChange={(e) => changeLanguage(e.target.value)}
-      >
-        {languages.map(lang => (
-          <option key={lang.code} value={lang.code}>
-            {lang.name}
-          </option>
-        ))}
-      </select>
+    <div className="language-switcher">
+      <button onClick={toggleLanguage}>
+        {currentLanguage === 'sq' ? 'English' : 'Shqip'}
+      </button>
     </div>
   );
 }

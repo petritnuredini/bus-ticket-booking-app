@@ -7,6 +7,7 @@ import Bus from "../components/Bus";
 import { Row, message } from "antd";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import GlobalLanguageSwitcher from "../components/GlobalLanguageSwitcher";
 
 
 function Index() {
@@ -17,6 +18,7 @@ function Index() {
       <Helmet>
         <title>Easy-Booking</title>
       </Helmet>
+      <GlobalLanguageSwitcher position="top-right" />
       <div className="h-screen flex bg-gray-900">
         <div
           className="hero min-h-screen lg:flex w-full lg:w-3/4"

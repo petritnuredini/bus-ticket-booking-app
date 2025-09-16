@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import PublicHeader from "./PublicHeader";
+import GlobalLanguageSwitcher from "./GlobalLanguageSwitcher";
 
 function PublicRoute({ children }) {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ function PublicRoute({ children }) {
   }, [navigate]);
   return (
     <div>
-      <PublicHeader />
+      <GlobalLanguageSwitcher position="top-right" />
       {children}
     </div>
   );

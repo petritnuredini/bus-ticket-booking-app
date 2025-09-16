@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import LanguageSwitcher from "./LanguageSwitcher";
+import GlobalLanguageSwitcher from "./GlobalLanguageSwitcher";
 //import logo from "../assets/img/bus_tickets_app.png";
 
 function DefaultLayout({ children }) {
@@ -161,9 +161,7 @@ function DefaultLayout({ children }) {
             <div className="mt-1">{user?.name} </div>
             <div className="mt-1">{user?.email}</div>
           </h1>
-          <div className="mt-3">
-            <LanguageSwitcher />
-          </div>
+          <GlobalLanguageSwitcher position="top-right" />
         </div>
         <div className="p-[10px] px-0">{children}</div>
       </div>
