@@ -6,9 +6,11 @@ import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import Bus from "../components/Bus";
 import { Row, message } from "antd";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 
 function Index() {
+  const { t } = useTranslation();
 
   return (
     <>
@@ -37,11 +39,10 @@ function Index() {
             </div>
 
             <h1 className="mb-5 text-5xl text-white font-bold ">
-              Easy-Booking
+              {t('common.appName')}
             </h1>
             <p className="mb-5 text-xl text-white">
-              is a platform that allows you to book your bus tickets online and
-              in a very easy way.
+              {t('common.appDescription')}
             </p>
             <div className="flex flex-col gap-4">
               <Link
@@ -53,7 +54,7 @@ function Index() {
                 <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
                 <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:translate-x-1"></span>
                 <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white">
-                  Check your tickets
+                  {t('common.checkTickets')}
                 </span>
                 <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
               </Link>
@@ -68,7 +69,7 @@ function Index() {
                 <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-green-500 opacity-100 group-hover:translate-x-1"></span>
                 <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white flex items-center justify-center gap-2">
                   <i className="ri-map-pin-line"></i>
-                  View Daily Buses inside Kosovo
+                  {t('common.viewDailyBuses')}
                 </span>
                 <span className="absolute inset-0 border-2 border-green-500 rounded-full"></span>
               </Link>
@@ -83,7 +84,7 @@ function Index() {
                 <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-purple-500 opacity-100 group-hover:translate-x-1"></span>
                 <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white flex items-center justify-center gap-2">
                   <i className="ri-plane-line"></i>
-                  Book an International Ticket
+                  {t('common.bookInternational')}
                 </span>
                 <span className="absolute inset-0 border-2 border-purple-500 rounded-full"></span>
               </Link>
@@ -95,33 +96,31 @@ function Index() {
                 <div className="flex flex-col justify-start">
                   <h3 className="text-lg font-semibold text-white mb-2">
                     <i className="ri-map-pin-line mr-2"></i>
-                    Domestic Travel
+                    {t('common.domesticTravel')}
                   </h3>
                   <p className="text-white text-sm opacity-90 mb-3">
-                    Explore daily bus schedules within Kosovo.
-                    Regular routes and recurring patterns.
+                    {t('common.domesticDescription')}
                   </p>
                   <Link
                     to="/daily-buses"
                     className="text-green-400 hover:text-green-300 text-sm font-medium underline"
                   >
-                    View Kosovo Routes →
+                    {t('common.viewKosovoRoutes')}
                   </Link>
                 </div>
                 <div className="flex flex-col justify-start">
                   <h3 className="text-lg font-semibold text-white mb-2">
                     <i className="ri-plane-line mr-2"></i>
-                    International Travel
+                    {t('common.internationalTravel')}
                   </h3>
                   <p className="text-white text-sm opacity-90 mb-3">
-                    Book tickets for international destinations.
-                    Connect Kosovo with the world.
+                    {t('common.internationalDescription')}
                   </p>
                   <Link
                     to="/international-booking"
                     className="text-purple-400 hover:text-purple-300 text-sm font-medium underline mt-auto"
                   >
-                    Book International →
+                    {t('common.bookInternationalLink')}
                   </Link>
                 </div>
               </div>

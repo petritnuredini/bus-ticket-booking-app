@@ -9,7 +9,18 @@
     "bookings": "Rezervimet",
     "myBookings": "Rezervimet e Mia",
     "profile": "Profili",
-    "language": "Gjuha"
+    "language": "Gjuha",
+    "appName": "Easy-Booking",
+    "appDescription": "Është një platformë që ju lejon të rezervoni biletat tuaja të autobusit online dhe në një mënyrë shumë të lehtë.",
+    "checkTickets": "Kontrolloni biletat tuaja",
+    "viewDailyBuses": "Shikoni autobusët e përditshëm brenda Kosovës",
+    "bookInternational": "Rezervoni një biletë ndërkombëtare",
+    "domesticTravel": "Udhëtime Vendase",
+    "domesticDescription": "Eksploroni oraret e përditshme të autobusëve brenda Kosovës. Rrugë të rregullta dhe modele të përsëritshme.",
+    "viewKosovoRoutes": "Shikoni rrugët e Kosovës →",
+    "internationalTravel": "Udhëtime Ndërkombëtare",
+    "internationalDescription": "Rezervoni bileta për destinacione ndërkombëtare. Lidhni Kosovën me botën.",
+    "bookInternationalLink": "Rezervo Ndërkombëtare →"
   },
   "auth": {
     "email": "Email",

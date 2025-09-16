@@ -9,7 +9,18 @@
     "bookings": "Bookings",
     "myBookings": "My Bookings",
     "profile": "Profile",
-    "language": "Language"
+    "language": "Language",
+    "appName": "Easy-Booking",
+    "appDescription": "Is a platform that allows you to book your bus tickets online and in a very easy way.",
+    "checkTickets": "Check your tickets",
+    "viewDailyBuses": "View Daily Buses inside Kosovo",
+    "bookInternational": "Book an International Ticket",
+    "domesticTravel": "Domestic Travel",
+    "domesticDescription": "Explore daily bus schedules within Kosovo. Regular routes and recurring patterns.",
+    "viewKosovoRoutes": "View Kosovo Routes →",
+    "internationalTravel": "International Travel",
+    "internationalDescription": "Book tickets for international destinations. Connect Kosovo with the world.",
+    "bookInternationalLink": "Book International →"
   },
   "auth": {
     "email": "Email",
