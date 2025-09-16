@@ -5,10 +5,12 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { ShowLoading, HideLoading } from "../redux/alertsSlice";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const onFinish = async (values) => {
     try {
       dispatch(ShowLoading());
@@ -47,7 +49,7 @@ function Login() {
   return (
     <>
       <Helmet>
-        <title>Login</title>
+        <title>{t('auth.login')}</title>
       </Helmet>
       <Form onFinish={onFinish} className="h-screen flex">
         <div
@@ -85,13 +87,13 @@ function Login() {
                   </svg>
                 </span>
                 <span className="absolute flex items-center justify-center w-full h-full text-blue-600 transition-all duration-300 transform group-hover:translate-x-full ease">
-                  Back
+                  {t('auth.back')}
                 </span>
                 <span className="relative invisible">Button Text</span>
               </Link>
             </div>
             <h1 className="mb-8 text-5xl text-center font-bold italic">
-              Login
+              {t('auth.login')}
             </h1>
             <Form.Item
               name="email"
@@ -99,7 +101,7 @@ function Login() {
               rules={[
                 {
                   required: true,
-                  message: "Please input your email!",
+                  message: t('auth.validation.emailRequired'),
                   validateTrigger: "onSubmit",
                 },
               ]}
@@ -116,7 +118,7 @@ function Login() {
                   htmlFor="floating_email"
                   className="absolute text-sm text-gray-500 dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
-                  Email address
+                  {t('auth.emailAddress')}
                 </label>
               </div>
             </Form.Item>
@@ -126,7 +128,7 @@ function Login() {
               rules={[
                 {
                   required: true,
-                  message: "Please input your password!",
+                  message: t('auth.validation.passwordRequired'),
                   min: 6,
                   validateTrigger: "onSubmit",
                 },
@@ -144,7 +146,7 @@ function Login() {
                   htmlFor="floating_password"
                   className="absolute text-sm text-gray-500 dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
-                  Password
+                  {t('auth.password')}
                 </label>
                 <i
                   className="absolute right-0 top-0 mt-3 mr-4 text-black cursor-pointer"
@@ -196,18 +198,18 @@ function Login() {
                 <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
                 <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:-translate-x-8"></span>
                 <span className="relative w-full text-left text-black transition-colors duration-200 ease-in-out group-hover:text-white">
-                  Login
+                  {t('auth.login')}
                 </span>
                 <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
               </button>
             </div>
             <p className="text-center text-base text-gray-600">
-              Don't have an account?{" "}
+              {t('auth.dontHaveAccount')}{" "}
               <Link
                 to="/register"
                 className="text-blue-600 font-bold hover:text-blue-700"
               >
-                Register
+                {t('auth.register')}
               </Link>
             </p>
             <p className="text-center text-base text-gray-600">
@@ -215,7 +217,7 @@ function Login() {
                 to="/forgot-password"
                 className="text-blue-600 font-bold hover:text-blue-700"
               >
-                Forgot Password ?
+                {t('auth.forgotPasswordQuestion')}
               </Link>
             </p>
           </div>

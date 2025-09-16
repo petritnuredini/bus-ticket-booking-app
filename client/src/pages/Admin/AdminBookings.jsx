@@ -6,10 +6,12 @@ import { HideLoading, ShowLoading } from "../../redux/alertsSlice";
 import PageTitle from "../../components/PageTitle";
 import moment from "moment";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
 
 function AdminBookings() {
   const [bookings, setBookings] = useState([]);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const getBookings = useCallback(async () => {
     try {
@@ -39,33 +41,33 @@ function AdminBookings() {
 
   const columns = [
     {
-      title: "Bus Name",
+      title: t('admin.busName'),
       dataIndex: "name",
       key: "bus",
     },
     {
-      title: "Full Name",
+      title: t('admin.fullName'),
       dataIndex: "user",
       render: (user) => `${user.name}`,
     },
 
     {
-      title: "Bus Number",
+      title: t('booking.busNumber'),
       dataIndex: "busNumber",
       key: "bus",
     },
     {
-      title: "Journey Date",
+      title: t('booking.journeyDate'),
       dataIndex: "journeyDate",
       render: (journeyDate) => moment(journeyDate).format("DD/MM/YYYY"),
     },
     {
-      title: "Journey Time",
+      title: t('admin.journeyTime'),
       dataIndex: "departure",
       render: (departure) => moment(departure, "HH:mm").format("hh:mm A"),
     },
     {
-      title: "Seats",
+      title: t('booking.seats'),
       dataIndex: "seats",
       render: (seats) => seats.join(", "),
     },
@@ -78,10 +80,10 @@ function AdminBookings() {
   return (
     <>
       <Helmet>
-        <title>User Bookings</title>
+        <title>{t('admin.bookings')}</title>
       </Helmet>
       <div className="p-5">
-        <PageTitle title="Bookings" />
+        <PageTitle title={t('admin.bookings')} />
         <Table columns={columns} dataSource={bookings} />
       </div>
     </>

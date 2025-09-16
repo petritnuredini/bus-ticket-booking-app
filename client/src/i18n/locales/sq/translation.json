@@ -24,17 +24,26 @@
   },
   "auth": {
     "email": "Email",
+    "emailAddress": "Adresa e emailit",
     "password": "Fjalëkalimi",
     "confirmPassword": "Konfirmo Fjalëkalimin",
     "name": "Emri",
     "phone": "Numri i Telefonit",
     "rememberMe": "Më mbaj mend",
     "forgotPassword": "Harruat fjalëkalimin?",
-    "dontHaveAccount": "Nuk keni llogari? Regjistrohu tani",
+    "forgotPasswordQuestion": "Harruat Fjalëkalimin ?",
+    "dontHaveAccount": "Nuk keni llogari?",
     "alreadyHaveAccount": "Keni tashmë një llogari? Hyni tani",
     "resetPassword": "Rivendosni Fjalëkalimin",
     "enterEmail": "Shkruani adresën tuaj të emailit",
-    "sendResetLink": "Dërgo Linkun e Rivendosjes"
+    "sendResetLink": "Dërgo Linkun e Rivendosjes",
+    "login": "Kyçu",
+    "register": "Regjistrohu",
+    "back": "Kthehu",
+    "validation": {
+      "emailRequired": "Ju lutem shkruani emailin tuaj!",
+      "passwordRequired": "Ju lutem shkruani fjalëkalimin tuaj!"
+    }
   },
   "booking": {
     "from": "Nga",
@@ -59,6 +68,7 @@
     "ticketPrice": "Çmimi i Biletës",
     "bookedSeats": "Vendet e Rezervuara",
     "availableSeats": "Vendet e Disponueshme",
+    "seats": "Vendet",
     "noSeatsSelected": "Nuk është zgjedhur asnjë vend",
     "noResults": "Nuk u gjetën autobusë për kriteret e zgjedhura",
     "dailyBuses": "Autobusët e Përditshëm",
@@ -74,9 +84,13 @@
     "editBus": "Ndrysho Autobusin",
     "deleteBus": "Fshi Autobusin",
     "busNumber": "Numri i Autobusit",
+    "busName": "Emri i Autobusit",
     "busType": "Tipi i Autobusit",
     "capacity": "Kapaciteti",
-    "price": "Çmimi"
+    "price": "Çmimi",
+    "fullName": "Emri i Plotë",
+    "journeyTime": "Koha e Udhëtimit",
+    "bookings": "Rezervimet"
   },
   "validator": {
     "scanTicket": "Skano Biletën",

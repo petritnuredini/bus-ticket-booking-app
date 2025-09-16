@@ -24,17 +24,26 @@
   },
   "auth": {
     "email": "Email",
+    "emailAddress": "Email address",
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "name": "Name",
     "phone": "Phone Number",
     "rememberMe": "Remember Me",
     "forgotPassword": "Forgot Password?",
-    "dontHaveAccount": "Don't have an account? Register now",
+    "forgotPasswordQuestion": "Forgot Password ?",
+    "dontHaveAccount": "Don't have an account?",
     "alreadyHaveAccount": "Already have an account? Login now",
     "resetPassword": "Reset Password",
     "enterEmail": "Enter your email address",
-    "sendResetLink": "Send Reset Link"
+    "sendResetLink": "Send Reset Link",
+    "login": "Login",
+    "register": "Register",
+    "back": "Back",
+    "validation": {
+      "emailRequired": "Please input your email!",
+      "passwordRequired": "Please input your password!"
+    }
   },
   "booking": {
     "from": "From",
@@ -59,6 +68,7 @@
     "ticketPrice": "Ticket Price",
     "bookedSeats": "Booked Seats",
     "availableSeats": "Available Seats",
+    "seats": "Seats",
     "noSeatsSelected": "No seats selected",
     "noResults": "No buses found for the selected criteria",
     "dailyBuses": "Daily Buses",
@@ -74,9 +84,13 @@
     "editBus": "Edit Bus",
     "deleteBus": "Delete Bus",
     "busNumber": "Bus Number",
+    "busName": "Bus Name",
     "busType": "Bus Type",
     "capacity": "Capacity",
-    "price": "Price"
+    "price": "Price",
+    "fullName": "Full Name",
+    "journeyTime": "Journey Time",
+    "bookings": "Bookings"
   },
   "validator": {
     "scanTicket": "Scan Ticket",
