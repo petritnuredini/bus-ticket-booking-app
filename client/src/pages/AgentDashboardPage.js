@@ -124,7 +124,7 @@ const AgentDashboardPage = () => {
               <span className="text-sm text-gray-600">{t('agent.connected')}</span>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 pr-16">
               <button className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors">
                 <Settings size={16} />
               </button>

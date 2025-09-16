@@ -7,10 +7,18 @@ export const axiosInstance = axios.create({
 // Add request interceptor to dynamically set the token
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // Check for user token first
+    const userToken = localStorage.getItem("token");
+    // Check for agent token if user token doesn't exist
+    const agentToken = localStorage.getItem("agentToken");
+    
+    // Set the appropriate token in Authorization header
+    if (userToken) {
+      config.headers.Authorization = `Bearer ${userToken}`;
+    } else if (agentToken) {
+      config.headers.Authorization = `Bearer ${agentToken}`;
     }
+    
     return config;
   },
   (error) => {
