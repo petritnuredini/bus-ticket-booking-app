@@ -48,10 +48,12 @@
     "alreadyHaveAccount": "Keni tashmë një llogari? Hyni tani",
     "resetPassword": "Rivendosni Fjalëkalimin",
     "enterEmail": "Shkruani adresën tuaj të emailit",
+    "enterEmailForReset": "Shkruani adresën tuaj të emailit dhe ne do t'ju dërgojmë një lidhje për të rivendosur fjalëkalimin tuaj.",
     "sendResetLink": "Dërgo Linkun e Rivendosjes",
     "login": "Kyçu",
     "register": "Regjistrohu",
     "back": "Kthehu",
+    "emailSentSuccessfully": "Emaili u dërgua me sukses. Ju lutemi kontrolloni emailin tuaj",
     "validation": {
       "emailRequired": "Ju lutem shkruani emailin tuaj!",
       "passwordRequired": "Ju lutem shkruani fjalëkalimin tuaj!",
@@ -60,6 +62,21 @@
     },
     "passwordsMustMatch": "Fjalëkalimi dhe Konfirmimi i Fjalëkalimit duhet të jenë të njëjtë",
     "createAccount": "Krijo Llogarinë"
+  },
+  "agent": {
+    "login": "Hyrja e Agjentit",
+    "accessDashboard": "Qasuni në panelin tuaj të mbështetjes së klientit",
+    "enterPassword": "Shkruani fjalëkalimin tuaj",
+    "signingIn": "Duke u kyçur...",
+    "signIn": "Kyçu",
+    "needHelp": "Ju nevojitet ndihmë?",
+    "contactAdmin": "Kontaktoni administratorin tuaj nëse keni probleme me qasjen në llogarinë tuaj",
+    "loginFailed": "Hyrja dështoi. Ju lutemi provoni përsëri.",
+    "failedToLoadData": "Dështoi në ngarkimin e të dhënave të agjentit",
+    "loadingDashboard": "Duke ngarkuar panelin e agjentit...",
+    "goToLogin": "Shko te Hyrja",
+    "customerSupportDashboard": "Paneli i Mbështetjes së Klientit",
+    "connected": "I lidhur"
   },
   "booking": {
     "from": "Nga",

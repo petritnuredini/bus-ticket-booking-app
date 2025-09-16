@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../helpers/axiosInstance";
 import { MessageCircle, Eye, EyeOff, User, Lock } from "react-feather";
+import { useTranslation } from "react-i18next";
+import GlobalLanguageSwitcher from "../components/GlobalLanguageSwitcher";
 
 const AgentLoginPage = () => {
   const [email, setEmail] = useState("");
@@ -9,6 +11,7 @@ const AgentLoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
 
@@ -33,7 +36,7 @@ const AgentLoginPage = () => {
       navigate(`/agent/dashboard/${agentData._id}`);
     } catch (error) {
       setError(
-        error.response?.data?.message || "Login failed. Please try again."
+        error.response?.data?.message || t('agent.loginFailed')
       );
     } finally {
       setIsLoading(false);
@@ -42,6 +45,8 @@ const AgentLoginPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <GlobalLanguageSwitcher position="top-right" />
+      
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
@@ -49,10 +54,10 @@ const AgentLoginPage = () => {
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Agent Login
+          {t('agent.login')}
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Access your customer support dashboard
+          {t('agent.accessDashboard')}
         </p>
       </div>
 
@@ -70,7 +75,7 @@ const AgentLoginPage = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email address
+                {t('auth.emailAddress')}
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -85,7 +90,7 @@ const AgentLoginPage = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Enter your email"
+                  placeholder={t('auth.enterEmail')}
                 />
               </div>
             </div>
@@ -95,7 +100,7 @@ const AgentLoginPage = () => {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                Password
+                {t('auth.password')}
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -110,7 +115,7 @@ const AgentLoginPage = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Enter your password"
+                  placeholder={t('agent.enterPassword')}
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                   <button
@@ -137,10 +142,10 @@ const AgentLoginPage = () => {
                 {isLoading ? (
                   <div className="flex items-center">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Signing in...
+                    {t('agent.signingIn')}
                   </div>
                 ) : (
-                  "Sign in"
+                  t('agent.signIn')
                 )}
               </button>
             </div>
@@ -152,14 +157,13 @@ const AgentLoginPage = () => {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Need help?</span>
+                <span className="px-2 bg-white text-gray-500">{t('agent.needHelp')}</span>
               </div>
             </div>
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                Contact your administrator if you're having trouble accessing
-                your account
+                {t('agent.contactAdmin')}
               </p>
             </div>
           </div>

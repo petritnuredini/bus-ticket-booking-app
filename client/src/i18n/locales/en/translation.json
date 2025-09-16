@@ -48,10 +48,12 @@
     "alreadyHaveAccount": "Already have an account? Login now",
     "resetPassword": "Reset Password",
     "enterEmail": "Enter your email address",
+    "enterEmailForReset": "Enter your email address and we'll send you a link to reset your password.",
     "sendResetLink": "Send Reset Link",
     "login": "Login",
     "register": "Register",
     "back": "Back",
+    "emailSentSuccessfully": "Email Sent Successfully. Please Check Your Email",
     "validation": {
       "emailRequired": "Please input your email!",
       "passwordRequired": "Please input your password!",
@@ -60,6 +62,21 @@
     },
     "passwordsMustMatch": "Password and Confirm Password must be the same",
     "createAccount": "Create Account"
+  },
+  "agent": {
+    "login": "Agent Login",
+    "accessDashboard": "Access your customer support dashboard",
+    "enterPassword": "Enter your password",
+    "signingIn": "Signing in...",
+    "signIn": "Sign in",
+    "needHelp": "Need help?",
+    "contactAdmin": "Contact your administrator if you're having trouble accessing your account",
+    "loginFailed": "Login failed. Please try again.",
+    "failedToLoadData": "Failed to load agent data",
+    "loadingDashboard": "Loading agent dashboard...",
+    "goToLogin": "Go to Login",
+    "customerSupportDashboard": "Customer Support Dashboard",
+    "connected": "Connected"
   },
   "booking": {
     "from": "From",
