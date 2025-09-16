@@ -1,7 +1,9 @@
 import React from "react";
 import { Row, Col } from "antd";
+import { useTranslation } from "react-i18next";
 
 function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
+  const { t } = useTranslation();
   const capacity = bus.capacity;
 
   const selectOrUnselectSeat = (seatNumber) => {
@@ -9,7 +11,7 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
       setSelectedSeats(selectedSeats.filter((seat) => seat !== seatNumber));
     } else {
       if (selectedSeats.length >= 5) {
-        alert("Mund të zgjedhësh maksimumi 5 ulëse.");
+        alert(t('booking.maxFiveSeats', 'You can select a maximum of 5 seats.'));
         return;
       }
       setSelectedSeats([...selectedSeats, seatNumber]);
@@ -113,7 +115,7 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
               borderRadius: '8px',
               boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
             }}></div>
-            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1e40af' }}>Available</div>
+            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1e40af' }}>{t('booking.available', 'Available')}</div>
           </div>
           <div>
             <div style={{ 
@@ -125,7 +127,7 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
               borderRadius: '8px',
               boxShadow: '0 2px 4px rgba(59, 130, 246, 0.3)'
             }}></div>
-            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1e40af' }}>Selected</div>
+            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1e40af' }}>{t('booking.selected', 'Selected')}</div>
           </div>
           <div>
             <div style={{ 
@@ -137,7 +139,7 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
               borderRadius: '8px',
               boxShadow: '0 2px 4px rgba(239, 68, 68, 0.3)'
             }}></div>
-            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1e40af' }}>Occupied</div>
+            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1e40af' }}>{t('booking.occupied', 'Occupied')}</div>
           </div>
         </div>
       </div>
@@ -155,16 +157,16 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
           {selectedSeats.length > 0 ? (
             <>
               <div style={{ color: '#1e40af', fontSize: '20px', fontWeight: 'bold' }}>
-                {selectedSeats.length} seat{selectedSeats.length > 1 ? 's' : ''} selected
+                {t('booking.seatsSelected', '{{count}} seat selected', { count: selectedSeats.length, defaultValue_plural: '{{count}} seats selected' })}
               </div>
               {selectedSeats.length >= 5 && (
                 <div style={{ color: '#ef4444', fontSize: '16px', marginTop: '8px', fontWeight: 'bold' }}>
-                  Maximum 5 seats allowed
+                  {t('booking.maxSeatsAllowed', 'Maximum 5 seats allowed')}
                 </div>
               )}
             </>
           ) : (
-            <span style={{ fontSize: '18px' }}>Click on seats to select them</span>
+            <span style={{ fontSize: '18px' }}>{t('booking.clickToSelectSeats', 'Click on seats to select them')}</span>
           )}
         </div>
       </div>

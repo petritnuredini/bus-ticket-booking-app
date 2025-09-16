@@ -7,6 +7,8 @@ import PublicRoute from "./components/PublicRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useSelector } from "react-redux";
 import { ChatProvider } from "./contexts/ChatContext";
+import { LanguageProvider } from "./contexts/LanguageContext";
+import "./i18n";
 
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
@@ -34,10 +36,11 @@ function App() {
   return (
     <div className="App">
       {loading && <Loader />}
-      <ChatProvider>
-        <BrowserRouter>
-          <Suspense fallback={loading}>
-            <Routes>
+      <LanguageProvider>
+        <ChatProvider>
+          <BrowserRouter>
+            <Suspense fallback={loading}>
+              <Routes>
               <Route
                 path="/"
                 element={
@@ -210,10 +213,11 @@ function App() {
                   </PublicRoute>
                 }
               />
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
-      </ChatProvider>
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </ChatProvider>
+      </LanguageProvider>
     </div>
   );
 }

@@ -3,11 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../helpers/axiosInstance";
 import AgentDashboard from "../components/Chat/AgentDashboard";
 import { LogOut, User, Settings } from "react-feather";
+import { useTranslation } from "react-i18next";
+import GlobalLanguageSwitcher from "../components/GlobalLanguageSwitcher";
 
 const AgentDashboardPage = () => {
   const [agent, setAgent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const { t } = useTranslation();
 
   const { agentId } = useParams();
   const navigate = useNavigate();
@@ -40,7 +43,7 @@ const AgentDashboardPage = () => {
         setAgent(response.data);
       } catch (error) {
         console.error("Error loading agent:", error);
-        setError("Failed to load agent data");
+        setError(t('agent.failedToLoadData'));
         localStorage.removeItem("agent");
         navigate("/agent/login");
       } finally {
@@ -70,9 +73,10 @@ const AgentDashboardPage = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <GlobalLanguageSwitcher position="top-right" />
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading agent dashboard...</p>
+          <p className="text-gray-600">{t('agent.loadingDashboard')}</p>
         </div>
       </div>
     );
@@ -81,13 +85,14 @@ const AgentDashboardPage = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <GlobalLanguageSwitcher position="top-right" />
         <div className="text-center">
           <div className="text-red-600 text-lg mb-4">{error}</div>
           <button
             onClick={() => navigate("/agent/login")}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
-            Go to Login
+            {t('agent.goToLogin')}
           </button>
         </div>
       </div>
@@ -100,12 +105,14 @@ const AgentDashboardPage = () => {
 
   return (
     <div className="h-screen flex flex-col">
+      <GlobalLanguageSwitcher position="top-right" />
+      
       {/* Top Navigation Bar */}
       <div className="bg-white border-b border-gray-200 px-6 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <h1 className="text-xl font-semibold text-gray-900">
-              Customer Support Dashboard
+              {t('agent.customerSupportDashboard')}
             </h1>
             <span className="text-sm text-gray-500">•</span>
             <span className="text-sm text-gray-600">{agent.name}</span>
@@ -114,10 +121,10 @@ const AgentDashboardPage = () => {
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 rounded-full bg-green-500"></div>
-              <span className="text-sm text-gray-600">Connected</span>
+              <span className="text-sm text-gray-600">{t('agent.connected')}</span>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 pr-16">
               <button className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors">
                 <Settings size={16} />
               </button>
@@ -129,7 +136,7 @@ const AgentDashboardPage = () => {
                 className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <LogOut size={16} />
-                <span>Logout</span>
+                <span>{t('common.logout')}</span>
               </button>
             </div>
           </div>

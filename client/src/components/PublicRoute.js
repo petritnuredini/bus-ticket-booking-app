@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import GlobalLanguageSwitcher from "./GlobalLanguageSwitcher";
 
 function PublicRoute({ children }) {
   const navigate = useNavigate();
@@ -8,7 +9,12 @@ function PublicRoute({ children }) {
       navigate("/easy-booking");
     }
   }, [navigate]);
-  return <div>{children}</div>;
+  return (
+    <div>
+      <GlobalLanguageSwitcher position="top-right" />
+      {children}
+    </div>
+  );
 }
 
 export default PublicRoute;

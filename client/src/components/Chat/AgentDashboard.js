@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { useChat } from "../../contexts/ChatContext";
 import { axiosInstance } from "../../helpers/axiosInstance";
 import { MessageCircle, Send, User, Phone, MapPin, Clock } from "react-feather";
+import { useTranslation } from "react-i18next";
 
 /**
  * AgentDashboard Component
  * Full-screen interface for customer service agents to manage multiple chat conversations
  */
 const AgentDashboard = ({ agentId, agent }) => {
+  const { t } = useTranslation();
   const [chats, setChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [message, setMessage] = useState("");
@@ -266,7 +268,7 @@ const AgentDashboard = ({ agentId, agent }) => {
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-semibold text-gray-800">
-              Agent Dashboard
+              {t('agent.dashboard', 'Agent Dashboard')}
             </h2>
             <div className="flex space-x-2">
               <button
@@ -283,8 +285,8 @@ const AgentDashboard = ({ agentId, agent }) => {
                 }`}
               >
                 {status === "online" && isAvailable
-                  ? "🟢 Online"
-                  : "🔴 Offline"}
+                  ? `🟢 ${t('chat.online', 'Online')}`
+                  : `🔴 ${t('chat.offline', 'Offline')}`}
               </button>
             </div>
           </div>
@@ -298,7 +300,7 @@ const AgentDashboard = ({ agentId, agent }) => {
           {chats.length === 0 ? (
             <div className="p-4 text-center text-gray-500">
               <MessageCircle size={32} className="mx-auto mb-2 opacity-50" />
-              <p>No chats yet</p>
+              <p>{t('chat.noChatsYet', 'No chats yet')}</p>
             </div>
           ) : (
             <div className="space-y-1">
@@ -316,7 +318,7 @@ const AgentDashboard = ({ agentId, agent }) => {
                     <div className="flex items-center space-x-2">
                       {getTopicIcon(chat.topic)}
                       <span className="font-medium text-gray-800">
-                        {chat.userId || "Unknown User"}
+                        {chat.userId || t('chat.unknownUser', 'Unknown User')}
                       </span>
                     </div>
                     {getUnreadCount(chat) > 0 && (
@@ -328,7 +330,7 @@ const AgentDashboard = ({ agentId, agent }) => {
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-600 truncate">
                       {chat.messages[chat.messages.length - 1]?.content ||
-                        "No messages yet"}
+                        t('chat.noMessagesYet', 'No messages yet')}
                     </p>
                     <span className="text-xs text-gray-400">
                       {chat.status === "active" ? "🟢" : "🔴"}
@@ -367,7 +369,7 @@ const AgentDashboard = ({ agentId, agent }) => {
                     onClick={() => closeChat(currentChat._id)}
                     className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                   >
-                    Close Chat
+                    {t('chat.closeChat', 'Close Chat')}
                   </button>
                 </div>
               </div>
@@ -416,7 +418,7 @@ const AgentDashboard = ({ agentId, agent }) => {
                   value={message}
                   onChange={handleTyping}
                   onKeyPress={handleKeyPress}
-                  placeholder="Type your message..."
+                  placeholder={t('chat.typeMessage', 'Type your message...')}
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <button
@@ -434,10 +436,10 @@ const AgentDashboard = ({ agentId, agent }) => {
             <div className="text-center text-gray-500">
               <MessageCircle size={48} className="mx-auto mb-4 opacity-50" />
               <h3 className="text-lg font-medium mb-2">
-                Select a chat to start
+                {t('chat.selectChatToStart', 'Select a chat to start')}
               </h3>
               <p className="text-sm">
-                Choose a conversation from the sidebar to begin chatting
+                {t('chat.chooseConversation', 'Choose a conversation from the sidebar to begin chatting')}
               </p>
             </div>
           </div>

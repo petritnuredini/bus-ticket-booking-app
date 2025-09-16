@@ -5,10 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { ShowLoading, HideLoading } from "../redux/alertsSlice";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
+import GlobalLanguageSwitcher from "../components/GlobalLanguageSwitcher";
 
 function ForgotPassword() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const onFinish = async (values) => {
     try {
       dispatch(ShowLoading());
@@ -18,7 +21,7 @@ function ForgotPassword() {
       );
       if (response.status === 200) {
         dispatch(HideLoading());
-        message.success("Email Sent Successfully Please Check Your Email");
+        message.success(t('auth.emailSentSuccessfully'));
         localStorage.setItem("email", values.email);
         navigate("/email-sent");
       }
@@ -30,8 +33,10 @@ function ForgotPassword() {
   return (
     <>
       <Helmet>
-        <title>Forgot Password</title>
+        <title>{t('auth.forgotPassword')}</title>
       </Helmet>
+      
+      <GlobalLanguageSwitcher position="top-right" />
 
       <Form onFinish={onFinish}>
         <div className="from-gray-50 to-blue-500 bg-gradient-to-r h-screen flex items-center justify-center p-12 py-6">
@@ -47,11 +52,10 @@ function ForgotPassword() {
               <div className="flex items-center">
                 <div className="mx-auto md:mx-0">
                   <h3 className="text-4xl font-bold text-white">
-                    Reset Password
+                    {t('auth.resetPassword')}
                   </h3>
                   <p className="mt-2 max-w-[20rem] text-lg text-white/80">
-                    Enter your email address and we'll send you a link to reset
-                    your password.
+                    {t('auth.enterEmailForReset')}
                   </p>
 
                   <Form.Item
@@ -60,7 +64,7 @@ function ForgotPassword() {
                     rules={[
                       {
                         required: true,
-                        message: "Please input your email!",
+                        message: t('auth.validation.emailRequired'),
                         validateTrigger: "onSubmit",
                       },
                     ]}
@@ -77,7 +81,7 @@ function ForgotPassword() {
                         htmlFor="floating_email"
                         className="absolute text-sm text-gray-500 dark:text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                       >
-                        Email address
+                        {t('auth.emailAddress')}
                       </label>
                     </div>
                   </Form.Item>
@@ -86,7 +90,7 @@ function ForgotPassword() {
                       <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
                       <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-gray-100 opacity-100 group-hover:translate-x-0"></span>
                       <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-black">
-                        Send Reset Code
+                        {t('auth.sendResetLink')}
                       </span>
                       <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
                     </button>

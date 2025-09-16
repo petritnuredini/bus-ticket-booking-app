@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useChat } from "../../contexts/ChatContext";
 import { axiosInstance } from "../../helpers/axiosInstance";
+import { useTranslation } from "react-i18next";
 import {
   MessageCircle,
   X,
@@ -17,6 +18,7 @@ import {
  * Features topic selection, real-time messaging, and chat history
  */
 const ChatWidget = ({ userId, user }) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -123,7 +125,7 @@ const ChatWidget = ({ userId, user }) => {
       console.log("Chat started successfully:", newChat);
     } catch (error) {
       console.error("Error starting new chat:", error);
-      alert("Unable to start chat. Please try again.");
+      alert(t('chat.unableToStartChat', 'Unable to start chat. Please try again.'));
     } finally {
       setIsLoading(false);
     }
@@ -242,13 +244,13 @@ const ChatWidget = ({ userId, user }) => {
   const getTopicLabel = (topic) => {
     switch (topic) {
       case "schedule":
-        return "Schedule & Timing";
+        return t('chat.topicSchedule', 'Schedule & Timing');
       case "location":
-        return "Routes & Locations";
+        return t('chat.topicLocation', 'Routes & Locations');
       case "booking":
-        return "Booking & Tickets";
+        return t('chat.topicBooking', 'Booking & Tickets');
       default:
-        return "General Support";
+        return t('chat.topicGeneral', 'General Support');
     }
   };
 
@@ -259,7 +261,7 @@ const ChatWidget = ({ userId, user }) => {
         <button
           onClick={() => setIsOpen(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-110"
-          title="Chat with Support"
+          title={t('chat.chatWithSupport', 'Chat with Support')}
         >
           <MessageCircle size={24} />
         </button>
@@ -273,7 +275,7 @@ const ChatWidget = ({ userId, user }) => {
       <div className="bg-blue-600 text-white p-4 rounded-t-lg flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <MessageCircle size={20} />
-          <span className="font-semibold">Customer Support</span>
+          <span className="font-semibold">{t('chat.customerSupport', 'Customer Support')}</span>
         </div>
         <button
           onClick={() => setIsOpen(false)}
@@ -290,10 +292,10 @@ const ChatWidget = ({ userId, user }) => {
           <div className="flex-1 p-4">
             <div className="text-center mb-4">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                How can we help you today?
+                {t('chat.howCanWeHelp', 'How can we help you today?')}
               </h3>
               <p className="text-gray-600 text-sm">
-                Choose a topic to start chatting with our support team
+                {t('chat.chooseTopicPrompt', 'Choose a topic to start chatting with our support team')}
               </p>
             </div>
 
@@ -321,7 +323,7 @@ const ChatWidget = ({ userId, user }) => {
               disabled={isLoading}
               className="w-full mt-4 bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {isLoading ? "Starting chat..." : "Start Chat"}
+              {isLoading ? t('chat.startingChat', 'Starting chat...') : t('chat.startChat', 'Start Chat')}
             </button>
           </div>
         ) : (
@@ -335,10 +337,10 @@ const ChatWidget = ({ userId, user }) => {
                 </div>
                 <div>
                   <p className="font-medium text-gray-800">
-                    {agent?.name || "Support Agent"}
+                    {agent?.name || t('chat.supportAgent', 'Support Agent')}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {agent?.status === "online" ? "🟢 Online" : "🔴 Offline"}
+                    {agent?.status === "online" ? `🟢 ${t('chat.online', 'Online')}` : `🔴 ${t('chat.offline', 'Offline')}`}
                   </p>
                 </div>
               </div>
@@ -352,7 +354,7 @@ const ChatWidget = ({ userId, user }) => {
                     size={32}
                     className="mx-auto mb-2 opacity-50"
                   />
-                  <p>Start the conversation!</p>
+                  <p>{t('chat.startConversationPrompt', 'Start the conversation!')}</p>
                 </div>
               ) : (
                 chatHistory.map((msg, index) => (
@@ -397,7 +399,7 @@ const ChatWidget = ({ userId, user }) => {
                   value={message}
                   onChange={handleTyping}
                   onKeyPress={handleKeyPress}
-                  placeholder="Type your message..."
+                  placeholder={t('chat.typeMessage', 'Type your message...')}
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <button
