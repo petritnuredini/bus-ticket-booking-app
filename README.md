@@ -32,6 +32,42 @@ A full-stack application for booking bus tickets with user and admin interfaces,
 - PostgreSQL (optional, for daily buses feature)
 - npm or yarn
 
+### Installation & Development
+
+1. **Install all dependencies** (root, server, and client):
+
+   ```bash
+   npm run install-all
+   ```
+
+2. **Start both frontend and backend** with one command:
+
+   ```bash
+   npm run dev
+   # or
+   npm start
+   ```
+
+   This will start:
+
+   - Backend server (usually on http://localhost:3001)
+   - Frontend client (usually on http://localhost:3000)
+
+### Available Scripts
+
+From the root directory, you can run:
+
+- `npm run dev` or `npm start` - Start both frontend and backend in development mode
+- `npm run server` - Start only the backend server
+- `npm run client` - Start only the frontend client
+- `npm run install-all` - Install dependencies for root, server, and client
+- `npm run install-server` - Install only server dependencies
+- `npm run install-client` - Install only client dependencies
+- `npm run build` - Build the client for production
+- `npm run test` - Run tests for both server and client
+- `npm run clean` - Remove all node_modules folders
+- `npm run clean-install` - Clean and reinstall all dependencies
+
 ### Environment Setup
 
 1. **Server Environment**

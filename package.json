@@ -1,0 +1,30 @@
+{
+  "name": "bus-ticket-booking-app",
+  "version": "1.0.0",
+  "description": "Bus Ticket Booking Application - Full Stack",
+  "scripts": {
+    "dev": "concurrently --names \"SERVER,CLIENT\" --prefix-colors \"blue,green\" \"npm run server\" \"npm run client\"",
+    "start": "npm run dev",
+    "server": "cd server && npm start",
+    "client": "cd client && npm start",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install --legacy-peer-deps",
+    "install-server": "cd server && npm install",
+    "install-client": "cd client && npm install",
+    "build": "cd client && npm run build",
+    "build-server": "cd server && npm run build",
+    "test": "concurrently \"npm run test-server\" \"npm run test-client\"",
+    "test-server": "cd server && npm test",
+    "test-client": "cd client && npm test",
+    "clean": "rm -rf node_modules server/node_modules client/node_modules",
+    "clean-install": "npm run clean && npm run install-all"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}
