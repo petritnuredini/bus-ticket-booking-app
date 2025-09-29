@@ -1,8 +1,44 @@
-import React from "react";
-import { Table, Button, Tag } from "antd";
-import { ReloadOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { Table, Button, Tag, Space, Popconfirm, message } from "antd";
+import { ReloadOutlined, DeleteOutlined } from "@ant-design/icons";
+import { axiosInstance } from "../helpers/axiosInstance";
 
-function PlanetList({ planets, loading, onRefresh, showTypeOnly = false }) {
+function PlanetList({
+  planets,
+  loading,
+  onRefresh,
+  onPlanetDeleted,
+  showTypeOnly = false,
+}) {
+  const [deleting, setDeleting] = useState(null);
+
+  const handleDelete = async (planetId) => {
+    try {
+      setDeleting(planetId);
+
+      const response = await axiosInstance.delete(`/planets/${planetId}`);
+
+      if (response.data.success) {
+        message.success(response.data.message);
+        if (onPlanetDeleted) {
+          onPlanetDeleted(planetId, response.data.data.deletedSatellitesCount);
+        }
+        if (onRefresh) {
+          onRefresh();
+        }
+      } else {
+        message.error(response.data.message || "Failed to delete planet");
+      }
+    } catch (error) {
+      console.error("Error deleting planet:", error);
+      message.error(
+        error.response?.data?.message ||
+          "Error deleting planet: " + error.message
+      );
+    } finally {
+      setDeleting(null);
+    }
+  };
   const columns = [
     {
       title: "Planet ID",
@@ -68,6 +104,37 @@ function PlanetList({ planets, loading, onRefresh, showTypeOnly = false }) {
     render: (date) => new Date(date).toLocaleDateString(),
     width: 120,
   });
+
+  // Add Actions column if not showing type only
+  if (!showTypeOnly) {
+    columns.push({
+      title: "Actions",
+      key: "actions",
+      width: 100,
+      render: (_, record) => (
+        <Space>
+          {!record.IsDeleted && (
+            <Popconfirm
+              title="Delete Planet"
+              description={`Are you sure you want to delete "${record.Name}"? This will also delete all its satellites.`}
+              onConfirm={() => handleDelete(record.PlanetId)}
+              okText="Yes"
+              cancelText="No"
+              okType="danger"
+            >
+              <Button
+                type="text"
+                danger
+                size="small"
+                icon={<DeleteOutlined />}
+                loading={deleting === record.PlanetId}
+              />
+            </Popconfirm>
+          )}
+        </Space>
+      ),
+    });
+  }
 
   return (
     <div>

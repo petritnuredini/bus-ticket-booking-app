@@ -94,6 +94,16 @@ function PlanetSatelliteSystem() {
     message.success("Satellite deleted successfully!");
   };
 
+  // Handle planet deletion
+  const handlePlanetDeleted = (planetId, deletedSatellitesCount) => {
+    setPlanets(planets.filter((planet) => planet.PlanetId !== planetId));
+    // Also refresh satellites list to remove deleted satellites
+    fetchSatellites();
+    message.success(
+      `Planet deleted successfully along with ${deletedSatellitesCount} satellites!`
+    );
+  };
+
   return (
     <div className="p-5">
       <Row gutter={[16, 16]}>
@@ -101,7 +111,7 @@ function PlanetSatelliteSystem() {
           <Card title="Planet-Satellite Management System" className="w-full">
             <Tabs activeKey={activeTab} onChange={setActiveTab}>
               {/* Tab 1: Insert Planet */}
-              <TabPane tab="a) Insert Planet" key="1">
+              <TabPane tab="Insert Planet" key="1">
                 <Row gutter={[16, 16]}>
                   <Col xs={24} lg={12}>
                     <Card title="Create New Planet" size="small">
@@ -114,6 +124,7 @@ function PlanetSatelliteSystem() {
                         planets={planets}
                         loading={loading}
                         onRefresh={fetchPlanets}
+                        onPlanetDeleted={handlePlanetDeleted}
                       />
                     </Card>
                   </Col>
@@ -121,7 +132,7 @@ function PlanetSatelliteSystem() {
               </TabPane>
 
               {/* Tab 2: Insert Satellite */}
-              <TabPane tab="b) Insert Satellite" key="2">
+              <TabPane tab="Insert Satellite" key="2">
                 <Row gutter={[16, 16]}>
                   <Col xs={24} lg={12}>
                     <Card title="Create New Satellite" size="small">
@@ -145,7 +156,7 @@ function PlanetSatelliteSystem() {
               </TabPane>
 
               {/* Tab 3: Update Planet Type */}
-              <TabPane tab="c) Update Planet Type" key="3">
+              <TabPane tab="Update Planet Type" key="3">
                 <Row gutter={[16, 16]}>
                   <Col xs={24} lg={12}>
                     <Card title="Update Planet Type" size="small">
@@ -161,6 +172,7 @@ function PlanetSatelliteSystem() {
                         planets={planets}
                         loading={loading}
                         onRefresh={fetchPlanets}
+                        onPlanetDeleted={handlePlanetDeleted}
                         showTypeOnly={true}
                       />
                     </Card>
@@ -169,31 +181,15 @@ function PlanetSatelliteSystem() {
               </TabPane>
 
               {/* Tab 4: Delete Satellites */}
-              <TabPane tab="d) Delete Satellites" key="4">
-                <Row gutter={[16, 16]}>
-                  <Col xs={24} lg={12}>
-                    <Card title="Delete Satellites by Planet" size="small">
-                      <DeleteSatellitesForm
-                        planets={planets}
-                        onSatellitesDeleted={handleSatellitesDeleted}
-                      />
-                    </Card>
-                  </Col>
-                  <Col xs={24} lg={12}>
-                    <Card title="Current Satellites" size="small">
-                      <SatelliteList
-                        satellites={satellites}
-                        loading={loading}
-                        onRefresh={fetchSatellites}
-                        onSatelliteDeleted={handleSatelliteDeleted}
-                      />
-                    </Card>
-                  </Col>
-                </Row>
+              <TabPane tab="Delete Satellites" key="4">
+                <DeleteSatellitesForm
+                  planets={planets}
+                  onSatellitesDeleted={handleSatellitesDeleted}
+                />
               </TabPane>
 
-              {/* Tab 5: Hide Deleted Satellites */}
-              <TabPane tab="e) Hide Deleted Satellites" key="5">
+              {/* Tab 5: Satellites */}
+              <TabPane tab="Satellites" key="5">
                 <Row gutter={[16, 16]}>
                   <Col span={24}>
                     <Card title="Filter Satellites (Hide Deleted)" size="small">
