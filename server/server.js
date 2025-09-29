@@ -38,6 +38,10 @@ app.use(
   require("./routes/internationalCitiesRoutes")
 );
 
+// 👉 Planet-Satellite System Routes (Exam)
+app.use("/api/planets", require("./routes/planetsRoutes"));
+app.use("/api/satellites", require("./routes/satellitesRoutes"));
+
 // 👉 Stripe Payment Routes
 app.use("/api/payments", require("./routes/paymentRoutes"));
 
