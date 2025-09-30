@@ -2,6 +2,18 @@ const sequelize = require("./postgresConfig");
 
 // Import models to ensure they are registered with Sequelize
 const DailyBus = require("../models/dailyBusModel");
+const Group = require("../models/groupModel");
+const Member = require("../models/memberModel");
+
+// Set up model associations
+const models = { DailyBus, Group, Member };
+
+// Initialize associations if they exist
+Object.keys(models).forEach((modelName) => {
+  if (models[modelName].associate) {
+    models[modelName].associate(models);
+  }
+});
 
 // Test PostgreSQL connection
 const testConnection = async () => {
@@ -28,7 +40,5 @@ module.exports = {
   sequelize,
   testConnection,
   initializeDatabase,
-  models: {
-    DailyBus,
-  },
+  models,
 };
