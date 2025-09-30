@@ -41,6 +41,10 @@ app.use(
 // 👉 Stripe Payment Routes
 app.use("/api/payments", require("./routes/paymentRoutes"));
 
+// Festival and Events Routes
+app.use("/api/festivals", require("./routes/festivalsRoutes"));
+app.use("/api/events", require("./routes/eventsRoutes"));
+
 /**
  * Socket.IO Connection Management
  * Handles real-time communication between users and agents

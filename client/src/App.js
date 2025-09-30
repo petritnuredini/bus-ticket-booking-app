@@ -29,7 +29,10 @@ const PasswordResetSuccess = lazy(() => import("./pages/PasswordResetSuccess"));
 const ChatPage = lazy(() => import("./pages/ChatPage"));
 const AgentLoginPage = lazy(() => import("./pages/AgentLoginPage"));
 const AgentDashboardPage = lazy(() => import("./pages/AgentDashboardPage"));
-const AdminTicketValidator = lazy(() => import("./pages/Admin/AdminTicketValidator"));
+const AdminTicketValidator = lazy(() =>
+  import("./pages/Admin/AdminTicketValidator")
+);
+const FestivalSystem = lazy(() => import("./pages/FestivalSystem"));
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
@@ -41,178 +44,187 @@ function App() {
           <BrowserRouter>
             <Suspense fallback={loading}>
               <Routes>
-              <Route
-                path="/"
-                element={
-                  <PublicRoute>
-                    <Index />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/"
+                  element={
+                    <PublicRoute>
+                      <Index />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/password-reset-success"
-                element={
-                  <PublicRoute>
-                    <PasswordResetSuccess />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/password-reset-success"
+                  element={
+                    <PublicRoute>
+                      <PasswordResetSuccess />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/email-sent"
-                element={
-                  <PublicRoute>
-                    <EmailSent />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/email-sent"
+                  element={
+                    <PublicRoute>
+                      <EmailSent />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/reset-password/:userId/:resetString"
-                element={
-                  <PublicRoute>
-                    <UpdatePassword />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/reset-password/:userId/:resetString"
+                  element={
+                    <PublicRoute>
+                      <UpdatePassword />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/forgot-password"
-                element={
-                  <PublicRoute>
-                    <ForgotPassword />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/forgot-password"
+                  element={
+                    <PublicRoute>
+                      <ForgotPassword />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/easy-booking"
-                element={
-                  <ProtectedRoute>
-                    <Home />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/easy-booking"
+                  element={
+                    <ProtectedRoute>
+                      <Home />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/bookings"
-                element={
-                  <ProtectedRoute>
-                    <Bookings />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/bookings"
+                  element={
+                    <ProtectedRoute>
+                      <Bookings />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/book-now/:id"
-                element={
-                  <ProtectedRoute>
-                    <BookNow />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/book-now/:id"
+                  element={
+                    <ProtectedRoute>
+                      <BookNow />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route path="/daily-buses" element={<DailyBusesView />} />
+                <Route path="/daily-buses" element={<DailyBusesView />} />
 
-              <Route
-                path="/international-booking"
-                element={
-                  <PublicRoute>
-                    <InternationalBooking />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/international-booking"
+                  element={
+                    <PublicRoute>
+                      <InternationalBooking />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/admin/bookings"
-                element={
-                  <ProtectedRoute>
-                    <AdminBookings />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/admin/bookings"
+                  element={
+                    <ProtectedRoute>
+                      <AdminBookings />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/admin/buses"
-                element={
-                  <ProtectedRoute>
-                    <AdminBuses />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/admin/buses"
+                  element={
+                    <ProtectedRoute>
+                      <AdminBuses />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/admin/daily-buses"
-                element={
-                  <ProtectedRoute>
-                    <AdminDailyBuses />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/admin/daily-buses"
+                  element={
+                    <ProtectedRoute>
+                      <AdminDailyBuses />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/admin/users"
-                element={
-                  <ProtectedRoute>
-                    <AdminUsers />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/admin/users"
+                  element={
+                    <ProtectedRoute>
+                      <AdminUsers />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/admin/ticket-validator"
-                element={
-                  <ProtectedRoute>
-                    <AdminTicketValidator />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/admin/ticket-validator"
+                  element={
+                    <ProtectedRoute>
+                      <AdminTicketValidator />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/login"
-                element={
-                  <PublicRoute>
-                    <Login />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/register"
-                element={
-                  <PublicRoute>
-                    <Register />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/festival-system"
+                  element={
+                    <PublicRoute>
+                      <FestivalSystem />
+                    </PublicRoute>
+                  }
+                />
 
-              {/* Chat Routes */}
-              <Route
-                path="/chat"
-                element={
-                  <ProtectedRoute>
-                    <ChatPage />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/login"
+                  element={
+                    <PublicRoute>
+                      <Login />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/register"
+                  element={
+                    <PublicRoute>
+                      <Register />
+                    </PublicRoute>
+                  }
+                />
 
-              {/* Agent Routes */}
-              <Route
-                path="/agent/login"
-                element={
-                  <PublicRoute>
-                    <AgentLoginPage />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/agent/dashboard/:agentId"
-                element={
-                  <PublicRoute>
-                    <AgentDashboardPage />
-                  </PublicRoute>
-                }
-              />
+                {/* Chat Routes */}
+                <Route
+                  path="/chat"
+                  element={
+                    <ProtectedRoute>
+                      <ChatPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Agent Routes */}
+                <Route
+                  path="/agent/login"
+                  element={
+                    <PublicRoute>
+                      <AgentLoginPage />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/agent/dashboard/:agentId"
+                  element={
+                    <PublicRoute>
+                      <AgentDashboardPage />
+                    </PublicRoute>
+                  }
+                />
               </Routes>
             </Suspense>
           </BrowserRouter>
