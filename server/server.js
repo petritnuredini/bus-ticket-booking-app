@@ -41,6 +41,10 @@ app.use(
 // 👉 Stripe Payment Routes
 app.use("/api/payments", require("./routes/paymentRoutes"));
 
+// 👉 Group-Member System Routes
+app.use("/api/groups", require("./routes/groupsRoutes"));
+app.use("/api/members", require("./routes/membersRoutes"));
+
 /**
  * Socket.IO Connection Management
  * Handles real-time communication between users and agents
