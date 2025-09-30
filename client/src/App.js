@@ -29,7 +29,13 @@ const PasswordResetSuccess = lazy(() => import("./pages/PasswordResetSuccess"));
 const ChatPage = lazy(() => import("./pages/ChatPage"));
 const AgentLoginPage = lazy(() => import("./pages/AgentLoginPage"));
 const AgentDashboardPage = lazy(() => import("./pages/AgentDashboardPage"));
-const AdminTicketValidator = lazy(() => import("./pages/Admin/AdminTicketValidator"));
+const AdminTicketValidator = lazy(() =>
+  import("./pages/Admin/AdminTicketValidator")
+);
+
+// Mbrojtja e lendes
+const AdminDepartmentet = lazy(() => import("./pages/Admin/AdminDepartmentet"));
+const AdminAsistentet = lazy(() => import("./pages/Admin/AdminAsistentet"));
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
@@ -41,178 +47,214 @@ function App() {
           <BrowserRouter>
             <Suspense fallback={loading}>
               <Routes>
-              <Route
-                path="/"
-                element={
-                  <PublicRoute>
-                    <Index />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/"
+                  element={
+                    <PublicRoute>
+                      <Index />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/password-reset-success"
-                element={
-                  <PublicRoute>
-                    <PasswordResetSuccess />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/password-reset-success"
+                  element={
+                    <PublicRoute>
+                      <PasswordResetSuccess />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/email-sent"
-                element={
-                  <PublicRoute>
-                    <EmailSent />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/email-sent"
+                  element={
+                    <PublicRoute>
+                      <EmailSent />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/reset-password/:userId/:resetString"
-                element={
-                  <PublicRoute>
-                    <UpdatePassword />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/departmenti"
+                  element={
+                    <PublicRoute>
+                      <AdminDepartmentet />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/forgot-password"
-                element={
-                  <PublicRoute>
-                    <ForgotPassword />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/asistenti"
+                  element={
+                    <PublicRoute>
+                      <AdminAsistentet />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/easy-booking"
-                element={
-                  <ProtectedRoute>
-                    <Home />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/reset-password/:userId/:resetString"
+                  element={
+                    <PublicRoute>
+                      <UpdatePassword />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/bookings"
-                element={
-                  <ProtectedRoute>
-                    <Bookings />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/forgot-password"
+                  element={
+                    <PublicRoute>
+                      <ForgotPassword />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/book-now/:id"
-                element={
-                  <ProtectedRoute>
-                    <BookNow />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/easy-booking"
+                  element={
+                    <ProtectedRoute>
+                      <Home />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route path="/daily-buses" element={<DailyBusesView />} />
+                <Route
+                  path="/bookings"
+                  element={
+                    <ProtectedRoute>
+                      <Bookings />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/international-booking"
-                element={
-                  <PublicRoute>
-                    <InternationalBooking />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/book-now/:id"
+                  element={
+                    <ProtectedRoute>
+                      <BookNow />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/admin/bookings"
-                element={
-                  <ProtectedRoute>
-                    <AdminBookings />
-                  </ProtectedRoute>
-                }
-              />
+                <Route path="/daily-buses" element={<DailyBusesView />} />
 
-              <Route
-                path="/admin/buses"
-                element={
-                  <ProtectedRoute>
-                    <AdminBuses />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/international-booking"
+                  element={
+                    <PublicRoute>
+                      <InternationalBooking />
+                    </PublicRoute>
+                  }
+                />
 
-              <Route
-                path="/admin/daily-buses"
-                element={
-                  <ProtectedRoute>
-                    <AdminDailyBuses />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/admin/bookings"
+                  element={
+                    <ProtectedRoute>
+                      <AdminBookings />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/admin/users"
-                element={
-                  <ProtectedRoute>
-                    <AdminUsers />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/admin/buses"
+                  element={
+                    <ProtectedRoute>
+                      <AdminBuses />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/admin/ticket-validator"
-                element={
-                  <ProtectedRoute>
-                    <AdminTicketValidator />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/admin/daily-buses"
+                  element={
+                    <ProtectedRoute>
+                      <AdminDailyBuses />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/login"
-                element={
-                  <PublicRoute>
-                    <Login />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/register"
-                element={
-                  <PublicRoute>
-                    <Register />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/admin/users"
+                  element={
+                    <ProtectedRoute>
+                      <AdminUsers />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Chat Routes */}
-              <Route
-                path="/chat"
-                element={
-                  <ProtectedRoute>
-                    <ChatPage />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/admin/ticket-validator"
+                  element={
+                    <ProtectedRoute>
+                      <AdminTicketValidator />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Agent Routes */}
-              <Route
-                path="/agent/login"
-                element={
-                  <PublicRoute>
-                    <AgentLoginPage />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/agent/dashboard/:agentId"
-                element={
-                  <PublicRoute>
-                    <AgentDashboardPage />
-                  </PublicRoute>
-                }
-              />
+                <Route
+                  path="/admin/departmentet"
+                  element={
+                    <ProtectedRoute>
+                      <AdminDepartmentet />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/admin/asistentet"
+                  element={
+                    <ProtectedRoute>
+                      <AdminAsistentet />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/login"
+                  element={
+                    <PublicRoute>
+                      <Login />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/register"
+                  element={
+                    <PublicRoute>
+                      <Register />
+                    </PublicRoute>
+                  }
+                />
+
+                {/* Chat Routes */}
+                <Route
+                  path="/chat"
+                  element={
+                    <ProtectedRoute>
+                      <ChatPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Agent Routes */}
+                <Route
+                  path="/agent/login"
+                  element={
+                    <PublicRoute>
+                      <AgentLoginPage />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/agent/dashboard/:agentId"
+                  element={
+                    <PublicRoute>
+                      <AgentDashboardPage />
+                    </PublicRoute>
+                  }
+                />
               </Routes>
             </Suspense>
           </BrowserRouter>

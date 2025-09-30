@@ -13,69 +13,79 @@ function DefaultLayout({ children }) {
 
   const userMenu = [
     {
-      name: t('common.home'),
+      name: t("common.home"),
       path: "/easy-booking",
       icon: "ri-home-line",
     },
     {
-      name: t('common.myBookings'),
+      name: t("common.myBookings"),
       path: "/bookings",
       icon: "ri-file-list-line",
     },
     {
-      name: t('booking.dailyBuses', 'Daily Buses'),
+      name: t("booking.dailyBuses", "Daily Buses"),
       path: "/daily-buses",
       icon: "ri-calendar-line",
     },
     {
-      name: t('booking.internationalBuses', 'International Buses'),
+      name: t("booking.internationalBuses", "International Buses"),
       path: "/international-booking",
       icon: "ri-plane-line",
     },
     {
-      name: t('chat.chatWithUs'),
+      name: t("chat.chatWithUs"),
       path: "/chat",
       icon: "ri-message-2-line",
     },
     {
-      name: t('common.logout'),
+      name: t("common.logout"),
       path: "/logout",
       icon: "ri-logout-box-line",
     },
   ];
   const adminMenu = [
     {
-      name: t('common.home'),
+      name: t("common.home"),
       path: "/easy-booking",
       icon: "ri-home-line",
     },
     {
-      name: t('admin.buses'),
+      name: t("admin.buses"),
       path: "/admin/buses",
       icon: "ri-bus-line",
     },
     {
-      name: t('admin.dailyBuses'),
+      name: t("admin.dailyBuses"),
       path: "/admin/daily-buses",
       icon: "ri-calendar-line",
     },
     {
-      name: t('admin.users'),
+      name: t("admin.users"),
       path: "/admin/users",
       icon: "ri-user-line",
     },
     {
-      name: t('admin.bookings'),
+      name: t("admin.bookings"),
       path: "/admin/bookings",
       icon: "ri-file-list-line",
     },
     {
-      name: t('chat.chatWithUs'),
+      name: "Departmentet",
+      path: "/admin/departmentet",
+      icon: "ri-building-line",
+    },
+    {
+      name: "Asistentet",
+      path: "/admin/asistentet",
+      icon: "ri-team-line",
+    },
+    {
+      name: t("chat.chatWithUs"),
       path: "/chat",
       icon: "ri-message-2-line",
     },
     {
-      name: t('common.logout'),
+      name: t("common.logout"),
       path: "/logout",
       icon: "ri-logout-box-line",
     },
