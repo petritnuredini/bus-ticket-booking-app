@@ -2,6 +2,19 @@ const sequelize = require("./postgresConfig");
 
 // Import models to ensure they are registered with Sequelize
 const DailyBus = require("../models/dailyBusModel");
+const Festival = require("../models/festivalModel");
+const Event = require("../models/eventModel");
+
+// Set up Festival-Event relationship
+Festival.hasMany(Event, {
+  foreignKey: "ID_Festivalit",
+  as: "events",
+  onDelete: "CASCADE",
+});
+Event.belongsTo(Festival, {
+  foreignKey: "ID_Festivalit",
+  as: "festival",
+});
 
 // Test PostgreSQL connection
 const testConnection = async () => {
@@ -30,5 +43,7 @@ module.exports = {
   initializeDatabase,
   models: {
     DailyBus,
+    Festival,
+    Event,
   },
 };
