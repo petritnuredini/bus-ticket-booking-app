@@ -80,7 +80,7 @@ function DefaultLayout({ children }) {
       icon: "ri-logout-box-line",
     },
     { name: t("admin.departments", "Departments"), path: "/admin/departments", icon: "ri-building-line" },
-    { name: t("admin.assistants", "Assistants"), path: "/admin/asisstants", icon: "ri-team-line" },
+    { name: t("admin.assistants", "Assistants"), path: "/admin/assistants", icon: "ri-team-line" },
   ];
   const menutoBeRendered = user?.isAdmin ? adminMenu : userMenu;
   let activeRoute = window.location.pathname;

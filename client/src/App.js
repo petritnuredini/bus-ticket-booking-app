@@ -9,8 +9,8 @@ import { useSelector } from "react-redux";
 import { ChatProvider } from "./contexts/ChatContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import "./i18n";
-//import AdminAssistants from "./pages/Admin/AdminAssistants";
-//import AdminDepartments from "./pages/Admin/AdminDepartments";
+import AdminAssistants from "./pages/Admin/AdminAssistants";
+import AdminDepartments from "./pages/Admin/AdminDepartments";
 
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
@@ -32,8 +32,8 @@ const ChatPage = lazy(() => import("./pages/ChatPage"));
 const AgentLoginPage = lazy(() => import("./pages/AgentLoginPage"));
 const AgentDashboardPage = lazy(() => import("./pages/AgentDashboardPage"));
 const AdminTicketValidator = lazy(() => import("./pages/Admin/AdminTicketValidator"));
-const AdminDepartments = lazy(() => import("./pages/Admin/AdminDepartments"));
-const AdminAssistants = lazy(() => import("./pages/Admin/AdminAssistants"));
+//const AdminDepartments = lazy(() => import("./pages/Admin/AdminDepartments"));
+//const AdminAssistants = lazy(() => import("./pages/Admin/AdminAssistants"));
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
@@ -43,7 +43,7 @@ function App() {
       <LanguageProvider>
         <ChatProvider>
           <BrowserRouter>
-            <Suspense fallback={loading}>
+            <Suspense fallback={Loader}>
               <Routes>
               <Route
                 path="/"
@@ -144,7 +144,7 @@ function App() {
                     <AdminBuses />
                   </ProtectedRoute>
                 }
-              />
+             />
             <Route
   path="/admin/departments"
   element={
@@ -154,13 +154,21 @@ function App() {
   }
 />
 
-<Route
+{/* <Route
   path="/admin/assistants"
   element={
     <ProtectedRoute>
       <AdminAssistants />
     </ProtectedRoute>
   }
+/> */}
+<Route
+path="/admin/assistants"
+element={
+  <ProtectedRoute>
+    <AdminAssistants/>
+  </ProtectedRoute>
+}
 />
               <Route
                 path="/admin/daily-buses"
