@@ -79,6 +79,8 @@ function DefaultLayout({ children }) {
       path: "/logout",
       icon: "ri-logout-box-line",
     },
+    { name: t("admin.departments", "Departments"), path: "/admin/departments", icon: "ri-building-line" },
+    { name: t("admin.assistants", "Assistants"), path: "/admin/asisstants", icon: "ri-team-line" },
   ];
   const menutoBeRendered = user?.isAdmin ? adminMenu : userMenu;
   let activeRoute = window.location.pathname;
@@ -109,7 +111,7 @@ function DefaultLayout({ children }) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-5 justify-start mt-[100px] ">
+        <div className="flex flex-col gap-5 justify-start mt-[60px] overflow-auto pb-6 ">
           {menutoBeRendered.map((item, key) => {
             return (
               <div

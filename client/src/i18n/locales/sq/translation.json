@@ -178,7 +178,9 @@
     "dailyBusSchedules": "Oraret e Autobusëve të Përditshëm",
     "dailyBusManagementDescription": "Menaxhoni oraret e përsëritura të autobusëve. Këto modele mund të përdoren për të gjeneruar instanca të rregullta të autobusëve.",
     "paginationTotal": "{{start}}-{{end}} nga {{total}} autobusë të përditshëm",
-    "accountCreatedAt": "Llogaria u Krijua Më"
+    "accountCreatedAt": "Llogaria u Krijua Më",
+    "departments": "Departamentet",
+    "assistants": "Asistentet"
   },
   "validator": {
     "scanTicket": "Skano Biletën",

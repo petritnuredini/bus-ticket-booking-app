@@ -178,7 +178,9 @@
     "dailyBusSchedules": "Daily Bus Schedules",
     "dailyBusManagementDescription": "Manage recurring bus schedules. These templates can be used to generate regular bus instances.",
     "paginationTotal": "{{start}}-{{end}} of {{total}} daily buses",
-    "accountCreatedAt": "Account Created At"
+    "accountCreatedAt": "Account Created At",
+    "departments": "Departments",
+    "assistants": "Assistants"
   },
   "validator": {
     "scanTicket": "Scan Ticket",

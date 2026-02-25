@@ -37,6 +37,10 @@ app.use(
   "/api/international-cities",
   require("./routes/internationalCitiesRoutes")
 );
+app.use("/api/departments", require("./routes/departmentRoutes"));
+
+app.use("/api/assistants", require("./routes/assistantRoutes"));
+
 
 // 👉 Stripe Payment Routes
 app.use("/api/payments", require("./routes/paymentRoutes"));
